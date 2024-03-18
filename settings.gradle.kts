@@ -22,3 +22,7 @@ dependencyResolutionManagement {
 rootProject.name = "Prod hse"
 include(":app")
 include(":authlib")
+include(":feature:weather")
+include(":feature:venues")
+include(":navdestinations")
+include(":core")
