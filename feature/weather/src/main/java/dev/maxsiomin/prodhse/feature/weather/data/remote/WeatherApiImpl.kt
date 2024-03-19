@@ -23,6 +23,7 @@ internal class WeatherApiImpl @Inject constructor(private val client: HttpClient
                 parameter("lat", lat)
                 parameter("lon", lon)
                 parameter("lang", lang)
+                parameter("units", "metric")
                 parameter("appid", ApiKeys.OPEN_WEATHER_MAP)
             }.body()
             if (response == null) {

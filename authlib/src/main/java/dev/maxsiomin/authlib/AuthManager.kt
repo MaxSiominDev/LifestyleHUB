@@ -18,12 +18,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
-public class AuthManager internal constructor(
+class AuthManager internal constructor(
     private val repo: UsersRepository,
 ) {
 
     private val _authStatus = MutableStateFlow<AuthStatus>(AuthStatus.Loading)
-    public val authStatus = _authStatus.asStateFlow()
+    val authStatus = _authStatus.asStateFlow()
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
@@ -31,11 +31,11 @@ public class AuthManager internal constructor(
         }
     }
 
-    public suspend fun registerUser(registrationInfo: RegistrationInfo): RegistrationStatus {
+    suspend fun registerUser(registrationInfo: RegistrationInfo): RegistrationStatus {
         TODO()
     }
 
-    public suspend fun loginWithUsernameAndPassword(loginInfo: LoginInfo): LoginStatus {
+    suspend fun loginWithUsernameAndPassword(loginInfo: LoginInfo): LoginStatus {
         TODO()
     }
 
@@ -56,12 +56,12 @@ public class AuthManager internal constructor(
         return mapper.invoke(entity)
     }
 
-    public companion object {
-        public fun init(context: Context) {
+    companion object {
+        fun init(context: Context) {
             AppModuleImpl.init(context)
         }
 
-        public val instance get() = AppModule.instance.authManager
+        val instance get() = AppModule.instance.authManager
     }
 
 }

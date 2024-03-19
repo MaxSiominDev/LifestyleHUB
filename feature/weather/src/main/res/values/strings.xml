@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="unknown_place">Unknown place</string>
+    <string name="temperature_unknown">Temperature unknown</string>
+    <string name="unknown_conditions">Unknown weather conditions</string>
+
+</resources>

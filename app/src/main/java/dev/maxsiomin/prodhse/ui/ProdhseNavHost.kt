@@ -7,16 +7,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.prodhse.MainViewModel
+import dev.maxsiomin.prodhse.core.SnackbarCallback
 import dev.maxsiomin.prodhse.navdestinations.Screen
 
 @Composable
-fun ProdhseNavHost(authManager: AuthManager) {
+fun ProdhseNavHost(authManager: AuthManager, showSnackbar: SnackbarCallback) {
 
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.TabsScreen.route) {
         composable(Screen.TabsScreen.route) {
             val viewModel: MainViewModel = viewModel()
-            TabsScreen(viewModel.state, viewModel::onEvent)
+            TabsScreen(viewModel.state, showSnackbar, viewModel::onEvent)
         }
     }
+
 }

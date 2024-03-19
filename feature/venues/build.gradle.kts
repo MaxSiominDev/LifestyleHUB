@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.ktor.client.logging)
 
     implementation(project(":feature:weather"))
+    implementation(project(":core"))
 
     // Hilt for DI
     implementation(libs.hilt.android)

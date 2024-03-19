@@ -1,9 +1,7 @@
 package dev.maxsiomin.prodhse.core
 
-import java.lang.Exception
-
-sealed class Resource<T>(val data: T? = null, val exception: Throwable? = null) {
-    class Success<T>(data: T): Resource<T>(data)
-    class Error<T>(exception: Throwable, data: T? = null): Resource<T>(data, exception)
+sealed class Resource<T>() {
+    class Success<T>(val data: T): Resource<T>()
+    class Error<T>(val exception: Throwable?): Resource<T>()
     class Loading<T>(val isLoading: Boolean = true): Resource<T>()
 }

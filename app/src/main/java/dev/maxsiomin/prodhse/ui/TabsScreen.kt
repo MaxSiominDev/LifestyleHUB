@@ -15,46 +15,50 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.prodhse.MainViewModel
+import dev.maxsiomin.prodhse.R
+import dev.maxsiomin.prodhse.core.SnackbarCallback
+import dev.maxsiomin.prodhse.core.SnackbarInfo
 import dev.maxsiomin.prodhse.feature.venues.presentation.addVenuesNavigation
 import dev.maxsiomin.prodhse.navdestinations.Screen
 
 @Composable
-fun TabsScreen(state: MainViewModel.State, onEvent: (MainViewModel.Event) -> Unit) {
+fun TabsScreen(state: MainViewModel.State, showSnackbar: SnackbarCallback, onEvent: (MainViewModel.Event) -> Unit) {
 
     val tabsNavController = rememberNavController()
 
     val items = listOf(
         BottomNavigationItem(
-            title = "Home",
+            title = stringResource(id = R.string.home),
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
-            route = dev.maxsiomin.prodhse.navdestinations.Screen.VenuesGraph.route,
+            route = Screen.VenuesGraph.route,
         ),
         BottomNavigationItem(
-            title = "Plans",
+            title =  stringResource(id = R.string.plans),
             selectedIcon = Icons.Filled.Event,
             unselectedIcon = Icons.Outlined.Event,
             route = Screen.PlannerGraph.route,
         ),
         BottomNavigationItem(
-            title = "",
+            title = stringResource(id = R.string.profile),
             selectedIcon = Icons.Filled.AccountCircle,
             unselectedIcon = Icons.Outlined.AccountCircle,
             route = Screen.AuthGraph.route,
         ),
     )
-
-    //tabsNavController.enableOnBackPressed(false)
 
     Scaffold(
         bottomBar = {
@@ -89,7 +93,7 @@ fun TabsScreen(state: MainViewModel.State, onEvent: (MainViewModel.Event) -> Uni
             startDestination = Screen.VenuesGraph.route,
             modifier = Modifier.padding(paddingValues = paddingValues)
         ) {
-            addVenuesNavigation(navController = tabsNavController)
+            addVenuesNavigation(navController = tabsNavController, showSnackbar = showSnackbar)
 
             navigation(
                 route = Screen.PlannerGraph.route,

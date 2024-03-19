@@ -2,7 +2,7 @@ package dev.maxsiomin.authlib.security
 
 import java.security.MessageDigest
 
-object StringHasher {
+internal object StringHasher {
 
     fun hashString(input: String, algorithm: String = "SHA-256"): String {
         // Get an instance of the specified algorithm
