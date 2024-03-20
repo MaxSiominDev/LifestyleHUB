@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.ui.theme
+package dev.maxsiomin.prodhse.core.theme
 
 import android.app.Activity
 import android.os.Build

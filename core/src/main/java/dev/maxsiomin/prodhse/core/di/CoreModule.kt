@@ -8,6 +8,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import dev.maxsiomin.prodhse.core.LocaleManager
+import dev.maxsiomin.prodhse.core.LocaleManagerImpl
 import dev.maxsiomin.prodhse.core.location.DefaultLocationClient
 import dev.maxsiomin.prodhse.core.location.LocationClient
 import io.ktor.client.HttpClient
@@ -41,4 +43,8 @@ object CoreModule {
     fun provideLocationClient(@ApplicationContext context: Context, client: FusedLocationProviderClient): LocationClient {
         return DefaultLocationClient(context, client)
     }
+
+    @Provides
+    fun provideLocaleManager(impl: LocaleManagerImpl): LocaleManager = impl
+
 }

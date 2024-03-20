@@ -6,7 +6,9 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 @Composable
 fun <T> CollectFlow(
@@ -16,8 +18,8 @@ fun <T> CollectFlow(
 ) {
     LaunchedEffect(lifecycleOwner.lifecycle) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            eventsFlow.collect { event ->
-                onEmission(event)
+            withContext(Dispatchers.Main.immediate) {
+                eventsFlow.collect(onEmission)
             }
         }
     }
