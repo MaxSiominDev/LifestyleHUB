@@ -61,6 +61,7 @@ fun TabsScreen(state: MainViewModel.State, showSnackbar: SnackbarCallback, onEve
     )
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         bottomBar = {
             NavigationBar {
                 items.fastForEachIndexed { index, item ->

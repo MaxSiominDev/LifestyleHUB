@@ -15,7 +15,7 @@ class PlacesDtoToUiModelMapper : (Result) -> PlaceModel? {
         return PlaceModel(
             name = name,
             address = address,
-            categories = category.joinToString { ", " },
+            categories = category.joinToString { "$it, " },
             photoUrl = null,
             id = id,
         )

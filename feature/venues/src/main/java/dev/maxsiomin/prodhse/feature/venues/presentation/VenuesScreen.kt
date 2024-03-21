@@ -42,10 +42,15 @@ internal fun VenuesScreen(showSnackbar: SnackbarCallback) {
         addAll(viewModel.state.places.map { FeedItem.Venue(it) })
     }
 
-    Box(Modifier.nestedScroll(pullToRefreshState.nestedScrollConnection)) {
+    Box(
+        Modifier
+            .nestedScroll(pullToRefreshState.nestedScrollConnection)
+            .fillMaxSize(),
+        contentAlignment = Alignment.TopCenter
+    ) {
         LazyColumn(
             Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             items(items) { feedItem ->

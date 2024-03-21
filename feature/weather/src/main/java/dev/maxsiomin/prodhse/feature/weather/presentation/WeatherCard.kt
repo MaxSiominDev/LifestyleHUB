@@ -147,7 +147,7 @@ private fun WeatherSuccessCardPreview() {
                 ),
                 weatherCondition = WeatherCondition(
                     name = "scattered clouds",
-                    iconUrl = "https://openweathermap.org/img/wn/03d.png",
+                    iconUrl = null,
                     isNight = true
                 ),
                 date = "Wednesday, 20 March"

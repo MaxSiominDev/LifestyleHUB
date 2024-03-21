@@ -2,7 +2,7 @@ package dev.maxsiomin.prodhse.feature.venues.data.remote
 
 import dev.maxsiomin.prodhse.core.ApiKeys
 import dev.maxsiomin.prodhse.core.ResponseWithException
-import dev.maxsiomin.prodhse.feature.venues.data.dto.place_photos.PlacePhotosResponse
+import dev.maxsiomin.prodhse.feature.venues.data.dto.place_photos.PlacePhotosResponseItem
 import dev.maxsiomin.prodhse.feature.venues.data.dto.places_nearby.PlacesResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -52,11 +52,11 @@ internal class PlacesApiImpl @Inject constructor(private val client: HttpClient)
         }
     }
 
-    override suspend fun getPhotos(id: String): ResponseWithException<PlacePhotosResponse, Exception> {
+    override suspend fun getPhotos(id: String): ResponseWithException<List<PlacePhotosResponseItem>, Exception> {
         try {
-            val response: PlacePhotosResponse? = client.get {
-                url(HttpRoutes.GET_PLACES_NEARBY)
-                parameter("fsq_id", id)
+            val response: List<PlacePhotosResponseItem>? = client.get {
+                url(HttpRoutes.getPlacePhotosUrl(fsqId = id))
+                parameter("sort", "NEWEST")
                 header("Accept", "application/json")
                 header("Authorization", ApiKeys.FOURS_SQUARE)
             }.body()

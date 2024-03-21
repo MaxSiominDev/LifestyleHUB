@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -34,7 +35,8 @@ fun ProdhseApp() {
             scope.launch {
                 snackbarHostState.showSnackbar(
                     message = info.message.asString(context),
-                    actionLabel = context.getString(R.string.hide)
+                    withDismissAction = true,
+                    duration = SnackbarDuration.Short
                 )
             }
             Unit

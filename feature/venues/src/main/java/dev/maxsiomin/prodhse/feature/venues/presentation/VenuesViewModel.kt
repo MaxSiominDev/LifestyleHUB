@@ -18,6 +18,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -109,8 +110,12 @@ internal class VenuesViewModel @Inject constructor(
                     var photoModel: PhotoModel? = null
                     repo.getPhotos(id = it.id).collect { photosResource ->
                         when (photosResource) {
-                            is Resource.Loading -> Unit
-                            is Resource.Error -> Unit
+                            is Resource.Loading -> {
+                                Timber.i("Photo data is loading...")
+                            }
+                            is Resource.Error -> {
+                                Timber.e(photosResource.exception)
+                            }
                             is Resource.Success -> {
                                 photoModel = photosResource.data.firstOrNull()
                             }
