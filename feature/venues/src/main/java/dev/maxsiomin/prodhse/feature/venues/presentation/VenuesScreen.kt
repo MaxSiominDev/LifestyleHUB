@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -14,7 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.semantics.Role.Companion.Button
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import dev.maxsiomin.prodhse.core.CollectFlow
 import dev.maxsiomin.prodhse.core.SnackbarCallback
 import dev.maxsiomin.prodhse.core.SnackbarInfo
@@ -23,7 +26,7 @@ import dev.maxsiomin.prodhse.feature.weather.presentation.weatherUi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun VenuesScreen(showSnackbar: SnackbarCallback) {
+internal fun VenuesScreen(navController: NavController, showSnackbar: SnackbarCallback) {
 
     val viewModel: VenuesViewModel = hiltViewModel()
 
@@ -42,12 +45,14 @@ internal fun VenuesScreen(showSnackbar: SnackbarCallback) {
         addAll(viewModel.state.places.map { FeedItem.Venue(it) })
     }
 
+
     Box(
         Modifier
             .nestedScroll(pullToRefreshState.nestedScrollConnection)
             .fillMaxSize(),
         contentAlignment = Alignment.TopCenter
     ) {
+
         LazyColumn(
             Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,

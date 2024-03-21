@@ -13,6 +13,8 @@
             <option value="$PROJECT_DIR$/authlib" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/auth" />
+            <option value="$PROJECT_DIR$/feature/planner" />
             <option value="$PROJECT_DIR$/feature/venues" />
             <option value="$PROJECT_DIR$/feature/weather" />
             <option value="$PROJECT_DIR$/navdestinations" />

@@ -1,10 +1,7 @@
 <resources>
     <string name="app_name">LifestyleHUB</string>
 
-    <!-- Bottom Nav Bar -->
-    <string name="home">Home</string>
-    <string name="plans">Plans</string>
-    <string name="profile">Profile</string>
+
 
     <!-- Snackbar actions -->
     <string name="hide">Hide</string>

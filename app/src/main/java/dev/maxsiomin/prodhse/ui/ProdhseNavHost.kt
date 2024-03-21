@@ -1,24 +1,28 @@
 package dev.maxsiomin.prodhse.ui
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import dev.maxsiomin.authlib.AuthManager
-import dev.maxsiomin.prodhse.MainViewModel
+import dev.maxsiomin.prodhse.ProdhseAppState
+import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
 import dev.maxsiomin.prodhse.core.SnackbarCallback
-import dev.maxsiomin.prodhse.navdestinations.Screen
+import dev.maxsiomin.prodhse.feature.auth.presentation.addAuthNavigation
+import dev.maxsiomin.prodhse.feature.venues.presentation.addVenuesNavigation
+import dev.maxsiomin.prodhse.planner.presentation.addPlannerNavigation
 
 @Composable
-fun ProdhseNavHost(authManager: AuthManager, showSnackbar: SnackbarCallback) {
+fun ProdhseNavHost(appState: ProdhseAppState, showSnackbar: SnackbarCallback) {
 
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.TabsScreen.route) {
-        composable(Screen.TabsScreen.route) {
-            val viewModel: MainViewModel = viewModel()
-            TabsScreen(viewModel.state, showSnackbar, viewModel::onEvent)
-        }
+    val navController = appState.navController
+    NavHost(navController = navController, startDestination = TopLevelDestination.HOME.route) {
+
+        addVenuesNavigation(navController = navController, showSnackbar = showSnackbar)
+
+        addPlannerNavigation(navController = navController)
+
+        addAuthNavigation(navController = navController)
+
     }
 
 }

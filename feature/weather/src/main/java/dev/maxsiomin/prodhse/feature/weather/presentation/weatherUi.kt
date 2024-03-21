@@ -52,9 +52,7 @@ fun weatherUi(showSnackbar: SnackbarCallback, endRefresh: () -> Unit): UpdateCal
                 contentDescription = if (viewModel.state.isExpanded) "Collapse" else "Expand"
             )
         }
-        if (viewModel.state.isExpanded.not()) {
-            Text(text = stringResource(id = R.string.weather))
-        }
+        Text(text = stringResource(id = R.string.weather))
     }
 
     Box(
