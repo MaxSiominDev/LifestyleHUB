@@ -3,9 +3,12 @@ package dev.maxsiomin.prodhse.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -39,13 +42,24 @@ fun ProdhseApp() {
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        /*topBar = {
+            TopAppBar(
+                title = { Text(text = "LifestyleHUB") },
+                navigationIcon = {
+                    Icon(painter = , contentDescription = )
+                }
+
+            )
+        }*/
     ) { paddingValues ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
             ProdhseNavHost(authManager = authManager, showSnackbar = showSnackbar)
         }
     }
-   
+
 }

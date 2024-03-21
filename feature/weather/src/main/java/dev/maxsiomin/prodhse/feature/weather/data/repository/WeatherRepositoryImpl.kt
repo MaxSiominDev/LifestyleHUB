@@ -3,7 +3,9 @@ package dev.maxsiomin.prodhse.feature.weather.data.repository
 import dev.maxsiomin.prodhse.core.Resource
 import dev.maxsiomin.prodhse.core.asResult
 import dev.maxsiomin.prodhse.feature.weather.data.dto.current_weather_response.CurrentWeatherResponse
+import dev.maxsiomin.prodhse.feature.weather.data.mappers.WeatherDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.weather.data.remote.WeatherApi
+import dev.maxsiomin.prodhse.feature.weather.domain.WeatherModel
 import dev.maxsiomin.prodhse.feature.weather.domain.repository.WeatherRepository
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.Flow
@@ -16,13 +18,14 @@ internal class WeatherRepositoryImpl @Inject constructor(private val api: Weathe
     override suspend fun getCurrentWeather(
         lat: String,
         lon: String,
-        lang: String
-    ): Flow<Resource<CurrentWeatherResponse>> {
+        lang: String,
+    ): Flow<Resource<WeatherModel>> {
         return flow {
             val apiResponse = api.getCurrentWeather(lat = lat, lon = lon, lang = lang)
             val remoteData = apiResponse.response
             if (remoteData != null) {
-                emit(remoteData)
+                val mapper = WeatherDtoToUiModelMapper()
+                emit(mapper.invoke(remoteData, null))
             } else {
                 throw (apiResponse.error ?: Exception("Unknown error"))
             }

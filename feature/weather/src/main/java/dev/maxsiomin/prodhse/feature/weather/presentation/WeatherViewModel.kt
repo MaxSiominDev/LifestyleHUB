@@ -55,9 +55,14 @@ internal class WeatherViewModel @Inject constructor(
     var state by mutableStateOf(State())
         private set
 
+    /** Without this workaround, when you refresh widget, it becomes day-themed until it is loaded.
+     *  This is not a problem during daytime but at night color changes every time you refresh the widget.
+     *  So I pass previous state of weather for the duration of refreshing
+     */
     private val previousIsNight get() = state.weather?.weatherCondition?.isNight
-    val emptyCardContent get() =
-        WeatherDtoToUiModelMapper().invoke(CurrentWeatherResponse(), previousIsNight)
+    val emptyCardContent
+        get() =
+            WeatherDtoToUiModelMapper().invoke(CurrentWeatherResponse(), previousIsNight)
 
     var endRefreshCallback: (() -> Unit)? = null
 
@@ -108,28 +113,29 @@ internal class WeatherViewModel @Inject constructor(
     }
 
     private suspend fun getCurrentWeather(lat: String, lon: String, lang: String) {
-        repo.getCurrentWeather(lat = lat, lon = lon, lang = lang).collect { response ->
-            endRefreshCallback?.invoke()
-            when (response) {
-                is Resource.Loading -> {
-                    if (response.isLoading || forceLoading) {
-                        state = state.copy(weatherStatus = WeatherStatus.Loading)
+        repo.getCurrentWeather(lat = lat, lon = lon, lang = lang)
+            .collect { weatherModelResource ->
+                endRefreshCallback?.invoke()
+                when (weatherModelResource) {
+                    is Resource.Loading -> {
+                        if (weatherModelResource.isLoading || forceLoading) {
+                            state = state.copy(weatherStatus = WeatherStatus.Loading)
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        state = state.copy(weatherStatus = WeatherStatus.Error)
+                        _eventFlow.send(UiEvent.FetchingError("Weather info is unavailable"))
+                    }
+
+                    is Resource.Success -> {
+                        state = state.copy(
+                            weather = weatherModelResource.data,
+                            weatherStatus = WeatherStatus.Success
+                        )
                     }
                 }
-
-                is Resource.Error -> {
-                    state = state.copy(weatherStatus = WeatherStatus.Error)
-                    _eventFlow.send(UiEvent.FetchingError("Weather info is unavailable"))
-                }
-
-                is Resource.Success -> {
-                    val weatherModel =
-                        WeatherDtoToUiModelMapper().invoke(response.data, previousIsNight)
-                    state =
-                        state.copy(weather = weatherModel, weatherStatus = WeatherStatus.Success)
-                }
             }
-        }
     }
 
 }

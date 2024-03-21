@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.daggerHilt)
+    alias(libs.plugins.kotlinxSerialization)
     kotlin("kapt")
 }
 
@@ -76,5 +77,8 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    // Logging with Timber
+    implementation(libs.timber)
 
 }
