@@ -4,10 +4,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import dev.maxsiomin.prodhse.core.SnackbarCallback
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
 
-fun NavGraphBuilder.addAuthNavigation(navController: NavController) {
+fun NavGraphBuilder.addAuthNavigation(
+    navController: NavController,
+    showSnackbar: SnackbarCallback
+) {
 
     composable(route = TopLevelDestination.AUTH.route) {
         val viewModel: AuthViewModel = hiltViewModel()
@@ -34,7 +38,8 @@ fun NavGraphBuilder.addAuthNavigation(navController: NavController) {
             state = viewModel.state,
             eventsFlow = viewModel.eventsFlow,
             onEvent = viewModel::onEvent,
-            navController = navController
+            navController = navController,
+            showSnackbar = showSnackbar,
         )
     }
 

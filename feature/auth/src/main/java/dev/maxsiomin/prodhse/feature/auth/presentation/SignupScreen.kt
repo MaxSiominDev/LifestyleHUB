@@ -30,6 +30,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.prodhse.core.CollectFlow
+import dev.maxsiomin.prodhse.core.SnackbarCallback
+import dev.maxsiomin.prodhse.core.SnackbarInfo
+import dev.maxsiomin.prodhse.core.UiText
 import dev.maxsiomin.prodhse.core.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.core.ui.TopRoundedCornerShape
 import dev.maxsiomin.prodhse.feature.auth.R
@@ -47,12 +50,16 @@ fun SignupScreen(
     state: SignupViewModel.State,
     eventsFlow: Flow<SignupViewModel.UiEvent>,
     onEvent: (SignupViewModel.Event) -> Unit,
+    showSnackbar: SnackbarCallback,
     navController: NavController
 ) {
 
     CollectFlow(flow = eventsFlow) { event ->
         when (event) {
             is SignupViewModel.UiEvent.Navigate -> event.navigate(navController)
+            is SignupViewModel.UiEvent.SignupError -> showSnackbar(
+                SnackbarInfo(event.reason)
+            )
         }
     }
 
@@ -114,7 +121,8 @@ fun SignupScreen(
                     value = state.username,
                     onValueChange = {
                         onEvent(SignupViewModel.Event.UsernameChanged(it))
-                    }
+                    },
+                    error = state.usernameError?.asString()
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -126,7 +134,8 @@ fun SignupScreen(
                     value = state.password,
                     onValueChange = {
                         onEvent(SignupViewModel.Event.PasswordChanged(it))
-                    }
+                    },
+                    error = state.passwordError?.asString()
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -182,6 +191,6 @@ fun SignupScreen(
 @Composable
 private fun SignupScreenPreview() {
     ProdhseTheme {
-        SignupScreen(SignupViewModel.State(), flow {}, {}, navController = rememberNavController())
+        SignupScreen(SignupViewModel.State(), flow {}, {}, {}, navController = rememberNavController())
     }
 }

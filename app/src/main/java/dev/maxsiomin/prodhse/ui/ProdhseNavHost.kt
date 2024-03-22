@@ -21,7 +21,7 @@ fun ProdhseNavHost(appState: ProdhseAppState, showSnackbar: SnackbarCallback) {
 
         addPlannerNavigation(navController = navController)
 
-        addAuthNavigation(navController = navController)
+        addAuthNavigation(navController = navController, showSnackbar = showSnackbar)
 
     }
 

@@ -26,7 +26,7 @@ import dev.maxsiomin.prodhse.feature.auth.presentation.LoginViewModel
 import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColor
 
 @Composable
-internal fun PasswordTextField(value: String, onValueChange: (String) -> Unit, modifier: Modifier = Modifier) {
+internal fun PasswordTextField(value: String, error: String?, onValueChange: (String) -> Unit, modifier: Modifier = Modifier) {
 
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     TextField(
@@ -65,7 +65,9 @@ internal fun PasswordTextField(value: String, onValueChange: (String) -> Unit, m
                 imageVector = Icons.Outlined.Lock,
                 contentDescription = stringResource(R.string.lock_icon),
             )
-        }
+        },
+        isError = error != null,
+        supportingText = { if (error != null) Text(text = error) },
     )
 
 }

@@ -8,8 +8,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.AuthManager
+import dev.maxsiomin.authlib.domain.RegistrationInfo
+import dev.maxsiomin.authlib.domain.RegistrationStatus
+import dev.maxsiomin.prodhse.core.Resource
 import dev.maxsiomin.prodhse.core.UiText
 import dev.maxsiomin.prodhse.feature.auth.R
+import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomUserRepository
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePassword
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsername
 import dev.maxsiomin.prodhse.navdestinations.Screen
@@ -20,6 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignupViewModel @Inject constructor(
+    private val repo: RandomUserRepository,
     private val authManager: AuthManager,
     private val validateUsername: ValidateUsername = ValidateUsername(),
     private val validatePassword: ValidatePassword = ValidatePassword(),
@@ -37,6 +42,7 @@ class SignupViewModel @Inject constructor(
 
     sealed class UiEvent {
         data class Navigate(val navigate: NavController.() -> Unit) : UiEvent()
+        data class SignupError(val reason: UiText) : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -51,8 +57,12 @@ class SignupViewModel @Inject constructor(
 
     fun onEvent(event: Event) {
         when (event) {
-            is Event.UsernameChanged -> state = state.copy(username = event.newValue)
-            is Event.PasswordChanged -> state = state.copy(password = event.newValue)
+            is Event.UsernameChanged -> state =
+                state.copy(username = event.newValue, usernameError = null)
+
+            is Event.PasswordChanged -> state =
+                state.copy(password = event.newValue, passwordError = null)
+
             Event.LoginClicked -> navigateToLoginScreen()
             Event.SignupClicked -> onSignup()
         }
@@ -73,8 +83,10 @@ class SignupViewModel @Inject constructor(
     }
 
     private fun onSignup() {
-        val validateUsername = validateUsername.execute(state.username)
-        val validatePassword = validatePassword.execute(state.password)
+        val username = state.username
+        val password = state.password
+        val validateUsername = validateUsername.execute(username)
+        val validatePassword = validatePassword.execute(password)
 
         val hasError = listOf(validateUsername, validatePassword).any {
             it.successful.not()
@@ -89,7 +101,7 @@ class SignupViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            val usernameAlreadyExists = authManager.checkIfUsernameExists(state.username)
+            val usernameAlreadyExists = authManager.checkIfUsernameExists(username)
             if (usernameAlreadyExists) {
                 state = state.copy(
                     usernameError = UiText.StringResource(R.string.account)
@@ -97,7 +109,55 @@ class SignupViewModel @Inject constructor(
                 return@launch
             }
 
+            repo.getRandomUser().collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> Unit
+                    is Resource.Error -> {
+                        onRegistrationError(resource.exception?.localizedMessage ?: "Unknown error")
+                    }
+
+                    is Resource.Success -> {
+                        val data = resource.data
+
+                        val registrationStatus = authManager.registerUser(
+                            RegistrationInfo(
+                                username = username,
+                                password = password,
+                                avatarUrl = data.avatarUrl,
+                                fullName = data.fullName,
+                            )
+                        )
+
+                        when (registrationStatus) {
+                            is RegistrationStatus.Failure -> {
+                                onRegistrationError(registrationStatus.reason)
+                            }
+
+                            is RegistrationStatus.Success -> {
+                                onRegistrationSuccess()
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
+
+    private suspend fun onRegistrationError(message: String) {
+        _eventsFlow.send(
+            UiEvent.SignupError(
+                UiText.DynamicString(message)
+            )
+        )
+    }
+
+    private suspend fun onRegistrationSuccess() {
+        _eventsFlow.send(
+            UiEvent.Navigate {
+                popBackStack(route = Screen.AuthScreen.route, inclusive = false)
+            }
+        )
+    }
+
 
 }

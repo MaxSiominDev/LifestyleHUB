@@ -14,7 +14,7 @@ import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColor
 
 @Composable
-internal fun UsernameTextField(value: String, onValueChange: (String) -> Unit, modifier: Modifier = Modifier) {
+internal fun UsernameTextField(value: String, onValueChange: (String) -> Unit, error: String?, modifier: Modifier = Modifier) {
 
     TextField(
         modifier = modifier,
@@ -38,7 +38,9 @@ internal fun UsernameTextField(value: String, onValueChange: (String) -> Unit, m
                 imageVector = Icons.Outlined.Person,
                 contentDescription = stringResource(R.string.lock_icon),
             )
-        }
+        },
+        isError = error != null,
+        supportingText = { if (error != null) Text(text = error) },
     )
 
 }

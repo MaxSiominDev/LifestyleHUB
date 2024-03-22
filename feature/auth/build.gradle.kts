@@ -85,4 +85,7 @@ dependencies {
     implementation(libs.androidx.material.icons.core)
     implementation(libs.androidx.material.icons.extended)
 
+    // Logging with Timber
+    implementation(libs.timber)
+
 }

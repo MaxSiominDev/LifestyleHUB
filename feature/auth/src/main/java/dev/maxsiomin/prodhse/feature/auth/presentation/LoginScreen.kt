@@ -124,7 +124,8 @@ fun LoginScreen(
                     value = state.username,
                     onValueChange = {
                         onEvent(LoginViewModel.Event.UsernameChanged(it))
-                    }
+                    },
+                    error = state.usernameError?.asString()
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -136,7 +137,8 @@ fun LoginScreen(
                     value = state.password,
                     onValueChange = {
                         onEvent(LoginViewModel.Event.PasswordChanged(it))
-                    }
+                    },
+                    error = state.passwordError?.asString(),
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))

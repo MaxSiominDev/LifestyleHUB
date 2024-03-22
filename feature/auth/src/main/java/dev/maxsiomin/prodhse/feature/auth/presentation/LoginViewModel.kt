@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.AuthManager
+import dev.maxsiomin.prodhse.core.UiText
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePassword
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsername
 import dev.maxsiomin.prodhse.navdestinations.Screen
@@ -25,7 +26,9 @@ class LoginViewModel @Inject constructor(
 
     data class State(
         val username: String = "",
+        val usernameError: UiText? = null,
         val password: String = "",
+        val passwordError: UiText? = null,
         val showForgotPasswordDialog: Boolean = false,
     )
 
@@ -50,8 +53,8 @@ class LoginViewModel @Inject constructor(
 
     fun onEvent(event: Event) {
         when (event) {
-            is Event.UsernameChanged -> state = state.copy(username = event.newValue)
-            is Event.PasswordChanged -> state = state.copy(password = event.newValue)
+            is Event.UsernameChanged -> state = state.copy(username = event.newValue, usernameError = null)
+            is Event.PasswordChanged -> state = state.copy(password = event.newValue, passwordError = null)
             Event.LoginClicked -> onLogin()
             Event.SignupClicked -> navigateToSignupScreen()
             Event.ForgotPasswordClicked -> state = state.copy(showForgotPasswordDialog = true)
