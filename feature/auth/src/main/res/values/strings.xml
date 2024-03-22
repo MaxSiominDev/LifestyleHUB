@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="password">Password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="username">Username</string>
+    <string name="lock_icon">Lock icon</string>
+
+    <string name="password_length_violated">The password needs to consist of at least %1$d characters</string>
+    <string name="password_must_consist_of_letters_and_digits">The password needs to contain at least one letter and digit</string>
+
+    <string name="username_length_violated">The username needs to consist of at least %1$d characters</string>
+
+    <string name="forgot_password">Forgot password?</string>
+    <string name="forgot_password_dialog_text">Your password cannot be retrieved if you forget it. You can register one more account. However, you will lose all your data.</string>
+    <string name="or">or</string>
+    <string name="create">Create</string>
+    <string name="account">Account</string>
+    <string name="welcome">Welcome</string>
+    <string name="back">Back</string>
+    <string name="sign_up">Sign up</string>
+    <string name="log_in">Log in</string>
+
+    <string name="username_already_exists">This username is already taken</string>
+
+</resources>

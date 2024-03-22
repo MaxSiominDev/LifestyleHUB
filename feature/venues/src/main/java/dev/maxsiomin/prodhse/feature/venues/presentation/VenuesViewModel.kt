@@ -49,8 +49,8 @@ internal class VenuesViewModel @Inject constructor(
         data class FetchingError(val message: String) : UiEvent()
     }
 
-    private val _eventFlow = Channel<UiEvent>()
-    val eventFlow = _eventFlow.receiveAsFlow()
+    private val _eventsFlow = Channel<UiEvent>()
+    val eventsFlow = _eventsFlow.receiveAsFlow()
 
 
     sealed class Event {
@@ -65,7 +65,7 @@ internal class VenuesViewModel @Inject constructor(
 
 
     private fun refreshPlaces() {
-        state = state.copy(isLoading = true)
+        state = state.copy(isLoading = true, places = emptyList())
         viewModelScope.launch {
             val location = try {
                 getCurrentLocation()
@@ -92,7 +92,7 @@ internal class VenuesViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    _eventFlow.send(UiEvent.FetchingError("Places info is unavailable"))
+                    _eventsFlow.send(UiEvent.FetchingError("Places info is unavailable"))
                 }
 
                 is Resource.Success -> {

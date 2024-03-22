@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-
 class AuthManager internal constructor(
     private val repo: UsersRepository,
 ) {
@@ -39,6 +38,10 @@ class AuthManager internal constructor(
         TODO()
     }
 
+    suspend fun checkIfUsernameExists(username: String): Boolean {
+        return repo.getUserByName(username) != null
+    }
+
     private suspend fun loadAuthStatus(): AuthStatus {
         val username = repo.getCurrentUsername()
         return when (username) {
@@ -52,7 +55,7 @@ class AuthManager internal constructor(
 
     private suspend fun loadUserInfoByName(username: String): UserInfo {
         val mapper = UserEntityToUiModelMapper()
-        val entity = repo.getUserByName(username)
+        val entity = repo.getUserByName(username)!!
         return mapper.invoke(entity)
     }
 

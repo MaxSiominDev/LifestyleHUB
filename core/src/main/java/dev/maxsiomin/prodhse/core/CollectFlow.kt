@@ -12,14 +12,14 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun <T> CollectFlow(
-    eventsFlow: Flow<T>,
+    flow: Flow<T>,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     onEmission: suspend (T) -> Unit
 ) {
     LaunchedEffect(lifecycleOwner.lifecycle) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             withContext(Dispatchers.Main.immediate) {
-                eventsFlow.collect(onEmission)
+                flow.collect(onEmission)
             }
         }
     }

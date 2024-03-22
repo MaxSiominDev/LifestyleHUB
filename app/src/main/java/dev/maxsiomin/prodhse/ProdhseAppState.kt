@@ -41,17 +41,37 @@ class ProdhseAppState(
             .currentBackStackEntryAsState().value?.destination
 
     val currentTopLevelDestination: TopLevelDestination?
-        @Composable get() = when (currentDestination?.route) {
-            TopLevelDestination.HOME.route -> TopLevelDestination.HOME
-            TopLevelDestination.PLANNER.route -> TopLevelDestination.PLANNER
-            TopLevelDestination.AUTH.route -> TopLevelDestination.AUTH
-            else -> null
+        @Composable get() {
+            val route = currentDestination?.route ?: return null
+            return when (route) {
+                in TopLevelDestination.HOME.children -> TopLevelDestination.HOME
+                in TopLevelDestination.PLANNER.children -> TopLevelDestination.PLANNER
+                in TopLevelDestination.AUTH.children -> TopLevelDestination.AUTH
+                else -> null
+            }
         }
 
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
 
-    fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
+    fun navigateToTopLevelDestination(
+        topLevelDestination: TopLevelDestination,
+        currentTopLevelDestination: TopLevelDestination?
+    ) {
         trace("Navigation: ${topLevelDestination.name}") {
+            /** Restore TLD state to initial if users clicks TLD being on this TLD
+             * Less abstract example: if user is at login screen (auth TLD),
+             * after pressing Auth icon on BottomNavBar,
+             * app will open auth screen (initial auth TLD destination)
+             */
+            if (topLevelDestination == currentTopLevelDestination) {
+                navController.popBackStack(
+                    currentTopLevelDestination.route,
+                    inclusive = false,
+                    saveState = false,
+                )
+                return@trace
+            }
+
             val topLevelNavOptions = navOptions {
                 // Pop up to the start destination of the graph to
                 // avoid building up a large stack of destinations

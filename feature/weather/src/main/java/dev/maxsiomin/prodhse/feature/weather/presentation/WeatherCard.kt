@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import dev.maxsiomin.prodhse.core.theme.ProdhseTheme
+import dev.maxsiomin.prodhse.core.ui.shimmerEffect
 import dev.maxsiomin.prodhse.feature.weather.R
 import dev.maxsiomin.prodhse.feature.weather.domain.TemperatureInfo
 import dev.maxsiomin.prodhse.feature.weather.domain.WeatherCondition
@@ -50,6 +52,18 @@ internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherViewModel.
         if (isNight) nightTextColor else dayTextColor
     }
 
+    val isLoading = weatherStatus == WeatherViewModel.WeatherStatus.Loading
+    if (isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(170.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .shimmerEffect(),
+        )
+        return
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -59,11 +73,13 @@ internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherViewModel.
         ),
         colors = CardDefaults.cardColors(
             containerColor = background,
-        )
+        ),
     ) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
             // Left-aligned content
             Column(modifier = Modifier.align(Alignment.CenterStart)) {
                 Text(
@@ -78,10 +94,8 @@ internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherViewModel.
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Normal,
                 )
-                Spacer(modifier = Modifier.height(8.dp))
 
-
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 if (weatherStatus == WeatherViewModel.WeatherStatus.Success) {
                     Text(text = weather.temperatureInfo.range, color = textColor)
                 }

@@ -7,6 +7,6 @@ import androidx.room.Query
 internal interface UsersDao {
 
     @Query(value = "SELECT * FROM USERS WHERE username=:username")
-    suspend fun getUserByName(username: String): UserEntity
+    suspend fun getUserByName(username: String): UserEntity?
 
 }

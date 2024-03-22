@@ -8,7 +8,7 @@ import dev.maxsiomin.authlib.domain.repository.UsersRepository
 internal class UsersRepositoryImpl(private val dao: UsersDao, private val prefs: SharedPreferences) :
     UsersRepository {
 
-    override suspend fun getUserByName(username: String): UserEntity {
+    override suspend fun getUserByName(username: String): UserEntity? {
         return dao.getUserByName(username)
     }
 

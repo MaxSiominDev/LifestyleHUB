@@ -5,7 +5,7 @@ import dev.maxsiomin.prodhse.feature.weather.data.dto.current_weather_response.C
 import dev.maxsiomin.prodhse.feature.weather.domain.WeatherModel
 import kotlinx.coroutines.flow.Flow
 
-internal interface WeatherRepository {
+interface WeatherRepository {
 
     suspend fun getCurrentWeather(
         lat: String,

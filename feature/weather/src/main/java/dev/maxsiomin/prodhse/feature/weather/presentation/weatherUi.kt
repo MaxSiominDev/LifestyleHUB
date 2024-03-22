@@ -1,6 +1,7 @@
 package dev.maxsiomin.prodhse.feature.weather.presentation
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,7 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,11 +24,13 @@ import dev.maxsiomin.prodhse.core.UiText
 import dev.maxsiomin.prodhse.feature.weather.R
 
 @Composable
-fun weatherUi(showSnackbar: SnackbarCallback, endRefresh: () -> Unit): UpdateCallback {
+fun weatherUi(
+    showSnackbar: SnackbarCallback,
+    endRefresh: () -> Unit,
+    viewModel: WeatherViewModel = hiltViewModel()
+): UpdateCallback {
 
-    val viewModel: WeatherViewModel = hiltViewModel()
-
-    CollectFlow(viewModel.eventFlow) { event ->
+    CollectFlow(viewModel.eventsFlow) { event ->
         when (event) {
             is WeatherViewModel.UiEvent.FetchingError -> {
                 showSnackbar(SnackbarInfo(UiText.DynamicString(event.message)))
@@ -38,20 +40,21 @@ fun weatherUi(showSnackbar: SnackbarCallback, endRefresh: () -> Unit): UpdateCal
 
     viewModel.endRefreshCallback = endRefresh
 
+    val isExpanded = viewModel.state.isExpanded
+    val bottomPadding = if (isExpanded) 16.dp else 0.dp
     Row(
         Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp),
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = bottomPadding)
+            .clickable {
+                viewModel.onEvent(WeatherViewModel.Event.ExpandStateChanged)
+            },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconButton(
-            onClick = { viewModel.onEvent(WeatherViewModel.Event.ExpandStateChanged) },
-        ) {
-            Icon(
-                imageVector = if (viewModel.state.isExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                contentDescription = if (viewModel.state.isExpanded) "Collapse" else "Expand"
-            )
-        }
+        Icon(
+            imageVector = if (isExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+            contentDescription = if (isExpanded) "Collapse" else "Expand"
+        )
         Text(text = stringResource(id = R.string.weather))
     }
 

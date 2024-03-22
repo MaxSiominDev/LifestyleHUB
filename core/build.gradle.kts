@@ -74,4 +74,6 @@ dependencies {
 
     // location Services
     implementation(libs.play.services.location)
+
+    implementation(project(":authlib"))
 }

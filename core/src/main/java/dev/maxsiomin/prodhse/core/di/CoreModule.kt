@@ -8,12 +8,14 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.prodhse.core.LocaleManager
 import dev.maxsiomin.prodhse.core.LocaleManagerImpl
 import dev.maxsiomin.prodhse.core.location.DefaultLocationClient
 import dev.maxsiomin.prodhse.core.location.LocationClient
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
+import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -49,5 +51,8 @@ object CoreModule {
 
     @Provides
     fun provideLocaleManager(impl: LocaleManagerImpl): LocaleManager = impl
+
+    @Provides
+    fun provideAuthManager(): AuthManager = AuthManager.instance
 
 }

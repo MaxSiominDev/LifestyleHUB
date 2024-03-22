@@ -19,23 +19,35 @@ enum class TopLevelDestination(
     val unselectedIcon: ImageVector,
     val titleTextId: Int,
     val route: String,
+    val children: List<String>,
 ) {
     HOME(
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home,
         titleTextId = R.string.home,
         route = Screen.VenuesScreen.route,
+        children = listOf(
+            Screen.VenuesScreen.route,
+        ),
     ),
     PLANNER(
         selectedIcon = Icons.Filled.Event,
         unselectedIcon = Icons.Outlined.Event,
         titleTextId = R.string.plans,
         route = Screen.PlannerScreen.route,
+        children = listOf(
+            Screen.PlannerScreen.route,
+        ),
     ),
     AUTH(
         selectedIcon = Icons.Filled.AccountCircle,
         unselectedIcon = Icons.Outlined.AccountCircle,
         titleTextId = R.string.profile,
         route = Screen.AuthScreen.route,
+        children = listOf(
+            Screen.AuthScreen.route,
+            Screen.LoginScreen.route,
+            Screen.SignupScreen.route,
+        )
     ),
 }

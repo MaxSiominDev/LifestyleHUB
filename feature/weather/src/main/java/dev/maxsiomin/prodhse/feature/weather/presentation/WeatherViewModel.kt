@@ -12,8 +12,6 @@ import dev.maxsiomin.prodhse.core.Resource
 import dev.maxsiomin.prodhse.core.location.LocationClient
 import dev.maxsiomin.prodhse.feature.weather.data.dto.current_weather_response.CurrentWeatherResponse
 import dev.maxsiomin.prodhse.feature.weather.data.mappers.WeatherDtoToUiModelMapper
-import dev.maxsiomin.prodhse.feature.weather.domain.TemperatureInfo
-import dev.maxsiomin.prodhse.feature.weather.domain.WeatherCondition
 import dev.maxsiomin.prodhse.feature.weather.domain.WeatherModel
 import dev.maxsiomin.prodhse.feature.weather.domain.repository.WeatherRepository
 import kotlinx.coroutines.channels.Channel
@@ -22,7 +20,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-internal class WeatherViewModel @Inject constructor(
+class WeatherViewModel @Inject constructor(
     private val repo: WeatherRepository,
     private val locationClient: LocationClient,
     private val localeManager: LocaleManager,
@@ -87,15 +85,15 @@ internal class WeatherViewModel @Inject constructor(
         data class FetchingError(val message: String) : UiEvent()
     }
 
-    private val _eventFlow = Channel<UiEvent>()
-    val eventFlow = _eventFlow.receiveAsFlow()
+    private val _eventsFlow = Channel<UiEvent>()
+    val eventsFlow = _eventsFlow.receiveAsFlow()
 
     private fun refreshWeather() {
         viewModelScope.launch {
             val location = try {
                 getCurrentLocation()
             } catch (e: LocationClient.LocationException) {
-                _eventFlow.send(UiEvent.FetchingError(e.message))
+                _eventsFlow.send(UiEvent.FetchingError(e.message))
                 endRefreshCallback?.invoke()
                 state = state.copy(weatherStatus = WeatherStatus.Error)
                 return@launch
@@ -125,7 +123,7 @@ internal class WeatherViewModel @Inject constructor(
 
                     is Resource.Error -> {
                         state = state.copy(weatherStatus = WeatherStatus.Error)
-                        _eventFlow.send(UiEvent.FetchingError("Weather info is unavailable"))
+                        _eventsFlow.send(UiEvent.FetchingError("Weather info is unavailable"))
                     }
 
                     is Resource.Success -> {

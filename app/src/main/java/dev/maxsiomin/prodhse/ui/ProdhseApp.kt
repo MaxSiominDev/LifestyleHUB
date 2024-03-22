@@ -47,21 +47,21 @@ fun ProdhseApp(appState: ProdhseAppState) {
         }
     }
 
-    val navController = rememberNavController()
-
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             NavigationBar {
 
-                TopLevelDestination.entries.forEach { destination ->
-                    val c = appState.currentDestination
-                    val isSelected =
-                        appState.currentDestination.isTopLevelDestinationInHierarchy(destination)
+                appState.topLevelDestinations.forEach { destination ->
+                    val currentDestination = appState.currentTopLevelDestination
+                    val isSelected = currentDestination == destination
                     NavigationBarItem(
                         selected = isSelected,
                         onClick = {
-                            appState.navigateToTopLevelDestination(destination)
+                            appState.navigateToTopLevelDestination(
+                                topLevelDestination = destination,
+                                currentTopLevelDestination = currentDestination,
+                            )
                         },
                         icon = {
                             val vector =
@@ -98,8 +98,17 @@ fun ProdhseApp(appState: ProdhseAppState) {
 
 }
 
-private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination) =
+/*private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination) =
     this?.hierarchy?.any {
         it.route?.contains(destination.route, true) ?: false
-    } ?: false
+    } ?: false*/
+
+private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination): Boolean {
+    val hierarchy = this?.hierarchy?.toList() ?: return false
+    val result = hierarchy.any {
+        val route = it.route ?: return@any false
+        route.contains(destination.route, true)
+    }
+    return result
+}
 
