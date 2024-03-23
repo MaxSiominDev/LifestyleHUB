@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import dev.maxsiomin.prodhse.core.ui.blueShimmerColors
 import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.core.ui.shimmerEffect
 import dev.maxsiomin.prodhse.feature.weather.R
@@ -59,7 +60,7 @@ internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherViewModel.
                 .fillMaxWidth()
                 .height(170.dp)
                 .clip(RoundedCornerShape(20.dp))
-                .shimmerEffect(),
+                .shimmerEffect(blueShimmerColors),
         )
         return
     }

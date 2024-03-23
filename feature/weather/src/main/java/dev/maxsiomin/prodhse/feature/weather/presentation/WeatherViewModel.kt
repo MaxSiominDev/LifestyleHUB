@@ -93,7 +93,6 @@ class WeatherViewModel @Inject constructor(
             val location = try {
                 getCurrentLocation()
             } catch (e: LocationClient.LocationException) {
-                _eventsFlow.send(UiEvent.FetchingError(e.message))
                 endRefreshCallback?.invoke()
                 state = state.copy(weatherStatus = WeatherStatus.Error)
                 return@launch

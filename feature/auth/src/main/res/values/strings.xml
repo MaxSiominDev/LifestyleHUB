@@ -27,4 +27,6 @@
 
     <string name="log_out">Log out</string>
 
+    <string name="hello_rokymiel" translatable="false">You are an honorable guest of my application! I love you!</string>
+
 </resources>

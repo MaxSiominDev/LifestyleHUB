@@ -13,6 +13,8 @@ import dev.maxsiomin.prodhse.core.LocaleManager
 import dev.maxsiomin.prodhse.core.LocaleManagerImpl
 import dev.maxsiomin.prodhse.core.location.DefaultLocationClient
 import dev.maxsiomin.prodhse.core.location.LocationClient
+import dev.maxsiomin.prodhse.core.location.PermissionChecker
+import dev.maxsiomin.prodhse.core.location.PermissionCheckerImpl
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.cache.HttpCache
@@ -43,10 +45,19 @@ object CoreModule {
         return LocationServices.getFusedLocationProviderClient(context)
     }
 
+    @Provides
+    fun providePermissionChecker(@ApplicationContext context: Context): PermissionChecker {
+        return PermissionCheckerImpl(context)
+    }
+
     @Singleton
     @Provides
-    fun provideLocationClient(@ApplicationContext context: Context, client: FusedLocationProviderClient): LocationClient {
-        return DefaultLocationClient(context, client)
+    fun provideLocationClient(
+        @ApplicationContext context: Context,
+        client: FusedLocationProviderClient,
+        permissionChecker: PermissionChecker,
+    ): LocationClient {
+        return DefaultLocationClient(context, client, permissionChecker)
     }
 
     @Provides

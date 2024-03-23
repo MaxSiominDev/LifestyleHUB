@@ -44,6 +44,7 @@ class SignupViewModel @Inject constructor(
         data object NavigateToLoginScreen : UiEvent()
         data object NavigateToSuccessfulRegistrationScreen : UiEvent()
         data class SignupError(val reason: UiText) : UiEvent()
+        data class ShowToast(val message: UiText) : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -58,8 +59,20 @@ class SignupViewModel @Inject constructor(
 
     fun onEvent(event: Event) {
         when (event) {
-            is Event.UsernameChanged -> state =
-                state.copy(username = event.newValue, usernameError = null)
+            is Event.UsernameChanged -> {
+                // Easter egg for the person I love the most
+                if (event.newValue.trim() == MY_BELOVED_ROKYMIEL) {
+                    viewModelScope.launch {
+                        _eventsFlow.send(
+                            UiEvent.ShowToast(
+                                UiText.StringResource(R.string.hello_rokymiel)
+                            )
+                        )
+                    }
+                }
+
+                state = state.copy(username = event.newValue, usernameError = null)
+            }
 
             is Event.PasswordChanged -> state =
                 state.copy(password = event.newValue, passwordError = null)
@@ -150,5 +163,8 @@ class SignupViewModel @Inject constructor(
         )
     }
 
+    companion object {
+        private const val MY_BELOVED_ROKYMIEL = "rokymiel"
+    }
 
 }

@@ -1,5 +1,6 @@
 package dev.maxsiomin.prodhse.core.location
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
@@ -17,13 +18,14 @@ import kotlin.coroutines.resume
 
 class DefaultLocationClient @Inject constructor(
     private val context: Context,
-    private val client: FusedLocationProviderClient
+    private val client: FusedLocationProviderClient,
+    private val permissionChecker: PermissionChecker,
 ) : LocationClient {
 
     @SuppressLint("MissingPermission")
     override suspend fun getLocation(): Location = withContext(Dispatchers.IO) {
         suspendCancellableCoroutine { continuation ->
-            if (context.hasLocationPermission().not()) {
+            if (permissionChecker.hasPermission(PermissionChecker.COARSE_LOCATION_PERMISSION).not()) {
                 throw LocationClient.LocationException("Missing location permission")
             }
 
@@ -37,7 +39,7 @@ class DefaultLocationClient @Inject constructor(
             }
 
             val locationRequest = LocationRequest.create().apply {
-                priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+                priority = LocationRequest.PRIORITY_HIGH_ACCURACY
                 numUpdates = 1 // Request a single update
             }
 

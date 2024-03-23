@@ -1,5 +1,6 @@
 package dev.maxsiomin.prodhse.feature.auth.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,6 +57,8 @@ fun SignupScreen(
     navController: NavController
 ) {
 
+    val context = LocalContext.current
+
     CollectFlow(flow = eventsFlow) { event ->
         when (event) {
 
@@ -77,6 +81,10 @@ fun SignupScreen(
             is SignupViewModel.UiEvent.SignupError -> showSnackbar(
                 SnackbarInfo(event.reason)
             )
+
+            is SignupViewModel.UiEvent.ShowToast -> {
+                Toast.makeText(context, event.message.asString(context), Toast.LENGTH_LONG).show()
+            }
 
         }
     }
