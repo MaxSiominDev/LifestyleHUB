@@ -125,6 +125,7 @@ internal class VenuesViewModel @Inject constructor(
     }
 
     private fun loadPhotos(places: List<PlaceModel>) {
+        val placeHolderUrl = "file:///android_asset/placeholder.png"
         viewModelScope.launch {
             val placesWithPhoto = places.map {
                 async {
@@ -144,7 +145,7 @@ internal class VenuesViewModel @Inject constructor(
                             }
                         }
                     }
-                    it.copy(photoUrl = photoModel?.url)
+                    it.copy(photoUrl = photoModel?.url ?: placeHolderUrl)
                 }
             }.awaitAll()
             state = state.copy(places = placesWithPhoto)

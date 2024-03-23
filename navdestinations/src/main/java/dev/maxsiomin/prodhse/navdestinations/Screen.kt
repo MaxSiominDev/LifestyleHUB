@@ -6,6 +6,8 @@ sealed class Screen(val route: String) {
     // TLD
     data object VenuesScreen : Screen("venues_screen")
 
+    data object DetailsScreen : Screen("details_screen")
+
     // TLD
     data object PlannerScreen : Screen("planner_screen")
 

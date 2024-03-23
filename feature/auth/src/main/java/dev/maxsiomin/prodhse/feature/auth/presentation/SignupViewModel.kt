@@ -35,6 +35,7 @@ class SignupViewModel @Inject constructor(
         val usernameError: UiText? = null,
         val password: String = "",
         val passwordError: UiText? = null,
+        val showFireworksAnimation: Boolean = false,
     )
 
     var state by mutableStateOf(State())
@@ -44,7 +45,6 @@ class SignupViewModel @Inject constructor(
         data object NavigateToLoginScreen : UiEvent()
         data object NavigateToSuccessfulRegistrationScreen : UiEvent()
         data class SignupError(val reason: UiText) : UiEvent()
-        data class ShowToast(val message: UiText) : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -62,13 +62,9 @@ class SignupViewModel @Inject constructor(
             is Event.UsernameChanged -> {
                 // Easter egg for the person I love the most
                 if (event.newValue.trim() == MY_BELOVED_ROKYMIEL) {
-                    viewModelScope.launch {
-                        _eventsFlow.send(
-                            UiEvent.ShowToast(
-                                UiText.StringResource(R.string.hello_rokymiel)
-                            )
-                        )
-                    }
+                    state = state.copy(showFireworksAnimation = true)
+                } else {
+                    state = state.copy(showFireworksAnimation = false)
                 }
 
                 state = state.copy(username = event.newValue, usernameError = null)

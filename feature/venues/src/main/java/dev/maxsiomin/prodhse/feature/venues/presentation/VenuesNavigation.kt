@@ -30,4 +30,11 @@ fun NavGraphBuilder.addVenuesNavigation(
         )
     }
 
+    composable(route = Screen.DetailsScreen.route) {
+        val viewModel: DetailsViewModel = hiltViewModel()
+        DetailsScreen(
+
+        )
+    }
+
 }

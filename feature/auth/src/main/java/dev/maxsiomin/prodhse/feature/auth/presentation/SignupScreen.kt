@@ -35,6 +35,7 @@ import dev.maxsiomin.prodhse.core.CollectFlow
 import dev.maxsiomin.prodhse.core.SnackbarCallback
 import dev.maxsiomin.prodhse.core.SnackbarInfo
 import dev.maxsiomin.prodhse.core.UiText
+import dev.maxsiomin.prodhse.core.ui.FireworksAnimation
 import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.core.ui.TopRoundedCornerShape
 import dev.maxsiomin.prodhse.feature.auth.R
@@ -81,10 +82,6 @@ fun SignupScreen(
             is SignupViewModel.UiEvent.SignupError -> showSnackbar(
                 SnackbarInfo(event.reason)
             )
-
-            is SignupViewModel.UiEvent.ShowToast -> {
-                Toast.makeText(context, event.message.asString(context), Toast.LENGTH_LONG).show()
-            }
 
         }
     }
@@ -209,6 +206,10 @@ fun SignupScreen(
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }
+    }
+
+    if (state.showFireworksAnimation) {
+        FireworksAnimation()
     }
 
 }

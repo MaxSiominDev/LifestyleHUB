@@ -76,4 +76,6 @@ dependencies {
     implementation(libs.play.services.location)
 
     implementation(project(":authlib"))
+
+    implementation(libs.lottie.compose)
 }

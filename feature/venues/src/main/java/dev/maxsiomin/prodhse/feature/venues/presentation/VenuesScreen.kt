@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import dev.maxsiomin.prodhse.core.CollectFlow
 import dev.maxsiomin.prodhse.core.SnackbarCallback
@@ -25,6 +27,7 @@ import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.core.openAppSettings
 import dev.maxsiomin.prodhse.core.ui.LocationPermissionTextProvider
 import dev.maxsiomin.prodhse.core.ui.PermissionDialog
+import dev.maxsiomin.prodhse.feature.venues.R
 import dev.maxsiomin.prodhse.feature.weather.presentation.weatherUi
 import kotlinx.coroutines.flow.Flow
 
@@ -67,6 +70,7 @@ internal fun VenuesScreen(
             is VenuesViewModel.UiEvent.FetchingError -> {
                 showSnackbar(SnackbarInfo(UiText.DynamicString(event.message)))
             }
+
             VenuesViewModel.UiEvent.RequestLocationPermission -> {
                 locationPermissionResultLauncher.launch(permissions)
             }
@@ -111,6 +115,7 @@ internal fun VenuesScreen(
         ) {
             items(items) { feedItem ->
                 when (feedItem) {
+
                     is FeedItem.Weather -> {
                         val updateCallback =
                             weatherUi(
@@ -126,8 +131,16 @@ internal fun VenuesScreen(
                     is FeedItem.Venue -> {
                         VenueCard(placeModel = feedItem.placeModel)
                     }
+
                 }
             }
+        }
+
+        if (state.places.isEmpty()) {
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = stringResource(R.string.no_places_nearby)
+            )
         }
 
         PullToRefreshContainer(
