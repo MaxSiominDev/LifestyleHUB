@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.core.theme
+package dev.maxsiomin.prodhse.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

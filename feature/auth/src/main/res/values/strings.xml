@@ -23,5 +23,8 @@
     <string name="log_in">Log in</string>
 
     <string name="username_already_exists">This username is already taken</string>
+    <string name="avatar">Avatar</string>
+
+    <string name="log_out">Log out</string>
 
 </resources>

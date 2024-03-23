@@ -10,6 +10,8 @@ sealed class Screen(val route: String) {
     data object PlannerScreen : Screen("planner_screen")
 
     // TLD
+    data object ProfileScreen : Screen("profile_screen")
+
     data object AuthScreen : Screen("auth_screen")
     data object LoginScreen : Screen("login_screen")
     data object SignupScreen : Screen("signup_screen")

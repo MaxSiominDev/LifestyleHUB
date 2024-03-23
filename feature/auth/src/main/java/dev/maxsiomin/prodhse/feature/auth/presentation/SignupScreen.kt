@@ -33,7 +33,7 @@ import dev.maxsiomin.prodhse.core.CollectFlow
 import dev.maxsiomin.prodhse.core.SnackbarCallback
 import dev.maxsiomin.prodhse.core.SnackbarInfo
 import dev.maxsiomin.prodhse.core.UiText
-import dev.maxsiomin.prodhse.core.theme.ProdhseTheme
+import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.core.ui.TopRoundedCornerShape
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.LineOrLine

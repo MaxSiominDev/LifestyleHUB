@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import dev.maxsiomin.prodhse.core.SnackbarCallback
-import dev.maxsiomin.prodhse.core.theme.ProdhseTheme
+import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.venues.R
 import dev.maxsiomin.prodhse.feature.weather.presentation.UpdateCallback
 import dev.maxsiomin.prodhse.feature.weather.presentation.weatherUi

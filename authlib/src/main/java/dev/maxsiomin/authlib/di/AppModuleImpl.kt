@@ -36,9 +36,7 @@ internal class AppModuleImpl private constructor(private val context: Context) :
         UsersRepositoryImpl(usersDao, sharedPrefs)
     }
 
-    override val authManager: AuthManager by lazy {
-        AuthManager(usersRepo)
-    }
+    override val authManager: AuthManager = AuthManager(usersRepo)
 
     companion object {
         fun init(context: Context) {

@@ -39,12 +39,13 @@ enum class TopLevelDestination(
             Screen.PlannerScreen.route,
         ),
     ),
-    AUTH(
+    PROFILE(
         selectedIcon = Icons.Filled.AccountCircle,
         unselectedIcon = Icons.Outlined.AccountCircle,
         titleTextId = R.string.profile,
-        route = Screen.AuthScreen.route,
+        route = Screen.ProfileScreen.route,
         allScreens = listOf(
+            Screen.ProfileScreen.route,
             Screen.AuthScreen.route,
             Screen.LoginScreen.route,
             Screen.SignupScreen.route,

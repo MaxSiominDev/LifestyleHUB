@@ -33,7 +33,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.prodhse.core.CollectFlow
-import dev.maxsiomin.prodhse.core.theme.ProdhseTheme
+import dev.maxsiomin.prodhse.core.SnackbarCallback
+import dev.maxsiomin.prodhse.core.SnackbarInfo
+import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.core.ui.TopRoundedCornerShape
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.ForgotPasswordDialog
@@ -52,11 +54,13 @@ fun LoginScreen(
     state: LoginViewModel.State,
     eventsFlow: Flow<LoginViewModel.UiEvent>,
     onEvent: (LoginViewModel.Event) -> Unit,
+    showSnackbar: SnackbarCallback,
     navController: NavController
 ) {
 
     CollectFlow(flow = eventsFlow) { event ->
         when (event) {
+
             is LoginViewModel.UiEvent.NavigateToSignupScreen ->{
                 navController.navigate(Screen.SignupScreen.route) {
                     popUpTo(Screen.AuthScreen.route) {
@@ -65,6 +69,16 @@ fun LoginScreen(
                     launchSingleTop = true
                     restoreState = true
                 }
+            }
+
+            is LoginViewModel.UiEvent.NavigateToProfileScreen -> {
+                navController.popBackStack(route = Screen.ProfileScreen.route, inclusive = false)
+            }
+
+            is LoginViewModel.UiEvent.LoginError -> {
+                showSnackbar(
+                    SnackbarInfo(event.reason)
+                )
             }
         }
     }
@@ -218,6 +232,6 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     ProdhseTheme {
-        LoginScreen(LoginViewModel.State(), flow {}, {}, navController = rememberNavController())
+        LoginScreen(LoginViewModel.State(), flow {}, {}, {}, navController = rememberNavController())
     }
 }

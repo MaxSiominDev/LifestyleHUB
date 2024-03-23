@@ -9,7 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import dev.maxsiomin.prodhse.ui.ProdhseApp
-import dev.maxsiomin.prodhse.core.theme.ProdhseTheme
+import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

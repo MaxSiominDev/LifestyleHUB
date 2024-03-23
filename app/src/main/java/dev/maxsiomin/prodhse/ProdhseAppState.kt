@@ -46,7 +46,7 @@ class ProdhseAppState(
             return when (route) {
                 in TopLevelDestination.HOME.allScreens -> TopLevelDestination.HOME
                 in TopLevelDestination.PLANNER.allScreens -> TopLevelDestination.PLANNER
-                in TopLevelDestination.AUTH.allScreens -> TopLevelDestination.AUTH
+                in TopLevelDestination.PROFILE.allScreens -> TopLevelDestination.PROFILE
                 else -> null
             }
         }
@@ -97,8 +97,8 @@ class ProdhseAppState(
                     topLevelNavOptions
                 )
 
-                TopLevelDestination.AUTH -> navController.navigate(
-                    TopLevelDestination.AUTH.route,
+                TopLevelDestination.PROFILE -> navController.navigate(
+                    TopLevelDestination.PROFILE.route,
                     topLevelNavOptions
                 )
             }

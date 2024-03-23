@@ -1,5 +1,7 @@
 package dev.maxsiomin.prodhse.feature.auth.presentation
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.prodhse.core.CollectFlow
-import dev.maxsiomin.prodhse.core.theme.ProdhseTheme
+import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColor
 import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColorGradientEnd
@@ -44,11 +47,16 @@ internal fun AuthScreen(
     navController: NavController
 ) {
 
+    BackHandler {
+        navController.popBackStack(Screen.ProfileScreen.route, inclusive = true)
+    }
+
     CollectFlow(flow = eventsFlow) { event ->
         when (event) {
             is AuthViewModel.UiEvent.NavigateToLoginScreen -> {
                 navController.navigate(Screen.LoginScreen.route)
             }
+
             is AuthViewModel.UiEvent.NavigateToSignupScreen -> {
                 navController.navigate(Screen.SignupScreen.route)
             }

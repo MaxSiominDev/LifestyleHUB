@@ -49,4 +49,6 @@ dependencies {
 
     // Shared prefs to save auth info
     implementation(libs.androidx.preference.ktx)
+
+    implementation(libs.timber)
 }

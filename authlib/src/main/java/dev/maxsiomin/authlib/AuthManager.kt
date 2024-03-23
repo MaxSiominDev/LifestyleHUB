@@ -47,8 +47,6 @@ class AuthManager internal constructor(
 
         repo.registerUser(userInfo)
 
-        loadAuthStatus()
-
         return RegistrationStatus.Success
     }
 
@@ -64,26 +62,32 @@ class AuthManager internal constructor(
 
         repo.login(userInfo.username)
 
+        loadAuthStatus()
+
         return LoginStatus.Success
     }
 
     suspend fun logout() {
         repo.logout()
+        loadAuthStatus()
     }
 
     suspend fun checkIfUsernameExists(username: String): Boolean {
         return repo.getUserByName(username) != null
     }
 
-    private suspend fun loadAuthStatus(): AuthStatus {
+    private suspend fun loadAuthStatus() {
         val username = repo.getCurrentUsername()
-        return when (username) {
+        val result = when (username) {
             null -> AuthStatus.NotAuthenticated
             else -> {
-                val userInfo = loadUserInfoByName(username = username) ?: return AuthStatus.NotAuthenticated
+                val userInfo = loadUserInfoByName(username = username) ?: return run {
+                    _authStatus.value = AuthStatus.NotAuthenticated
+                }
                 AuthStatus.Authenticated(userInfo = userInfo)
             }
         }
+        _authStatus.value = result
     }
 
     private suspend fun loadUserInfoByName(username: String): UserInfo? {

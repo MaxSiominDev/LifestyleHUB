@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.core.theme
+package dev.maxsiomin.prodhse.core.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -39,7 +39,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun ProdhseTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit

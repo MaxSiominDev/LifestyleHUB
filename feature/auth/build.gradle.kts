@@ -88,4 +88,7 @@ dependencies {
     // Logging with Timber
     implementation(libs.timber)
 
+    // Image loading lib
+    implementation(libs.coil.compose)
+
 }

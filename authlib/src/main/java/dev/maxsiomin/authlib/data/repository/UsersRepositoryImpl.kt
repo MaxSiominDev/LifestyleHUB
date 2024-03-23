@@ -7,12 +7,18 @@ import dev.maxsiomin.authlib.data.mappers.UserInfoToUserEntityMapper
 import dev.maxsiomin.authlib.data.room.UsersDao
 import dev.maxsiomin.authlib.domain.UserInfo
 import dev.maxsiomin.authlib.domain.repository.UsersRepository
+import timber.log.Timber
 
 @SuppressLint("ApplySharedPref")
 internal class UsersRepositoryImpl(
     private val dao: UsersDao,
     private val prefs: SharedPreferences
 ) : UsersRepository {
+
+    init {
+        val allKeys = prefs.all
+        Timber.i(allKeys.toString())
+    }
 
     override suspend fun getUserByName(username: String): UserInfo? {
         val entity = dao.getUserByName(username) ?: return null
