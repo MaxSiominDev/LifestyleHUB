@@ -4,19 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.authlib.AuthManager
-import dev.maxsiomin.prodhse.navdestinations.Screen
+import dev.maxsiomin.prodhse.core.UiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val authManager: AuthManager) : ViewModel() {
+class SuccessfulRegistrationViewModel @Inject constructor(): ViewModel() {
 
     sealed class UiEvent {
         data object NavigateToLoginScreen : UiEvent()
-        data object NavigateToSignupScreen : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -25,16 +23,12 @@ class AuthViewModel @Inject constructor(private val authManager: AuthManager) : 
 
     sealed class Event {
         data object LoginClicked : Event()
-        data object SignupClicked : Event()
     }
 
     fun onEvent(event: Event) {
         when (event) {
             Event.LoginClicked -> viewModelScope.launch {
                 _eventsFlow.send(UiEvent.NavigateToLoginScreen)
-            }
-            Event.SignupClicked -> viewModelScope.launch {
-                _eventsFlow.send(UiEvent.NavigateToSignupScreen)
             }
         }
     }

@@ -43,4 +43,13 @@ fun NavGraphBuilder.addAuthNavigation(
         )
     }
 
+    composable(route = Screen.SuccessfulRegistrationScreen.route) {
+        val viewModel: SuccessfulRegistrationViewModel = hiltViewModel()
+        SuccessfulRegistrationScreen(
+            navController = navController,
+            eventsFlow = viewModel.eventsFlow,
+            onEvent = viewModel::onEvent
+        )
+    }
+
 }

@@ -1,7 +1,6 @@
 package dev.maxsiomin.authlib
 
 import android.content.Context
-import dev.maxsiomin.authlib.data.mappers.UserEntityToUiModelMapper
 import dev.maxsiomin.authlib.di.AppModule
 import dev.maxsiomin.authlib.di.AppModuleImpl
 import dev.maxsiomin.authlib.domain.AuthStatus
@@ -11,6 +10,7 @@ import dev.maxsiomin.authlib.domain.RegistrationInfo
 import dev.maxsiomin.authlib.domain.RegistrationStatus
 import dev.maxsiomin.authlib.domain.UserInfo
 import dev.maxsiomin.authlib.domain.repository.UsersRepository
+import dev.maxsiomin.authlib.security.StringHasher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,11 +31,44 @@ class AuthManager internal constructor(
     }
 
     suspend fun registerUser(registrationInfo: RegistrationInfo): RegistrationStatus {
-        TODO()
+
+        val alreadyExists = checkIfUsernameExists(registrationInfo.username)
+        if (alreadyExists) {
+            return RegistrationStatus.Failure("User already exists")
+        }
+
+        val hashedPassword = StringHasher.hashString(registrationInfo.password)
+        val userInfo = UserInfo(
+            username = registrationInfo.username,
+            passwordHash = hashedPassword,
+            avatarUrl = registrationInfo.avatarUrl,
+            fullName = registrationInfo.fullName,
+        )
+
+        repo.registerUser(userInfo)
+
+        loadAuthStatus()
+
+        return RegistrationStatus.Success
     }
 
     suspend fun loginWithUsernameAndPassword(loginInfo: LoginInfo): LoginStatus {
-        TODO()
+
+        // Check if username even exists
+        val userInfo = loadUserInfoByName(loginInfo.username)
+            ?: return LoginStatus.Failure(INVALID_CREDENTIALS)
+
+        // Check if password is correct
+        val hashedPassword = StringHasher.hashString(loginInfo.password)
+        if (hashedPassword != userInfo.passwordHash) return LoginStatus.Failure(INVALID_CREDENTIALS)
+
+        repo.login(userInfo.username)
+
+        return LoginStatus.Success
+    }
+
+    suspend fun logout() {
+        repo.logout()
     }
 
     suspend fun checkIfUsernameExists(username: String): Boolean {
@@ -47,16 +80,14 @@ class AuthManager internal constructor(
         return when (username) {
             null -> AuthStatus.NotAuthenticated
             else -> {
-                val userInfo = loadUserInfoByName(username = username)
+                val userInfo = loadUserInfoByName(username = username) ?: return AuthStatus.NotAuthenticated
                 AuthStatus.Authenticated(userInfo = userInfo)
             }
         }
     }
 
-    private suspend fun loadUserInfoByName(username: String): UserInfo {
-        val mapper = UserEntityToUiModelMapper()
-        val entity = repo.getUserByName(username)!!
-        return mapper.invoke(entity)
+    private suspend fun loadUserInfoByName(username: String): UserInfo? {
+        return repo.getUserByName(username)
     }
 
     companion object {
@@ -65,6 +96,8 @@ class AuthManager internal constructor(
         }
 
         val instance get() = AppModule.instance.authManager
+
+        const val INVALID_CREDENTIALS = "Incorrect username or password"
     }
 
 }

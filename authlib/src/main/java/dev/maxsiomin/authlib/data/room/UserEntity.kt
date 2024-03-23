@@ -13,4 +13,10 @@ internal data class UserEntity(
     @ColumnInfo(name = "pwdHash")
     val passwordHash: String,
 
+    @ColumnInfo(name = "avatarUrl")
+    val avatarUrl: String,
+
+    @ColumnInfo(name = "fullName")
+    val fullName: String,
+
 )

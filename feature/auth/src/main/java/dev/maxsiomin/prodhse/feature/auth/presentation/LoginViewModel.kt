@@ -36,7 +36,7 @@ class LoginViewModel @Inject constructor(
         private set
 
     sealed class UiEvent {
-        data class Navigate(val navigate: NavController.() -> Unit) : UiEvent()
+        data object NavigateToSignupScreen : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -56,23 +56,11 @@ class LoginViewModel @Inject constructor(
             is Event.UsernameChanged -> state = state.copy(username = event.newValue, usernameError = null)
             is Event.PasswordChanged -> state = state.copy(password = event.newValue, passwordError = null)
             Event.LoginClicked -> onLogin()
-            Event.SignupClicked -> navigateToSignupScreen()
+            Event.SignupClicked -> viewModelScope.launch {
+                _eventsFlow.send(UiEvent.NavigateToSignupScreen)
+            }
             Event.ForgotPasswordClicked -> state = state.copy(showForgotPasswordDialog = true)
             Event.DismissForgotPasswordDialog -> state = state.copy(showForgotPasswordDialog = false)
-        }
-    }
-
-    private fun navigateToSignupScreen() {
-        viewModelScope.launch {
-            _eventsFlow.send(UiEvent.Navigate {
-                navigate(Screen.SignupScreen.route) {
-                    popUpTo(Screen.AuthScreen.route) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            })
         }
     }
 

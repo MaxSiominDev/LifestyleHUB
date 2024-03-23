@@ -42,6 +42,7 @@ import dev.maxsiomin.prodhse.feature.auth.presentation.components.UsernameTextFi
 import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColor
 import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColorGradientEnd
 import dev.maxsiomin.prodhse.feature.auth.theme.grayThemeColor
+import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -56,10 +57,27 @@ fun SignupScreen(
 
     CollectFlow(flow = eventsFlow) { event ->
         when (event) {
-            is SignupViewModel.UiEvent.Navigate -> event.navigate(navController)
+
+            is SignupViewModel.UiEvent.NavigateToLoginScreen -> {
+                navController.navigate(Screen.LoginScreen.route) {
+                    popUpTo(Screen.AuthScreen.route) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+
+            is SignupViewModel.UiEvent.NavigateToSuccessfulRegistrationScreen -> {
+                navController.navigate(Screen.SuccessfulRegistrationScreen.route) {
+                    popUpTo(Screen.AuthScreen.route)
+                }
+            }
+
             is SignupViewModel.UiEvent.SignupError -> showSnackbar(
                 SnackbarInfo(event.reason)
             )
+
         }
     }
 

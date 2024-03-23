@@ -46,7 +46,12 @@ internal fun AuthScreen(
 
     CollectFlow(flow = eventsFlow) { event ->
         when (event) {
-            is AuthViewModel.UiEvent.Navigate -> event.navigate(navController)
+            is AuthViewModel.UiEvent.NavigateToLoginScreen -> {
+                navController.navigate(Screen.LoginScreen.route)
+            }
+            is AuthViewModel.UiEvent.NavigateToSignupScreen -> {
+                navController.navigate(Screen.SignupScreen.route)
+            }
         }
     }
 

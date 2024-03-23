@@ -20,7 +20,7 @@ internal class AppModuleImpl private constructor(private val context: Context) :
             context,
             UsersDatabase::class.java,
             "usersDb",
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     override val usersDao: UsersDao by lazy {

@@ -16,8 +16,6 @@ data class Location(
     val state: String,
     @SerialName("country")
     val country: String,
-    @SerialName("postcode")
-    val postcode: String,
     @SerialName("coordinates")
     val coordinates: Coordinates,
     @SerialName("timezone")

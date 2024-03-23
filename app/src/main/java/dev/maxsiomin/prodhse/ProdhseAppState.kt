@@ -44,9 +44,9 @@ class ProdhseAppState(
         @Composable get() {
             val route = currentDestination?.route ?: return null
             return when (route) {
-                in TopLevelDestination.HOME.children -> TopLevelDestination.HOME
-                in TopLevelDestination.PLANNER.children -> TopLevelDestination.PLANNER
-                in TopLevelDestination.AUTH.children -> TopLevelDestination.AUTH
+                in TopLevelDestination.HOME.allScreens -> TopLevelDestination.HOME
+                in TopLevelDestination.PLANNER.allScreens -> TopLevelDestination.PLANNER
+                in TopLevelDestination.AUTH.allScreens -> TopLevelDestination.AUTH
                 else -> null
             }
         }

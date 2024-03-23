@@ -43,6 +43,7 @@ import dev.maxsiomin.prodhse.feature.auth.presentation.components.UsernameTextFi
 import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColor
 import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColorGradientEnd
 import dev.maxsiomin.prodhse.feature.auth.theme.grayThemeColor
+import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -56,7 +57,15 @@ fun LoginScreen(
 
     CollectFlow(flow = eventsFlow) { event ->
         when (event) {
-            is LoginViewModel.UiEvent.Navigate -> event.navigate(navController)
+            is LoginViewModel.UiEvent.NavigateToSignupScreen ->{
+                navController.navigate(Screen.SignupScreen.route) {
+                    popUpTo(Screen.AuthScreen.route) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
         }
     }
 

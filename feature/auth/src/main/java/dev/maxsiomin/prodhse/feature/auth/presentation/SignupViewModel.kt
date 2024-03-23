@@ -41,7 +41,8 @@ class SignupViewModel @Inject constructor(
         private set
 
     sealed class UiEvent {
-        data class Navigate(val navigate: NavController.() -> Unit) : UiEvent()
+        data object NavigateToLoginScreen : UiEvent()
+        data object NavigateToSuccessfulRegistrationScreen : UiEvent()
         data class SignupError(val reason: UiText) : UiEvent()
     }
 
@@ -70,15 +71,7 @@ class SignupViewModel @Inject constructor(
 
     private fun navigateToLoginScreen() {
         viewModelScope.launch {
-            _eventsFlow.send(UiEvent.Navigate {
-                navigate(Screen.LoginScreen.route) {
-                    popUpTo(Screen.AuthScreen.route) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            })
+            _eventsFlow.send(UiEvent.NavigateToLoginScreen)
         }
     }
 
@@ -104,7 +97,7 @@ class SignupViewModel @Inject constructor(
             val usernameAlreadyExists = authManager.checkIfUsernameExists(username)
             if (usernameAlreadyExists) {
                 state = state.copy(
-                    usernameError = UiText.StringResource(R.string.account)
+                    usernameError = UiText.StringResource(R.string.username_already_exists)
                 )
                 return@launch
             }
@@ -153,9 +146,7 @@ class SignupViewModel @Inject constructor(
 
     private suspend fun onRegistrationSuccess() {
         _eventsFlow.send(
-            UiEvent.Navigate {
-                popBackStack(route = Screen.AuthScreen.route, inclusive = false)
-            }
+            UiEvent.NavigateToSuccessfulRegistrationScreen
         )
     }
 
