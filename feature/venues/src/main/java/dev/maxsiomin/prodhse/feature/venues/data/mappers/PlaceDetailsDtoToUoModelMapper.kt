@@ -16,7 +16,7 @@ class PlaceDetailsDtoToUoModelMapper : (PlaceDetailsResponse) -> PlaceDetailsMod
         val rating = detailsDto.rating
         val website = detailsDto.website
         val isVerified = detailsDto.verified
-        val workingHours = detailsDto.hours?.display?.split(";")
+        val workingHours = detailsDto.hours?.display?.split(";")?.map { it.trim() }
         val isOpenNow = detailsDto.hours?.openNow
         val photos = detailsDto.photos?.mapNotNull {
             it?.let {

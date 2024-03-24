@@ -5,4 +5,7 @@
     <string name="no_places_nearby">No places nearby</string>
     <string name="rating">Rating: %1$s/10</string>
     <string name="fullscreen_image">Fullscreen image</string>
+    <string name="open_now">Open now</string>
+    <string name="closed_now">Closed</string>
+    <string name="working_hours">Working hours:</string>
 </resources>

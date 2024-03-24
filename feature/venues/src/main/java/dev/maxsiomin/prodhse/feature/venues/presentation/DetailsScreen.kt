@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -76,11 +78,16 @@ internal fun DetailsScreen(
 
     val placeDetails = state.placeDetails ?: return
 
+    val scrollState = rememberScrollState()
+
     Column(
         Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
+            .verticalScroll(scrollState)
     ) {
+
+        Spacer(modifier = Modifier.height(10.dp))
 
         if (placeDetails.photos.isNotEmpty()) {
             val mainPhotoModifier = Modifier
@@ -133,6 +140,10 @@ internal fun DetailsScreen(
         }
 
         Spacer(modifier = Modifier.height(20.dp))
+        Text(
+            modifier = Modifier.padding(vertical = 8.dp),
+            text = placeDetails.categories,
+        )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 modifier = Modifier,
@@ -172,13 +183,39 @@ internal fun DetailsScreen(
             )
         }
 
+        if (state.placeDetails.isOpenNow) {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = stringResource(id = R.string.open_now),
+                fontSize = 16.sp,
+                color = Color(0xFF1BA35C),
+            )
+        } else {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = stringResource(id = R.string.closed_now),
+                fontSize = 16.sp,
+                color = Color.Red,
+            )
+        }
 
-        Text(
-            modifier = Modifier.padding(vertical = 8.dp),
-            text = placeDetails.name,
-            fontSize = 20.sp
-        )
+        placeDetails.workingHours?.let { schedule ->
+            Column {
+                Text(
+                    modifier = Modifier.padding(bottom = 4.dp),
+                    text = stringResource(id = R.string.working_hours),
+                    fontSize = 17.sp
+                )
+                schedule.forEach {
+                    Text(
+                        text = it,
+                        fontSize = 15.sp
+                    )
+                }
+            }
+        }
 
+        Spacer(modifier = Modifier.height(10.dp))
 
     }
 
@@ -202,7 +239,11 @@ private fun DetailsScreenPreview() {
                         PhotoModel(id = "", url = ""),
                         PhotoModel(id = "", url = ""),
                     ),
-                    workingHours = listOf(),
+                    workingHours = listOf(
+                        "Mon-Thu 11:00-23:00",
+                        "Fri 11:00-24:00",
+                        "Sat-Sun 0:00-2:00",
+                    ),
                     isVerified = true,
                     rating = 9.3,
                     website = "https://megapolism.ru",
