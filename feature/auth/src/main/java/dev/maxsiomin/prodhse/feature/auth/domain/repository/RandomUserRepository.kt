@@ -1,6 +1,6 @@
 package dev.maxsiomin.prodhse.feature.auth.domain.repository
 
-import dev.maxsiomin.prodhse.core.Resource
+import dev.maxsiomin.prodhse.core.util.Resource
 import dev.maxsiomin.prodhse.feature.auth.domain.RandomUserModel
 import kotlinx.coroutines.flow.Flow
 

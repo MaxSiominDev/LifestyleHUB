@@ -35,7 +35,7 @@ class PlaceDetailsDtoToUoModelMapper : (PlaceDetailsResponse) -> PlaceDetailsMod
             isVerified = isVerified ?: false,
             isOpenNow = isOpenNow ?: false,
             photos = photos,
-            id = id,
+            fsqId = id,
         )
     }
 

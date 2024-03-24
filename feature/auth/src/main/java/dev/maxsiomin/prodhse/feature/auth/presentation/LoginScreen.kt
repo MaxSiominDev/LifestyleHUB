@@ -32,11 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import dev.maxsiomin.prodhse.core.CollectFlow
-import dev.maxsiomin.prodhse.core.SnackbarCallback
-import dev.maxsiomin.prodhse.core.SnackbarInfo
+import dev.maxsiomin.prodhse.core.util.CollectFlow
+import dev.maxsiomin.prodhse.core.util.SnackbarInfo
 import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.core.ui.TopRoundedCornerShape
+import dev.maxsiomin.prodhse.core.util.SnackbarCallback
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.ForgotPasswordDialog
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.LineOrLine

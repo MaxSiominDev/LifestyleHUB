@@ -7,8 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.prodhse.core.LocaleManager
-import dev.maxsiomin.prodhse.core.Resource
+import dev.maxsiomin.prodhse.core.util.LocaleManager
+import dev.maxsiomin.prodhse.core.util.Resource
 import dev.maxsiomin.prodhse.core.location.LocationClient
 import dev.maxsiomin.prodhse.feature.weather.data.dto.current_weather_response.CurrentWeatherResponse
 import dev.maxsiomin.prodhse.feature.weather.data.mappers.WeatherDtoToUiModelMapper

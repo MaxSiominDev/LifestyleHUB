@@ -1,13 +1,10 @@
 package dev.maxsiomin.prodhse.feature.auth.presentation
 
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import dev.maxsiomin.authlib.AuthManager
-import dev.maxsiomin.prodhse.core.SnackbarCallback
+import dev.maxsiomin.prodhse.core.util.SnackbarCallback
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
 

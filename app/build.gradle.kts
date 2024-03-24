@@ -90,7 +90,6 @@ dependencies {
 
     implementation(project(":feature:weather"))
     implementation(project(":feature:venues"))
-    implementation(project(":feature:planner"))
     implementation(project(":feature:auth"))
     implementation(project(":authlib"))
     implementation(project(":core"))

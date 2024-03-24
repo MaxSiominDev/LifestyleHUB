@@ -12,7 +12,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -20,11 +19,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.prodhse.ProdhseAppState
-import dev.maxsiomin.prodhse.core.SnackbarInfo
+import dev.maxsiomin.prodhse.core.util.SnackbarInfo
 import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
 import kotlinx.coroutines.launch
 

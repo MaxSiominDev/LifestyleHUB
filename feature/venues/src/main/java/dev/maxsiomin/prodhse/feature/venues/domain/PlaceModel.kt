@@ -4,6 +4,6 @@ data class PlaceModel(
     val name: String,
     val address: String,
     val photoUrl: String?,
-    val id: String,
+    val fsqId: String,
     val categories: String,
 )

@@ -1,8 +1,8 @@
 package dev.maxsiomin.prodhse.feature.venues.data.repository
 
 import android.content.SharedPreferences
-import dev.maxsiomin.prodhse.core.Resource
-import dev.maxsiomin.prodhse.core.asResult
+import dev.maxsiomin.prodhse.core.util.Resource
+import dev.maxsiomin.prodhse.core.extensions.asResult
 import dev.maxsiomin.prodhse.feature.venues.data.mappers.PlaceDetailsDtoToUoModelMapper
 import dev.maxsiomin.prodhse.feature.venues.data.mappers.PlacesDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.venues.data.mappers.PlacesPhotosDtoToUiModelMapper
@@ -76,7 +76,7 @@ internal class PlacesRepositoryImpl @Inject constructor(
     private fun savePlaceDetailsToSharedPrefs(place: PlaceDetailsModel) {
         prefs.edit().apply {
             val jsonString = Json.encodeToString(PlaceDetailsModel.serializer(), place)
-            val key = getPlacePrefsKey(place.id)
+            val key = getPlacePrefsKey(place.fsqId)
             putString(key, jsonString)
         }.apply()
     }

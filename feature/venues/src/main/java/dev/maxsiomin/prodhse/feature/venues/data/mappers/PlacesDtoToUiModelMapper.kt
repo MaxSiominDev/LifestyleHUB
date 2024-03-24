@@ -17,7 +17,7 @@ class PlacesDtoToUiModelMapper : (Result) -> PlaceModel? {
             address = address,
             categories = category.joinToString(separator = ", "),
             photoUrl = null,
-            id = id,
+            fsqId = id,
         )
     }
 

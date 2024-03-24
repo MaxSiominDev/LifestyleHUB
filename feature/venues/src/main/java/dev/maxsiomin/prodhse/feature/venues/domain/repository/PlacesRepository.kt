@@ -1,7 +1,6 @@
 package dev.maxsiomin.prodhse.feature.venues.domain.repository
 
-import dev.maxsiomin.prodhse.core.Resource
-import dev.maxsiomin.prodhse.feature.venues.data.dto.places_nearby.Result
+import dev.maxsiomin.prodhse.core.util.Resource
 import dev.maxsiomin.prodhse.feature.venues.domain.PhotoModel
 import dev.maxsiomin.prodhse.feature.venues.domain.PlaceDetailsModel
 import dev.maxsiomin.prodhse.feature.venues.domain.PlaceModel

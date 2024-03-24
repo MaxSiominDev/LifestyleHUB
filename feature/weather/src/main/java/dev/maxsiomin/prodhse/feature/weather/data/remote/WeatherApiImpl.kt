@@ -1,7 +1,7 @@
 package dev.maxsiomin.prodhse.feature.weather.data.remote
 
 import dev.maxsiomin.prodhse.core.ApiKeys
-import dev.maxsiomin.prodhse.core.ResponseWithException
+import dev.maxsiomin.prodhse.core.util.ResponseWithException
 import dev.maxsiomin.prodhse.feature.weather.data.dto.current_weather_response.CurrentWeatherResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

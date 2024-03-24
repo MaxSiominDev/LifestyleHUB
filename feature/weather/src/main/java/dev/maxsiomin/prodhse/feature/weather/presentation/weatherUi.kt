@@ -19,10 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import dev.maxsiomin.prodhse.core.CollectFlow
-import dev.maxsiomin.prodhse.core.SnackbarCallback
-import dev.maxsiomin.prodhse.core.SnackbarInfo
-import dev.maxsiomin.prodhse.core.UiText
+import dev.maxsiomin.prodhse.core.util.CollectFlow
+import dev.maxsiomin.prodhse.core.util.SnackbarCallback
+import dev.maxsiomin.prodhse.core.util.SnackbarInfo
+import dev.maxsiomin.prodhse.core.util.UiText
 import dev.maxsiomin.prodhse.feature.weather.R
 
 @Composable

@@ -1,6 +1,6 @@
 package dev.maxsiomin.prodhse.feature.auth.domain.use_case
 
-import dev.maxsiomin.prodhse.core.UiText
+import dev.maxsiomin.prodhse.core.util.UiText
 import dev.maxsiomin.prodhse.feature.auth.R
 import javax.inject.Inject
 

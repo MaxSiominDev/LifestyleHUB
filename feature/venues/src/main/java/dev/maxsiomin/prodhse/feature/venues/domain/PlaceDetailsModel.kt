@@ -8,7 +8,7 @@ data class PlaceDetailsModel(
     val name: String,
     val address: String,
     val photos: List<PhotoModel>,
-    val id: String,
+    val fsqId: String,
     val categories: String,
     val workingHours: List<String>?,
     val isVerified: Boolean,
