@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 
 @Dao
-interface PlansDao {
+internal interface PlansDao {
 
     @Insert
     suspend fun insertPlan(planEntity: PlanEntity)

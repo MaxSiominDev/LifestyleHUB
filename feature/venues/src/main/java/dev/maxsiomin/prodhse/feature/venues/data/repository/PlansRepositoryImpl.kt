@@ -7,7 +7,7 @@ import dev.maxsiomin.prodhse.feature.venues.domain.PlanModel
 import dev.maxsiomin.prodhse.feature.venues.domain.repository.PlansRepository
 import javax.inject.Inject
 
-class PlansRepositoryImpl @Inject constructor(
+internal class PlansRepositoryImpl @Inject constructor(
     private val dao: PlansDao,
 ) : PlansRepository {
 

@@ -4,7 +4,7 @@ import dev.maxsiomin.prodhse.feature.venues.data.dto.place_details.PlaceDetailsR
 import dev.maxsiomin.prodhse.feature.venues.domain.PhotoModel
 import dev.maxsiomin.prodhse.feature.venues.domain.PlaceDetailsModel
 
-class PlaceDetailsDtoToUoModelMapper : (PlaceDetailsResponse) -> PlaceDetailsModel? {
+internal class PlaceDetailsDtoToUoModelMapper : (PlaceDetailsResponse) -> PlaceDetailsModel? {
 
     override fun invoke(detailsDto: PlaceDetailsResponse): PlaceDetailsModel? {
         val timeUpdated = System.currentTimeMillis()

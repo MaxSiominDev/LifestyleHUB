@@ -17,6 +17,8 @@ import dev.maxsiomin.prodhse.core.location.DefaultLocationClient
 import dev.maxsiomin.prodhse.core.location.LocationClient
 import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.core.location.PermissionCheckerImpl
+import dev.maxsiomin.prodhse.core.util.DateFormatter
+import dev.maxsiomin.prodhse.core.util.DefaultDateFormatter
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -72,5 +74,9 @@ object CoreModule {
     fun provideSharedPrefs(@ApplicationContext context: Context): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideDateFormatter(impl: DefaultDateFormatter): DateFormatter = impl
 
 }

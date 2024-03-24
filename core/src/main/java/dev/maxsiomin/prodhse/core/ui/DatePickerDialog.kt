@@ -6,8 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import java.time.LocalDate
@@ -15,16 +14,14 @@ import java.time.ZoneId
 import java.util.Calendar
 import java.util.Date
 
+/** Open source dialog */
 @Composable
 fun DatePickerDialog(
     date: LocalDate,
     onDateChange: (LocalDate) -> Unit
 ) {
     val context = LocalContext.current
-    var showDialog by remember { mutableStateOf(false) }
-
-    // Remember a CoroutineScope to launch the dialog
-    val coroutineScope = rememberCoroutineScope()
+    var showDialog by rememberSaveable { mutableStateOf(false) }
 
     // When showDialog value changes to true, show the DatePickerDialog
     LaunchedEffect(showDialog) {

@@ -29,6 +29,7 @@ enum class TopLevelDestination(
         allScreens = listOf(
             Screen.VenuesScreen.route,
             Screen.DetailsScreen.route,
+            Screen.AddPlanScreen.route,
         ),
     ),
     PLANNER(

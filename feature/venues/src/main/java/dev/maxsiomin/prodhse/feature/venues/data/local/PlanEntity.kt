@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "plans")
-data class PlanEntity(
+internal data class PlanEntity(
 
     @PrimaryKey(autoGenerate = true)
     val id: Long,
@@ -13,10 +13,13 @@ data class PlanEntity(
     @ColumnInfo("fsqId")
     val placeId: String,
 
-    @ColumnInfo("note")
-    val note: String,
+    @ColumnInfo("noteTitle")
+    val noteTitle: String,
+
+    @ColumnInfo("noteText")
+    val noteText: String,
 
     @ColumnInfo("date")
-    val date: Long,
+    val date: Long
 
 )
