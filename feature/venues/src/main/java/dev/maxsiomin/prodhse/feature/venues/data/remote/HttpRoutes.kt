@@ -9,4 +9,8 @@ object HttpRoutes {
         return "$BASE_URL/v3/places/$fsqId/photos"
     }
 
+    fun getPlaceDetailsUrl(fsqId: String): String {
+        return "$BASE_URL/v3/places/$fsqId"
+    }
+
 }

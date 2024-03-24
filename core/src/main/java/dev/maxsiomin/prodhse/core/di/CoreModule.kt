@@ -1,6 +1,8 @@
 package dev.maxsiomin.prodhse.core.di
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.Module
@@ -65,5 +67,11 @@ object CoreModule {
 
     @Provides
     fun provideAuthManager(): AuthManager = AuthManager.instance
+
+    @Provides
+    @Singleton
+    fun provideSharedPrefs(@ApplicationContext context: Context): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+    }
 
 }

@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -29,6 +30,7 @@ import dev.maxsiomin.prodhse.core.ui.LocationPermissionTextProvider
 import dev.maxsiomin.prodhse.core.ui.PermissionDialog
 import dev.maxsiomin.prodhse.feature.venues.R
 import dev.maxsiomin.prodhse.feature.weather.presentation.weatherUi
+import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,6 +75,10 @@ internal fun VenuesScreen(
 
             VenuesViewModel.UiEvent.RequestLocationPermission -> {
                 locationPermissionResultLauncher.launch(permissions)
+            }
+
+            is VenuesViewModel.UiEvent.GoToDetailsScreen -> {
+                navController.navigate(Screen.DetailsScreen.withArgs(event.fsqId))
             }
         }
     }
@@ -126,10 +132,21 @@ internal fun VenuesScreen(
                             updateCallback.invoke()
                             onEvent(VenuesViewModel.Event.Refresh)
                         }
+                        LaunchedEffect(state.invokeWeatherCallback) {
+                            if (state.invokeWeatherCallback) {
+                                updateCallback.invoke()
+                                onEvent(VenuesViewModel.Event.UpdateWeatherMessageAccepted)
+                            }
+                        }
                     }
 
                     is FeedItem.Venue -> {
-                        VenueCard(placeModel = feedItem.placeModel)
+                        VenueCard(
+                            placeModel = feedItem.placeModel,
+                            onClick = {
+                                onEvent(VenuesViewModel.Event.OnVenueClicked(feedItem.placeModel.id))
+                            },
+                        )
                     }
 
                 }

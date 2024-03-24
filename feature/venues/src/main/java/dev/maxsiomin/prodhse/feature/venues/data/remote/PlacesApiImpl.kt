@@ -2,6 +2,7 @@ package dev.maxsiomin.prodhse.feature.venues.data.remote
 
 import dev.maxsiomin.prodhse.core.ApiKeys
 import dev.maxsiomin.prodhse.core.ResponseWithException
+import dev.maxsiomin.prodhse.feature.venues.data.dto.place_details.PlaceDetailsResponse
 import dev.maxsiomin.prodhse.feature.venues.data.dto.place_photos.PlacePhotosResponseItem
 import dev.maxsiomin.prodhse.feature.venues.data.dto.places_nearby.PlacesResponse
 import io.ktor.client.HttpClient
@@ -80,4 +81,50 @@ internal class PlacesApiImpl @Inject constructor(private val client: HttpClient)
             return ResponseWithException(null, e)
         }
     }
+
+    override suspend fun getPlaceDetails(id: String): ResponseWithException<PlaceDetailsResponse, Exception> {
+        try {
+            val response: PlaceDetailsResponse? = client.get {
+                url(HttpRoutes.getPlaceDetailsUrl(fsqId = id))
+                parameter("fields", placeDetailsFields)
+                header("Accept", "application/json")
+                header("Authorization", ApiKeys.FOURS_SQUARE)
+            }.body()
+            if (response == null) {
+                Timber.e("Response is null")
+                return ResponseWithException(null, Exception("Response is null"))
+            }
+            return ResponseWithException(response, null)
+        } catch (e: RedirectResponseException) {
+            Timber.e(e.response.status.description)
+            return ResponseWithException(null, e)
+        } catch (e: ClientRequestException) {
+            Timber.e(e.response.status.description)
+            return ResponseWithException(null, e)
+        } catch (e: ServerResponseException) {
+            Timber.e(e.response.status.description)
+            return ResponseWithException(null, e)
+        } catch (e: Exception) {
+            Timber.e(e.message)
+            return ResponseWithException(null, e)
+        }
+    }
+
+    companion object {
+        // Place details fields
+        private const val HOURS = "hours"
+        private const val RATING = "rating"
+        private const val WEBSITE = "website"
+        private const val VERIFIED = "verified"
+        private const val FSQ_ID = "fsq_id"
+        private const val NAME = "name"
+        private const val LOCATION = "location"
+        private const val CATEGORIES = "categories"
+        private const val PHOTOS = "photos"
+
+        private val placeDetailsFields = listOf(
+            HOURS, RATING, WEBSITE, VERIFIED, FSQ_ID, NAME, LOCATION, CATEGORIES, PHOTOS,
+        ).joinToString(separator = ",")
+    }
+
 }

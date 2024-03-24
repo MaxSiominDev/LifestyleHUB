@@ -9,21 +9,21 @@ import androidx.annotation.Keep
 @Serializable
 data class PlaceDetailsResponse(
     @SerialName("fsq_id")
-    val fsqId: String? = "",
+    val fsqId: String? = null,
     @SerialName("categories")
-    val categories: List<Category>? = listOf(),
-    @SerialName("closed_bucket")
-    val closedBucket: String? = "",
-    @SerialName("geocodes")
-    val geocodes: Geocodes? = Geocodes(),
-    @SerialName("link")
-    val link: String? = "",
+    val categories: List<Category?>? = null,
+    @SerialName("hours")
+    val hours: Hours? = null,
     @SerialName("location")
-    val location: Location? = Location(),
+    val location: Location? = null,
     @SerialName("name")
-    val name: String? = "",
-    @SerialName("related_places")
-    val relatedPlaces: RelatedPlaces? = RelatedPlaces(),
-    @SerialName("timezone")
-    val timezone: String? = ""
+    val name: String? = null,
+    @SerialName("photos")
+    val photos: List<Photo?>? = null,
+    @SerialName("rating")
+    val rating: Double? = null,
+    @SerialName("verified")
+    val verified: Boolean? = null,
+    @SerialName("website")
+    val website: String? = null
 )

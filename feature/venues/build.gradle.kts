@@ -86,4 +86,11 @@ dependencies {
     // Image loading lib
     implementation(libs.coil.compose)
 
+    // Shared prefs to save auth info
+    implementation(libs.androidx.preference.ktx)
+
+    // Icons
+    implementation(libs.androidx.material.icons.core)
+    implementation(libs.androidx.material.icons.extended)
+
 }

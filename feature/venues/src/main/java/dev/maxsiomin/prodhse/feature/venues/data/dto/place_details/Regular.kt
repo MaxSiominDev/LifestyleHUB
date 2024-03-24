@@ -7,7 +7,11 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class RelatedPlaces(
-    @SerialName("parent")
-    val parent: Parent? = Parent()
+data class Regular(
+    @SerialName("close")
+    val close: String? = null,
+    @SerialName("day")
+    val day: Int? = null,
+    @SerialName("open")
+    val `open`: String? = null
 )

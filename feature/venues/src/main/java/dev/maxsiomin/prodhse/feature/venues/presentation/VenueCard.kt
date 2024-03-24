@@ -1,6 +1,7 @@
 package dev.maxsiomin.prodhse.feature.venues.presentation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,14 +27,17 @@ import dev.maxsiomin.prodhse.feature.venues.R
 import dev.maxsiomin.prodhse.feature.venues.domain.PlaceModel
 
 @Composable
-internal fun VenueCard(placeModel: PlaceModel) {
+internal fun VenueCard(placeModel: PlaceModel, onClick: () -> Unit) {
 
     val isPreview = LocalInspectionMode.current
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable {
+                onClick()
+            },
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
         )
@@ -76,13 +80,16 @@ internal fun VenueCard(placeModel: PlaceModel) {
 private fun VenueCardPreview() {
 
     ProdhseTheme {
-        VenueCard(placeModel = PlaceModel(
-            name = "Dodo Pizza",
-            address = "16, Odesskaya st., Moscow, Russia",
-            photoUrl = "",
-            id = "",
-            categories = "Pizza, Restaurants"
-        ))
+        VenueCard(
+            placeModel = PlaceModel(
+                name = "Dodo Pizza",
+                address = "16, Odesskaya st., Moscow, Russia",
+                photoUrl = "",
+                id = "",
+                categories = "Pizza, Restaurants",
+            ),
+            {}
+        )
     }
 
 }

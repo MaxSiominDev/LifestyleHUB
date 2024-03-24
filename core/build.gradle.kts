@@ -77,5 +77,9 @@ dependencies {
 
     implementation(project(":authlib"))
 
+    // Fireworks animation for rokymiel
     implementation(libs.lottie.compose)
+
+    // Shared prefs to save auth info
+    implementation(libs.androidx.preference.ktx)
 }

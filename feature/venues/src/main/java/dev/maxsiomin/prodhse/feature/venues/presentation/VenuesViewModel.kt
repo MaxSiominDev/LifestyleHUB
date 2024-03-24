@@ -37,6 +37,7 @@ internal class VenuesViewModel @Inject constructor(
         val places: List<PlaceModel> = listOf(),
         val isLoading: Boolean = false,
         val showLocationPermissionDialog: Boolean = false,
+        val invokeWeatherCallback: Boolean = false,
     )
 
     var state by mutableStateOf(State())
@@ -45,6 +46,7 @@ internal class VenuesViewModel @Inject constructor(
     sealed class UiEvent {
         data class FetchingError(val message: String) : UiEvent()
         data object RequestLocationPermission : UiEvent()
+        data class GoToDetailsScreen(val fsqId: String) : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -55,17 +57,31 @@ internal class VenuesViewModel @Inject constructor(
         data object Refresh : Event()
         data class LocationPermissionResult(val coarseIsGranted: Boolean) : Event()
         data object DismissLocationDialog : Event()
+        data class OnVenueClicked(val id: String) : Event()
+        data object UpdateWeatherMessageAccepted : Event()
     }
 
     fun onEvent(event: Event) {
         when (event) {
+
             Event.Refresh -> refreshPlaces()
+
             is Event.LocationPermissionResult -> {
                 if (event.coarseIsGranted.not()) {
                     state = state.copy(showLocationPermissionDialog = true)
+                    return
                 }
+                state = state.copy(invokeWeatherCallback = true)
+                refreshPlaces()
             }
+
             Event.DismissLocationDialog -> state = state.copy(showLocationPermissionDialog = false)
+
+            is Event.OnVenueClicked -> viewModelScope.launch {
+                _eventsFlow.send(UiEvent.GoToDetailsScreen(fsqId = event.id))
+            }
+
+            Event.UpdateWeatherMessageAccepted -> state = state.copy(invokeWeatherCallback = false)
         }
     }
 
@@ -90,7 +106,6 @@ internal class VenuesViewModel @Inject constructor(
                 getCurrentLocation()
             } catch (e: LocationClient.LocationException) {
                 _eventsFlow.send(UiEvent.FetchingError(e.message))
-
                 return@launch
             }
             val lat = location.latitude.toString()

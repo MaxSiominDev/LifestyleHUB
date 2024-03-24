@@ -1,12 +1,28 @@
 package dev.maxsiomin.prodhse.navdestinations
 
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+
 /** Don't forget to add new screens to [TopLevelDestination] */
-sealed class Screen(val route: String) {
+sealed class Screen(val route: String, val arguments: List<NamedNavArgument> = emptyList()) {
 
     // TLD
     data object VenuesScreen : Screen("venues_screen")
 
-    data object DetailsScreen : Screen("details_screen")
+    data object DetailsScreen : Screen(
+        route = "details_screen/{fsqId}",
+        arguments = listOf(
+            navArgument("fsqId") { type = NavType.StringType }
+        )
+    )
+
+    data object PhotoScreen : Screen(
+        route = "photo_screen/{url}",
+        arguments = listOf(
+            navArgument("url") { type = NavType.StringType }
+        )
+    )
 
     // TLD
     data object PlannerScreen : Screen("planner_screen")
@@ -21,9 +37,9 @@ sealed class Screen(val route: String) {
 
     fun withArgs(vararg args: String): String {
         return buildString {
-            append(route)
+            append(route.split("/").first())
             args.forEach { arg ->
-                append(arg)
+                append("/$arg")
             }
         }
     }
