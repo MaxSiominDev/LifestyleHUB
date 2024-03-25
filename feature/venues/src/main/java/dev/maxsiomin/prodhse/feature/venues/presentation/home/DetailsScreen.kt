@@ -42,7 +42,9 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import dev.maxsiomin.prodhse.core.util.CollectFlow
 import dev.maxsiomin.prodhse.core.extensions.linkString
+import dev.maxsiomin.prodhse.core.extensions.openEmail
 import dev.maxsiomin.prodhse.core.extensions.openLink
+import dev.maxsiomin.prodhse.core.extensions.openPhoneNumber
 import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.venues.R
 import dev.maxsiomin.prodhse.feature.venues.domain.PhotoModel
@@ -185,7 +187,27 @@ internal fun DetailsScreen(
                 modifier = Modifier.padding(vertical = 8.dp),
                 text = linkString(link),
                 onClick = {
-                    context.openLink(Uri.parse(link))
+                    context.openLink(link)
+                }
+            )
+        }
+
+        placeDetails.phone?.let { phone ->
+            ClickableText(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = linkString(phone),
+                onClick = {
+                    context.openPhoneNumber(phone)
+                }
+            )
+        }
+
+        placeDetails.email?.let { email ->
+            ClickableText(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = linkString(email),
+                onClick = {
+                    context.openEmail(email)
                 }
             )
         }
