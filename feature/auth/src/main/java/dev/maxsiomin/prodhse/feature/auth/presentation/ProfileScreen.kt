@@ -2,15 +2,22 @@ package dev.maxsiomin.prodhse.feature.auth.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -33,6 +40,7 @@ import dev.maxsiomin.authlib.domain.AuthStatus
 import dev.maxsiomin.authlib.domain.UserInfo
 import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.auth.R
+import dev.maxsiomin.prodhse.feature.auth.presentation.components.RandomActivityDialog
 import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColor
 import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColorGradientEnd
 import dev.maxsiomin.prodhse.navdestinations.Screen
@@ -60,6 +68,15 @@ internal fun ProfileScreen(
         is AuthStatus.Authenticated -> Unit
     }
 
+    if (state.showRandomActivityDialog) {
+        RandomActivityDialog(
+            activity = state.randomActivity!!,
+            onDismissRequest = {
+                onEvent(ProfileViewModel.Event.DismissRandomActivityDialog)
+            }
+        )
+    }
+
     val userInfo = (state.authStatus as? AuthStatus.Authenticated)?.userInfo ?: return
 
     Column(
@@ -75,7 +92,9 @@ internal fun ProfileScreen(
     ) {
 
         IconButton(
-            modifier = Modifier.align(Alignment.End).padding(16.dp),
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(16.dp),
             onClick = {
                 onEvent(ProfileViewModel.Event.LogoutClicked)
             },
@@ -116,6 +135,41 @@ internal fun ProfileScreen(
 
         Spacer(modifier = Modifier.weight(0.75f))
 
+        Column(
+            Modifier
+                .width(IntrinsicSize.Max)
+                .padding(16.dp))
+        {
+
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                enabled = state.randomActivity != null,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = cyanThemeColor,
+                ),
+                onClick = {
+                    onEvent(ProfileViewModel.Event.BoredClicked)
+                }
+            ) {
+                Text(text = stringResource(R.string.i_m_bored))
+            }
+
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                enabled = false,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = cyanThemeColor,
+                ),
+                onClick = {
+
+                }
+            ) {
+                Text(text = stringResource(R.string.the_nearest_holiday))
+            }
+
+        }
     }
 
 }

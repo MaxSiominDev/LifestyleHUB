@@ -63,7 +63,7 @@ internal fun SuccessfulRegistrationScreen(
             modifier = Modifier
                 .padding(start = 16.dp)
                 .fillMaxWidth(),
-            text = "Thank you",
+            text = stringResource(R.string.thank_you),
             fontSize = 40.sp,
             fontWeight = FontWeight.ExtraBold,
             color = Color.White
@@ -72,7 +72,7 @@ internal fun SuccessfulRegistrationScreen(
             modifier = Modifier
                 .padding(start = 16.dp)
                 .fillMaxWidth(),
-            text = "for joining our club",
+            text = stringResource(R.string.for_joining_our_club),
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White
@@ -83,7 +83,7 @@ internal fun SuccessfulRegistrationScreen(
         Text(
             modifier = Modifier
                 .padding(horizontal = 16.dp),
-            text = "Now you can login with your credentials",
+            text = stringResource(R.string.now_you_can_login_with_your_credentials),
             fontWeight = FontWeight.Bold,
             color = Color.White,
             fontSize = 18.sp,

@@ -3,7 +3,7 @@ package dev.maxsiomin.prodhse.feature.auth.data.repository
 import dev.maxsiomin.prodhse.core.util.Resource
 import dev.maxsiomin.prodhse.core.extensions.asResult
 import dev.maxsiomin.prodhse.feature.auth.data.mappers.RandomUserDtoToModelMapper
-import dev.maxsiomin.prodhse.feature.auth.data.remote.RandomUserApi
+import dev.maxsiomin.prodhse.feature.auth.data.remote.random_user.RandomUserApi
 import dev.maxsiomin.prodhse.feature.auth.domain.RandomUserModel
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomUserRepository
 import kotlinx.coroutines.flow.Flow

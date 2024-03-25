@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.auth.data.dto
+package dev.maxsiomin.prodhse.feature.auth.data.dto.random_user
 
 
 import kotlinx.serialization.SerialName

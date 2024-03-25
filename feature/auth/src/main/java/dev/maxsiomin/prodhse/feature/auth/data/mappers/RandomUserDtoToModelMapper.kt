@@ -1,6 +1,6 @@
 package dev.maxsiomin.prodhse.feature.auth.data.mappers
 
-import dev.maxsiomin.prodhse.feature.auth.data.dto.Result
+import dev.maxsiomin.prodhse.feature.auth.data.dto.random_user.Result
 import dev.maxsiomin.prodhse.feature.auth.domain.RandomUserModel
 
 class RandomUserDtoToModelMapper : (Result) -> RandomUserModel {

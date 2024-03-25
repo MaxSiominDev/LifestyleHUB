@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.auth.data.remote
+package dev.maxsiomin.prodhse.feature.auth.data.remote.random_user
 
 object HttpRoutes {
 

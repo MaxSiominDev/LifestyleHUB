@@ -22,4 +22,11 @@
     <string name="log_out">Выйти</string>
     <string name="blank_password">Пароль не может быть пустым</string>
     <string name="blank_username">Имя пользователя не может быть пустым</string>
+    <string name="thank_you">Спасибо</string>
+    <string name="for_joining_our_club">За регистрацию</string>
+    <string name="now_you_can_login_with_your_credentials">Теперь Вы можете войти по своим данным</string>
+    <string name="the_nearest_holiday">Ближайшний праздник</string>
+    <string name="i_m_bored">Мне скучно!</string>
+    <string name="random_activity">Мы придумали для вас занятие</string>
+    <string name="random_activity_text">%1$s\nУчастники: %2$s</string>
 </resources>

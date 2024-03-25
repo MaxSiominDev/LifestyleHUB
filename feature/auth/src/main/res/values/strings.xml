@@ -30,5 +30,12 @@
     <string name="hello_rokymiel" translatable="false">You are an honorable guest of my application! I love you!</string>
     <string name="blank_password">Password must not be blank</string>
     <string name="blank_username">Username must not be blank</string>
+    <string name="thank_you">Thank you</string>
+    <string name="for_joining_our_club">For joining our club</string>
+    <string name="now_you_can_login_with_your_credentials">Now you can login with your credentials</string>
+    <string name="the_nearest_holiday">The nearest holiday</string>
+    <string name="i_m_bored">I\'m bored!</string>
+    <string name="random_activity">We\'ve generated an activity for you</string>
+    <string name="random_activity_text">%1$s\nParticipants: %2$s</string>
 
 </resources>
