@@ -40,6 +40,7 @@ import dev.maxsiomin.authlib.domain.AuthStatus
 import dev.maxsiomin.authlib.domain.UserInfo
 import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.auth.R
+import dev.maxsiomin.prodhse.feature.auth.presentation.components.NearestHolidayDialog
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.RandomActivityDialog
 import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColor
 import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColorGradientEnd
@@ -73,6 +74,15 @@ internal fun ProfileScreen(
             activity = state.randomActivity!!,
             onDismissRequest = {
                 onEvent(ProfileViewModel.Event.DismissRandomActivityDialog)
+            }
+        )
+    }
+
+    if (state.showNearestHolidayDialog) {
+        NearestHolidayDialog(
+            holiday = state.nearestHoliday!!,
+            onDismissRequest = {
+                onEvent(ProfileViewModel.Event.DismissHolidayDialog)
             }
         )
     }
@@ -157,13 +167,13 @@ internal fun ProfileScreen(
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                enabled = false,
+                enabled = state.nearestHoliday != null,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = cyanThemeColor,
                 ),
                 onClick = {
-
+                    onEvent(ProfileViewModel.Event.HolidayClicked)
                 }
             ) {
                 Text(text = stringResource(R.string.the_nearest_holiday))

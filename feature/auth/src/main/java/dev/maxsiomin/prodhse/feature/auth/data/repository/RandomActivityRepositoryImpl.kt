@@ -8,7 +8,6 @@ import dev.maxsiomin.prodhse.feature.auth.domain.RandomActivityModel
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomActivityRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.lang.Exception
 import javax.inject.Inject
 
 class RandomActivityRepositoryImpl @Inject constructor(

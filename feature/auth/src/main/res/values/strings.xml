@@ -37,5 +37,7 @@
     <string name="i_m_bored">I\'m bored!</string>
     <string name="random_activity">We\'ve generated an activity for you</string>
     <string name="random_activity_text">%1$s\nParticipants: %2$s</string>
+    <string name="nearest_holiday">We found the nearest holiday for you</string>
+    <string name="nearest_holiday_text">%1$s on %2$s</string>
 
 </resources>
