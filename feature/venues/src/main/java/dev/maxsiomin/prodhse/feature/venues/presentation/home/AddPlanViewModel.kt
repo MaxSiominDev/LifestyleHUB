@@ -119,10 +119,13 @@ internal class AddPlanViewModel @Inject constructor(
             if (fsqId == null || name == null) return@launch
 
             val plan = PlanModel(
-                placeId = fsqId,
+                placeFsqId = fsqId,
                 noteTitle = state.noteTitle,
                 noteText = state.noteText,
-                date = state.dateLocalDate.toEpochMillis()
+                date = state.dateLocalDate.toEpochMillis(),
+                // Room will create new record
+                databaseId = 0,
+                dateString = state.dateString,
             )
             plansRepo.addPlan(plan)
 

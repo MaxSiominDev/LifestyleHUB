@@ -1,8 +1,10 @@
 package dev.maxsiomin.prodhse.feature.venues.domain
 
 data class PlanModel(
-    val placeId: String,
+    val databaseId: Long,
+    val placeFsqId: String,
     val noteTitle: String,
     val noteText: String,
-    val date: Long
+    val dateString: String,
+    val date: Long,
 )

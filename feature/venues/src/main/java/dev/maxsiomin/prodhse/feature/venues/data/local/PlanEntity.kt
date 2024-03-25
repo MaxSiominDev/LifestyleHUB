@@ -20,6 +20,6 @@ internal data class PlanEntity(
     val noteText: String,
 
     @ColumnInfo("date")
-    val date: Long
+    val date: Long,
 
 )

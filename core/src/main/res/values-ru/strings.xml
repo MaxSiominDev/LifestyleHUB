@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="grant_permission">Предоставить разрешение</string>
+    <string name="permission_required">Требуется разрешение</string>
+    <string name="location_permission_declined">Кажется, Вы навсегда отклонили разрешение на отслеживание местоположения. Пожалуйста, предоставьте разрешение через настройки.</string>
+    <string name="location_permission_rationale">Приложению нужен доступ к местоположению, чтобы загрузить погоду и ближайшие места</string>
+    <string name="select_date">Выберите Дату</string>
+</resources>

@@ -56,10 +56,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.ui.tooling)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-
     // Network requests with Ktor
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.android)
@@ -85,5 +81,9 @@ dependencies {
     // Icons
     implementation(libs.androidx.material.icons.core)
     implementation(libs.androidx.material.icons.extended)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 
 }

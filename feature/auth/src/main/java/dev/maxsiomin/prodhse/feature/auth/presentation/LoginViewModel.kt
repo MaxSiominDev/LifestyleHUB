@@ -10,8 +10,9 @@ import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.authlib.domain.LoginInfo
 import dev.maxsiomin.authlib.domain.LoginStatus
 import dev.maxsiomin.prodhse.core.util.UiText
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePassword
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsername
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForLogin
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForLogin
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForSignup
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -20,8 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authManager: AuthManager,
-    private val validateUsername: ValidateUsername = ValidateUsername(),
-    private val validatePassword: ValidatePassword = ValidatePassword(),
+    private val validateUsernameForSignup: ValidateUsernameForLogin,
+    private val validatePasswordForSignup: ValidatePasswordForLogin,
 ) : ViewModel() {
 
     data class State(
@@ -75,8 +76,8 @@ class LoginViewModel @Inject constructor(
     private fun onLogin() {
         val username = state.username
         val password = state.password
-        val validateUsername = validateUsername.execute(username)
-        val validatePassword = validatePassword.execute(password)
+        val validateUsername = validateUsernameForSignup.execute(username)
+        val validatePassword = validatePasswordForSignup.execute(password)
 
         val hasError = listOf(validateUsername, validatePassword).any {
             it.successful.not()

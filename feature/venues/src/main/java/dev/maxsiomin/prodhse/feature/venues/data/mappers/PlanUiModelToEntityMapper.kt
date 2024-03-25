@@ -7,8 +7,8 @@ internal class PlanUiModelToEntityMapper : (PlanModel) -> PlanEntity {
 
     override fun invoke(plan: PlanModel): PlanEntity {
         return PlanEntity(
-            id = 0,
-            placeId = plan.placeId,
+            id = plan.databaseId,
+            placeId = plan.placeFsqId,
             noteTitle = plan.noteTitle,
             noteText = plan.noteText,
             date = plan.date,

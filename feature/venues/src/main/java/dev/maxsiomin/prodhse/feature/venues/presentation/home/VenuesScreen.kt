@@ -105,9 +105,9 @@ internal fun VenuesScreen(
         )
     }
 
-    val items: List<FeedItem> = buildList {
-        add(FeedItem.Weather)
-        addAll(state.places.map { FeedItem.Venue(it) })
+    val items: List<HomeFeedItem> = buildList {
+        add(HomeFeedItem.Weather)
+        addAll(state.places.map { HomeFeedItem.Venue(it) })
     }
 
 
@@ -126,7 +126,7 @@ internal fun VenuesScreen(
             items(items) { feedItem ->
                 when (feedItem) {
 
-                    is FeedItem.Weather -> {
+                    is HomeFeedItem.Weather -> {
                         val updateCallback =
                             weatherUi(
                                 showSnackbar = showSnackbar,
@@ -147,7 +147,7 @@ internal fun VenuesScreen(
                         }
                     }
 
-                    is FeedItem.Venue -> {
+                    is HomeFeedItem.Venue -> {
                         VenueCard(
                             placeModel = feedItem.placeModel,
                             goToDetails = {

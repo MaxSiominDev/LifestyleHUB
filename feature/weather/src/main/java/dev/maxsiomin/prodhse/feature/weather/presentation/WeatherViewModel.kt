@@ -1,15 +1,14 @@
 package dev.maxsiomin.prodhse.feature.weather.presentation
 
-import android.location.Location
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.maxsiomin.prodhse.core.location.LocationTracker
 import dev.maxsiomin.prodhse.core.util.LocaleManager
 import dev.maxsiomin.prodhse.core.util.Resource
-import dev.maxsiomin.prodhse.core.location.LocationTracker
 import dev.maxsiomin.prodhse.feature.weather.data.dto.current_weather_response.CurrentWeatherResponse
 import dev.maxsiomin.prodhse.feature.weather.data.mappers.WeatherDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.weather.domain.WeatherModel

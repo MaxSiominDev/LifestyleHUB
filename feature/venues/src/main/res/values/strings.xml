@@ -12,4 +12,8 @@
     <string name="description">Description</string>
     <string name="title">Title</string>
     <string name="plan_added">%1$s added to plans.</string>
+    <string name="plan_updated">Plan has been successfully updated.</string>
+    <string name="no_plans_saved">No plans saved</string>
+    <string name="plan_not_found" translatable="false">Plan is not found in database. Go back and try again</string>
+    <string name="save">Save</string>
 </resources>

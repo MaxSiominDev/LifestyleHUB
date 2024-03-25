@@ -13,8 +13,8 @@ import dev.maxsiomin.prodhse.core.util.Resource
 import dev.maxsiomin.prodhse.core.util.UiText
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomUserRepository
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePassword
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsername
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForSignup
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForSignup
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -24,8 +24,8 @@ import javax.inject.Inject
 class SignupViewModel @Inject constructor(
     private val repo: RandomUserRepository,
     private val authManager: AuthManager,
-    private val validateUsername: ValidateUsername = ValidateUsername(),
-    private val validatePassword: ValidatePassword = ValidatePassword(),
+    private val validateUsernameForSignup: ValidateUsernameForSignup,
+    private val validatePasswordForSignup: ValidatePasswordForSignup,
 ) : ViewModel() {
 
     data class State(
@@ -85,8 +85,8 @@ class SignupViewModel @Inject constructor(
     private fun onSignup() {
         val username = state.username
         val password = state.password
-        val validateUsername = validateUsername.execute(username)
-        val validatePassword = validatePassword.execute(password)
+        val validateUsername = validateUsernameForSignup.execute(username)
+        val validatePassword = validatePasswordForSignup.execute(password)
 
         val hasError = listOf(validateUsername, validatePassword).any {
             it.successful.not()

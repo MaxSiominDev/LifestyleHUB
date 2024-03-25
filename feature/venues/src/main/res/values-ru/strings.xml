@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hide">Скрыть</string>
+    <string name="show">Показать</string>
+    <string name="no_places_nearby">Поблизости ничего нет</string>
+    <string name="rating">Рейтинг: %1$s/10</string>
+    <string name="fullscreen_image">Полноэкранное изображение</string>
+    <string name="open_now">Сейчас открыто</string>
+    <string name="closed_now">Закрыто</string>
+    <string name="working_hours">Время работы:</string>
+    <string name="refresh">Обновить</string>
+    <string name="description">Описание</string>
+    <string name="title">Название</string>
+    <string name="plan_added">%1$s добавлен в планы.</string>
+    <string name="plan_updated">План обновлён</string>
+    <string name="no_plans_saved">У вас нет планов</string>
+    <string name="save">Сохранить</string>
+</resources>

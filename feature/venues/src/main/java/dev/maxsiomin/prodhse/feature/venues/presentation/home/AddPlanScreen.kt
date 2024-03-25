@@ -112,7 +112,7 @@ internal fun AddPlanScreen(
         Button(onClick = {
             onEvent(AddPlanViewModel.Event.SaveClicked)
         }) {
-            Text(text = "Save")
+            Text(text = stringResource(id = R.string.save))
         }
     }
 
