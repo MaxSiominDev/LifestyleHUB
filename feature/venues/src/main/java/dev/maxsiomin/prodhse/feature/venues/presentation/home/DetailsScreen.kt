@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddCircleOutline
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -219,7 +221,7 @@ internal fun DetailsScreen(
                 }
             }
         }
-        
+
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             IconButton(
                 onClick = {
@@ -235,6 +237,21 @@ internal fun DetailsScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
+    }
+
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp),
+        contentAlignment = Alignment.BottomEnd,
+    ) {
+        FloatingActionButton(
+            onClick = { onEvent(DetailsViewModel.Event.IconAddToPlansClicked(fsqId)) }
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.AddCircleOutline,
+                contentDescription = stringResource(R.string.add_to_plans)
+            )
+        }
     }
 
 }
@@ -269,6 +286,8 @@ private fun DetailsScreenPreview() {
                     fsqId = "",
                     categories = "Cafe",
                     timeUpdated = System.currentTimeMillis(),
+                    email = "example@example.com",
+                    phone = "+79291234576",
                 )
             ),
             onEvent = {},

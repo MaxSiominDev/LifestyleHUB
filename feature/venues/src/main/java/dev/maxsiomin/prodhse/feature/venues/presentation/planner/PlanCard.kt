@@ -27,7 +27,7 @@ import dev.maxsiomin.prodhse.feature.venues.domain.PlanModel
 import java.time.LocalDate
 
 @Composable
-internal fun PlanCard(placeDetails: PlaceDetailsModel?, plan: PlanModel, onClick: () -> Unit) {
+internal fun PlanCard(placeDetails: PlaceDetailsModel, plan: PlanModel, onClick: () -> Unit) {
 
     val isPreview = LocalInspectionMode.current
 
@@ -55,7 +55,7 @@ internal fun PlanCard(placeDetails: PlaceDetailsModel?, plan: PlanModel, onClick
                     contentDescription = null,
                 )
             } else {
-                placeDetails?.photos?.firstOrNull()?.url?.let { url ->
+                placeDetails.photos.firstOrNull()?.url?.let { url ->
                     AsyncImage(
                         model = url,
                         contentDescription = "Attraction Image",
@@ -66,13 +66,11 @@ internal fun PlanCard(placeDetails: PlaceDetailsModel?, plan: PlanModel, onClick
             }
 
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = plan.noteTitle, fontWeight = FontWeight.Bold)
+            if (plan.noteTitle.isNotBlank()) {
+                Text(text = plan.noteTitle, fontWeight = FontWeight.Bold)
+            }
             Text(text = plan.dateString, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
-            if (placeDetails == null) {
-                Text(text = "ERROR")
-                return@Column
-            }
             Text(text = placeDetails.name, fontWeight = FontWeight.Bold)
             Text(text = placeDetails.address)
             Text(text = placeDetails.categories)
@@ -110,6 +108,8 @@ private fun VenueCardPreview() {
                 fsqId = "",
                 categories = "Cafe",
                 timeUpdated = System.currentTimeMillis(),
+                email = "example@example.com",
+                phone = "+79291234576",
             ),
             onClick = {},
             plan = PlanModel(

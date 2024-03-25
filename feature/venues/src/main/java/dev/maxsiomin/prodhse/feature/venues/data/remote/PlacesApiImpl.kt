@@ -121,9 +121,21 @@ internal class PlacesApiImpl @Inject constructor(private val client: HttpClient)
         private const val LOCATION = "location"
         private const val CATEGORIES = "categories"
         private const val PHOTOS = "photos"
+        private const val PHONE = "tel"
+        private const val EMAIL = "email"
 
         private val placeDetailsFields = listOf(
-            HOURS, RATING, WEBSITE, VERIFIED, FSQ_ID, NAME, LOCATION, CATEGORIES, PHOTOS,
+            HOURS,
+            RATING,
+            WEBSITE,
+            VERIFIED,
+            FSQ_ID,
+            NAME,
+            LOCATION,
+            CATEGORIES,
+            PHOTOS,
+            PHONE,
+            EMAIL
         ).joinToString(separator = ",")
     }
 

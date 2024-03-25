@@ -73,7 +73,7 @@ internal class PlannerViewModel @Inject constructor(
                             }
 
                             is Resource.Error -> {
-                                feedItem = PlannerFeedItem.Venue(null, currentPlan)
+                                Timber.e(resource.exception)
                             }
 
                             is Resource.Success -> {

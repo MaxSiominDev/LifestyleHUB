@@ -23,6 +23,8 @@ internal class PlaceDetailsDtoToUoModelMapper : (PlaceDetailsResponse) -> PlaceD
                 PhotoModel(id = id, url = "${it.prefix}original${it.suffix}")
             }
         } ?: emptyList()
+        val phone = detailsDto.phone
+        val email = detailsDto.email
 
         return PlaceDetailsModel(
             timeUpdated = timeUpdated,
@@ -36,6 +38,8 @@ internal class PlaceDetailsDtoToUoModelMapper : (PlaceDetailsResponse) -> PlaceD
             isOpenNow = isOpenNow ?: false,
             photos = photos,
             fsqId = id,
+            phone = phone,
+            email = email,
         )
     }
 

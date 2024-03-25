@@ -15,4 +15,5 @@
     <string name="plan_updated">План обновлён</string>
     <string name="no_plans_saved">У вас нет планов</string>
     <string name="save">Сохранить</string>
+    <string name="add_to_plans">Добавить в досуг</string>
 </resources>

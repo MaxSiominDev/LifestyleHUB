@@ -73,15 +73,6 @@ fun ProdhseApp(appState: ProdhseAppState) {
 
             }
         }
-        /*topBar = {
-            TopAppBar(
-                title = { Text(text = "LifestyleHUB") },
-                navigationIcon = {
-                    Icon(painter = , contentDescription = )
-                }
-
-            )
-        }*/
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -93,11 +84,6 @@ fun ProdhseApp(appState: ProdhseAppState) {
     }
 
 }
-
-/*private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination) =
-    this?.hierarchy?.any {
-        it.route?.contains(destination.route, true) ?: false
-    } ?: false*/
 
 private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination): Boolean {
     val hierarchy = this?.hierarchy?.toList() ?: return false

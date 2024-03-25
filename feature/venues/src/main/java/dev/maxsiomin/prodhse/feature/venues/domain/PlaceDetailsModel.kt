@@ -15,4 +15,6 @@ data class PlaceDetailsModel(
     val rating: Double?,
     val website: String?,
     val isOpenNow: Boolean,
+    val phone: String?,
+    val email: String?,
 )

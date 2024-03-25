@@ -166,6 +166,8 @@ private fun AddPlanScreenPreview() {
                     fsqId = "",
                     categories = "Cafe",
                     timeUpdated = System.currentTimeMillis(),
+                    phone = "+79151236547",
+                    email = "rokymiel@gmail.com"
                 ),
                 dateString = "March 26, 2024",
                 dateLocalDate = LocalDate.now(),

@@ -1,6 +1,5 @@
 package dev.maxsiomin.prodhse.feature.venues.data.dto.place_details
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import androidx.annotation.Keep
@@ -25,5 +24,9 @@ data class PlaceDetailsResponse(
     @SerialName("verified")
     val verified: Boolean? = null,
     @SerialName("website")
-    val website: String? = null
+    val website: String? = null,
+    @SerialName("tel")
+    val phone: String? = null,
+    @SerialName("email")
+    val email: String? = null,
 )

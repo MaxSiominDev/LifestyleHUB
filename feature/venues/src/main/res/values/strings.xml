@@ -16,4 +16,5 @@
     <string name="no_plans_saved">No plans saved</string>
     <string name="plan_not_found" translatable="false">Plan is not found in database. Go back and try again</string>
     <string name="save">Save</string>
+    <string name="add_to_plans">Add to plans</string>
 </resources>

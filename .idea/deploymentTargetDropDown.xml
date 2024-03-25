@@ -13,12 +13,12 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\Maxim\.android\avd\Resizable_Experimental_API_34_2.avd" />
+                  <value value="C:\Users\Maxim\.android\avd\RU-Resizable_Experimental_API_34.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-25T13:07:20.995547Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-03-25T21:32:40.630150200Z" />
         </State>
       </entry>
       <entry key="authlib">
