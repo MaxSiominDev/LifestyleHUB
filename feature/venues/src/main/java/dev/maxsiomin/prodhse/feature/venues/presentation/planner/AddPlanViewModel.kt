@@ -32,32 +32,32 @@ internal class AddPlanViewModel @Inject constructor(
     data class State(
         val placeDetails: PlaceDetailsModel? = null,
         val dateString: String,
-        val dateMillis: Long,
         val dateLocalDate: LocalDate,
+        val noteTitle: String = "",
+        val noteText: String = "",
     )
 
     var state by mutableStateOf(
         State(
-            dateString = dateFormatter.formatDate(epochMillis),
-            dateMillis = epochMillis,
+            dateString = dateFormatter.formatDate(System.currentTimeMillis()),
             dateLocalDate = LocalDate.now(),
         )
     )
         private set
 
-    init {
-        state = state.copy(dateString = dateFormatter.formatDate(state.dateMillis))
-    }
-
     sealed class Event {
         data class PassPlaceId(val fsqId: String) : Event()
         data class NewDateSelected(val newDate: LocalDate) : Event()
+        data class NoteTitleChanged(val newValue: String) : Event()
+        data class NoteTextChanged(val newValue: String) : Event()
     }
 
     fun onEvent(event: Event) {
         when (event) {
             is Event.PassPlaceId -> loadPlaceDetails(id = event.fsqId)
             is Event.NewDateSelected -> onNewDate(newDate = event.newDate)
+            is Event.NoteTitleChanged -> state = state.copy(noteTitle = event.newValue)
+            is Event.NoteTextChanged -> state = state.copy(noteText = event.newValue)
         }
     }
 
@@ -81,7 +81,6 @@ internal class AddPlanViewModel @Inject constructor(
         val epochMillis = startOfDay.toInstant().toEpochMilli()
         state = state.copy(
             dateString = dateFormatter.formatDate(epochMillis),
-            dateMillis = epochMillis,
             dateLocalDate = newDate,
         )
     }

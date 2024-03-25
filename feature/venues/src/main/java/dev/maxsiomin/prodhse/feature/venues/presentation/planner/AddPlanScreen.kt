@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
@@ -37,14 +38,15 @@ import java.time.LocalDate
  * only from destinations of home TLD.
  */
 @Composable
-internal fun AddPlanScreen(fsqId: String, state: AddPlanViewModel.State, onEvent: (AddPlanViewModel.Event) -> Unit) {
+internal fun AddPlanScreen(
+    fsqId: String,
+    state: AddPlanViewModel.State,
+    onEvent: (AddPlanViewModel.Event) -> Unit
+) {
 
     LaunchedEffect(fsqId) {
         onEvent(AddPlanViewModel.Event.PassPlaceId(fsqId))
     }
-
-    var place by remember { mutableStateOf("") }
-    var note by remember { mutableStateOf("") }
 
     val placeDetails = state.placeDetails ?: return
 
@@ -75,10 +77,23 @@ internal fun AddPlanScreen(fsqId: String, state: AddPlanViewModel.State, onEvent
             )
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
         TextField(
-            value = note,
-            onValueChange = { note = it },
-            label = { Text("Note") },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text("Title") },
+            value = state.noteTitle,
+            onValueChange = {
+                onEvent(AddPlanViewModel.Event.NoteTitleChanged(it))
+            },
+        )
+
+        TextField(
+            value = state.noteText,
+            onValueChange = {
+                onEvent(AddPlanViewModel.Event.NoteTextChanged(it))
+            },
+            label = { Text("Description") },
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
@@ -126,7 +141,6 @@ private fun AddPlanScreenPreview() {
                     timeUpdated = System.currentTimeMillis(),
                 ),
                 dateString = "March 26, 2024",
-                dateMillis = System.currentTimeMillis(),
                 dateLocalDate = LocalDate.now(),
             ),
             onEvent = {}

@@ -29,10 +29,6 @@ class WeatherViewModel @Inject constructor(
     /** If you want loading widget to stay forever (for testing purposes only) set this to true */
     private val forceLoading = false
 
-    init {
-        refreshWeather()
-    }
-
     data class State(
         val weather: WeatherModel? = null,
         val weatherStatus: WeatherStatus = WeatherStatus.Loading,
@@ -52,6 +48,10 @@ class WeatherViewModel @Inject constructor(
 
     var state by mutableStateOf(State())
         private set
+
+    init {
+        refreshWeather()
+    }
 
     /** Without this workaround, when you refresh widget, it becomes day-themed until it is loaded.
      *  This is not a problem during daytime but at night color changes every time you refresh the widget.

@@ -75,14 +75,14 @@ internal fun VenueCard(placeModel: PlaceModel, goToDetails: () -> Unit, addToPla
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = placeModel.name, fontWeight = FontWeight.Bold)
             Text(text = placeModel.address)
-            Text(text = placeModel.categories)
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.End,
             ) {
+                Text(text = placeModel.categories, modifier = Modifier.weight(1f))
                 IconButton(
-                    modifier = Modifier.padding(16.dp),
                     onClick = {
                         addToPlans()
                     }

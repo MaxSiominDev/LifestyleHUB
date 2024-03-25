@@ -7,18 +7,29 @@
       </entry>
       <entry key="app">
         <State>
+          <runningDeviceTargetSelectedWithDropDown>
+            <Target>
+              <type value="RUNNING_DEVICE_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\Maxim\.android\avd\Resizable_Experimental_API_34_2.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </runningDeviceTargetSelectedWithDropDown>
           <targetSelectedWithDropDown>
             <Target>
               <type value="QUICK_BOOT_TARGET" />
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\Maxim\.android\avd\RU-Resizable_Experimental_API_34.avd" />
+                  <value value="C:\Users\Maxim\.android\avd\Resizable_Experimental_API_34_2.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-24T18:00:33.115011800Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-03-25T13:07:20.995547Z" />
         </State>
       </entry>
       <entry key="authlib">
