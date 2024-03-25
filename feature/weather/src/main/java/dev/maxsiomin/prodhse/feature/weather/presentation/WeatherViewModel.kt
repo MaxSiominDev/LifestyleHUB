@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.prodhse.core.util.LocaleManager
 import dev.maxsiomin.prodhse.core.util.Resource
-import dev.maxsiomin.prodhse.core.location.LocationClient
+import dev.maxsiomin.prodhse.core.location.LocationTracker
 import dev.maxsiomin.prodhse.feature.weather.data.dto.current_weather_response.CurrentWeatherResponse
 import dev.maxsiomin.prodhse.feature.weather.data.mappers.WeatherDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.weather.domain.WeatherModel
@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
     private val repo: WeatherRepository,
-    private val locationClient: LocationClient,
+    private val locationTracker: LocationTracker,
     private val localeManager: LocaleManager,
 ) : ViewModel() {
 
@@ -40,7 +40,7 @@ class WeatherViewModel @Inject constructor(
     )
 
     sealed class WeatherStatus {
-        // TODO Show shimmering effect
+        // Show shimmering loader
         data object Loading : WeatherStatus()
 
         // Show actual weather data
@@ -59,8 +59,7 @@ class WeatherViewModel @Inject constructor(
      */
     private val previousIsNight get() = state.weather?.weatherCondition?.isNight
     val emptyCardContent
-        get() =
-            WeatherDtoToUiModelMapper().invoke(CurrentWeatherResponse(), previousIsNight)
+        get() = WeatherDtoToUiModelMapper().invoke(CurrentWeatherResponse(), previousIsNight)
 
     var endRefreshCallback: (() -> Unit)? = null
 
@@ -90,9 +89,7 @@ class WeatherViewModel @Inject constructor(
 
     private fun refreshWeather() {
         viewModelScope.launch {
-            val location = try {
-                getCurrentLocation()
-            } catch (e: LocationClient.LocationException) {
+            val location = locationTracker.getCurrentLocation() ?: kotlin.run {
                 endRefreshCallback?.invoke()
                 state = state.copy(weatherStatus = WeatherStatus.Error)
                 return@launch
@@ -102,11 +99,6 @@ class WeatherViewModel @Inject constructor(
             val lang = localeManager.getLocaleLanguage()
             getCurrentWeather(lat = lat, lon = lon, lang = lang)
         }
-    }
-
-    @Throws(LocationClient.LocationException::class)
-    private suspend fun getCurrentLocation(): Location {
-        return locationClient.getLocation()
     }
 
     private suspend fun getCurrentWeather(lat: String, lon: String, lang: String) {

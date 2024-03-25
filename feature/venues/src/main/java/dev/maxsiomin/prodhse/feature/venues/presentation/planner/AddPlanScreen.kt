@@ -32,6 +32,10 @@ import dev.maxsiomin.prodhse.feature.venues.domain.PlaceDetailsModel
 import dev.maxsiomin.prodhse.feature.venues.presentation.home.DetailsViewModel
 import java.time.LocalDate
 
+/** This screen is in planner package instead of home, since its logic is more about plans than about venues.
+ * In spite of it, screen is located at home TLD in navigation graph (it makes sense because user can get to this screen
+ * only from destinations of home TLD.
+ */
 @Composable
 internal fun AddPlanScreen(fsqId: String, state: AddPlanViewModel.State, onEvent: (AddPlanViewModel.Event) -> Unit) {
 
@@ -41,7 +45,6 @@ internal fun AddPlanScreen(fsqId: String, state: AddPlanViewModel.State, onEvent
 
     var place by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
-    val context = LocalContext.current
 
     val placeDetails = state.placeDetails ?: return
 

@@ -1,5 +1,6 @@
 package dev.maxsiomin.prodhse.core.di
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
@@ -13,17 +14,19 @@ import dagger.hilt.components.SingletonComponent
 import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.prodhse.core.util.LocaleManager
 import dev.maxsiomin.prodhse.core.util.LocaleManagerImpl
-import dev.maxsiomin.prodhse.core.location.DefaultLocationClient
-import dev.maxsiomin.prodhse.core.location.LocationClient
+import dev.maxsiomin.prodhse.core.location.DefaultLocationTracker
+import dev.maxsiomin.prodhse.core.location.LocationTracker
 import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.core.location.PermissionCheckerImpl
 import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.prodhse.core.util.DefaultDateFormatter
+import dev.maxsiomin.prodhse.core.util.RussianDateFormatter
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import java.lang.IllegalArgumentException
 import javax.inject.Singleton
 
 @Module
@@ -59,8 +62,8 @@ object CoreModule {
         @ApplicationContext context: Context,
         client: FusedLocationProviderClient,
         permissionChecker: PermissionChecker,
-    ): LocationClient {
-        return DefaultLocationClient(context, client, permissionChecker)
+    ): LocationTracker {
+        return DefaultLocationTracker(context, client, permissionChecker)
     }
 
     @Provides
@@ -77,6 +80,19 @@ object CoreModule {
 
     @Provides
     @Singleton
-    fun provideDateFormatter(impl: DefaultDateFormatter): DateFormatter = impl
+    fun provideDateFormatter(localeManager: LocaleManager): DateFormatter {
+        return when (localeManager.getLocaleLanguage()) {
+
+            LocaleManager.defaultLocale -> {
+                DefaultDateFormatter()
+            }
+
+            "ru" -> {
+                RussianDateFormatter()
+            }
+
+            else -> throw IllegalArgumentException("Locale is invalid")
+        }
+    }
 
 }

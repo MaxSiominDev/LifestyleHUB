@@ -9,10 +9,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Calendar
 import java.util.Date
+import dev.maxsiomin.prodhse.core.R
 
 /** Open source dialog */
 @Composable
@@ -44,6 +46,6 @@ fun DatePickerDialog(
 
     // Optional: Use a Button or any Composable to trigger the dialog
     Button(onClick = { showDialog = true }) {
-        Text("Select Date")
+        Text(text = stringResource(id = R.string.select_date))
     }
 }

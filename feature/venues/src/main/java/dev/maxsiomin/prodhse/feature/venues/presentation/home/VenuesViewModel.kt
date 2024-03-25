@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.prodhse.core.util.LocaleManager
 import dev.maxsiomin.prodhse.core.util.Resource
-import dev.maxsiomin.prodhse.core.location.LocationClient
+import dev.maxsiomin.prodhse.core.location.LocationTracker
 import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.feature.venues.domain.PhotoModel
 import dev.maxsiomin.prodhse.feature.venues.domain.PlaceModel
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class VenuesViewModel @Inject constructor(
     private val repo: PlacesRepository,
-    private val locationClient: LocationClient,
+    private val locationTracker: LocationTracker,
     private val localeManager: LocaleManager,
     private val permissionChecker: PermissionChecker,
 ) : ViewModel() {
@@ -108,10 +108,8 @@ internal class VenuesViewModel @Inject constructor(
 
         state = state.copy(isLoading = true, places = emptyList())
         viewModelScope.launch {
-            val location = try {
-                getCurrentLocation()
-            } catch (e: LocationClient.LocationException) {
-                _eventsFlow.send(UiEvent.FetchingError(e.message))
+            val location = locationTracker.getCurrentLocation() ?: kotlin.run {
+                _eventsFlow.send(UiEvent.FetchingError("Location cannot be retrieved"))
                 return@launch
             }
             val lat = location.latitude.toString()
@@ -119,11 +117,6 @@ internal class VenuesViewModel @Inject constructor(
             val lang = localeManager.getLocaleLanguage()
             getCurrentWeather(lat = lat, lon = lon, lang = lang)
         }
-    }
-
-    @Throws(LocationClient.LocationException::class)
-    private suspend fun getCurrentLocation(): Location {
-        return locationClient.getLocation()
     }
 
     private suspend fun getCurrentWeather(lat: String, lon: String, lang: String) {
