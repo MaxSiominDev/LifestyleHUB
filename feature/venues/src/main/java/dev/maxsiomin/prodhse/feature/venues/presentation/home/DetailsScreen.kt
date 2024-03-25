@@ -3,6 +3,7 @@ package dev.maxsiomin.prodhse.feature.venues.presentation.home
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +18,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AddCircleOutline
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -66,6 +70,12 @@ internal fun DetailsScreen(
             is DetailsViewModel.UiEvent.NavigateToPhotoScreen -> {
                 navController.navigate(
                     Screen.PhotoScreen.withArgs(event.url)
+                )
+            }
+
+            is DetailsViewModel.UiEvent.NavigateToAddPlanScreen -> {
+                navController.navigate(
+                    Screen.AddPlanScreen.withArgs(event.fsqId)
                 )
             }
         }
@@ -207,6 +217,19 @@ internal fun DetailsScreen(
                         fontSize = 15.sp
                     )
                 }
+            }
+        }
+        
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+            IconButton(
+                onClick = {
+                    onEvent(DetailsViewModel.Event.IconAddToPlansClicked(fsqId))
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.AddCircleOutline,
+                    contentDescription = "Add to plans"
+                )
             }
         }
 

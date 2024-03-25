@@ -132,10 +132,13 @@ internal fun VenuesScreen(
                                 showSnackbar = showSnackbar,
                                 endRefresh = pullToRefreshState::endRefresh
                             )
-                        if (pullToRefreshState.isRefreshing) {
-                            updateCallback.invoke()
-                            onEvent(VenuesViewModel.Event.Refresh)
+                        LaunchedEffect(pullToRefreshState.isRefreshing) {
+                            if (pullToRefreshState.isRefreshing) {
+                                updateCallback.invoke()
+                                onEvent(VenuesViewModel.Event.Refresh)
+                            }
                         }
+
                         LaunchedEffect(state.invokeWeatherCallback) {
                             if (state.invokeWeatherCallback) {
                                 updateCallback.invoke()

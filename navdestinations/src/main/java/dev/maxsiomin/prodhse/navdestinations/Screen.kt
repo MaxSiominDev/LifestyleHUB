@@ -24,13 +24,20 @@ sealed class Screen(val route: String, val arguments: List<NamedNavArgument> = e
         )
     )
 
-    // TLD
-    data object PlannerScreen : Screen("planner_screen")
-
     data object AddPlanScreen : Screen(
         route = "add_plan_screen/{fsqId}",
         arguments = listOf(
             navArgument("fsqId") { type = NavType.StringType }
+        )
+    )
+
+    // TLD
+    data object PlannerScreen : Screen("planner_screen")
+
+    data object EditPlanScreen : Screen(
+        route = "edit_plan_screen/{planId}",
+        arguments = listOf(
+            navArgument("planId") { type = NavType.StringType }
         )
     )
 

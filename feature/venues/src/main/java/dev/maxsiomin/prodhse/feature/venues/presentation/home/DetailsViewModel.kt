@@ -22,6 +22,7 @@ internal class DetailsViewModel @Inject constructor(
 
     sealed class UiEvent {
         data class NavigateToPhotoScreen(val url: String) : UiEvent()
+        data class NavigateToAddPlanScreen(val fsqId: String) : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -37,6 +38,7 @@ internal class DetailsViewModel @Inject constructor(
     sealed class Event {
         data class PassPlaceId(val placeId: String) : Event()
         data class ImageClicked(val url: String) : Event()
+        data class IconAddToPlansClicked(val fsqId: String) : Event()
     }
 
     fun onEvent(event: Event) {
@@ -45,6 +47,9 @@ internal class DetailsViewModel @Inject constructor(
             is Event.ImageClicked -> viewModelScope.launch {
                 val encodedUrl = URLEncoder.encode(event.url, "UTF-8")
                 _eventsFlow.send(UiEvent.NavigateToPhotoScreen(encodedUrl))
+            }
+            is Event.IconAddToPlansClicked -> viewModelScope.launch {
+                _eventsFlow.send(UiEvent.NavigateToAddPlanScreen(event.fsqId))
             }
         }
     }

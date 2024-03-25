@@ -39,6 +39,7 @@ enum class TopLevelDestination(
         route = Screen.PlannerScreen.route,
         allScreens = listOf(
             Screen.PlannerScreen.route,
+            Screen.EditPlanScreen.route,
         ),
     ),
     PROFILE(

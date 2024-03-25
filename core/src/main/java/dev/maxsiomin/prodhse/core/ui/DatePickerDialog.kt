@@ -31,16 +31,16 @@ fun DatePickerDialog(
             val calendar = Calendar.getInstance().apply {
                 time = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant())
             }
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
+            val currentYear = calendar.get(Calendar.YEAR)
+            val currentMonth = calendar.get(Calendar.MONTH)
+            val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
 
             android.app.DatePickerDialog(context, { _, year, month, dayOfMonth ->
                 // Update the date when a new date is selected
                 val newDate = LocalDate.of(year, month + 1, dayOfMonth)
                 onDateChange(newDate)
                 showDialog = false
-            }, year, month, day).show()
+            }, currentYear, currentMonth, currentDay).show()
         }
     }
 

@@ -49,4 +49,21 @@ fun NavGraphBuilder.addVenuesNavigation(
         PhotoScreen(url = url)
     }
 
+    composable(
+        route = Screen.AddPlanScreen.route,
+        arguments = Screen.AddPlanScreen.arguments,
+    ) { backStackEntry ->
+        val fsqId = backStackEntry.arguments?.getString("fsqId")!!
+        val viewModel: AddPlanViewModel = hiltViewModel()
+        AddPlanScreen(
+            fsqId = fsqId,
+            state = viewModel.state,
+            onEvent = viewModel::onEvent,
+            navController = navController,
+            snackbarCallback = showSnackbar,
+            eventFlow = viewModel.eventsFlow,
+        )
+    }
+
+
 }

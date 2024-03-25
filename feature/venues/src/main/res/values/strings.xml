@@ -8,4 +8,8 @@
     <string name="open_now">Open now</string>
     <string name="closed_now">Closed</string>
     <string name="working_hours">Working hours:</string>
+    <string name="refresh">Refresh</string>
+    <string name="description">Description</string>
+    <string name="title">Title</string>
+    <string name="plan_added">%1$s added to plans.</string>
 </resources>
