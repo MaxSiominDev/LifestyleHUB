@@ -57,51 +57,49 @@ class ProdhseAppState(
         topLevelDestination: TopLevelDestination,
         currentTopLevelDestination: TopLevelDestination?
     ) {
-        trace("Navigation: ${topLevelDestination.name}") {
-            /** Restore TLD state to initial if users clicks TLD being on this TLD
-             * Less abstract example: if user is at login screen (auth TLD),
-             * after pressing Auth icon on BottomNavBar,
-             * app will open auth screen (initial auth TLD destination)
-             */
-            if (topLevelDestination == currentTopLevelDestination) {
-                navController.popBackStack(
-                    currentTopLevelDestination.route,
-                    inclusive = false,
-                    saveState = false,
-                )
-                return@trace
+        /** Restore TLD state to initial if users clicks TLD being on this TLD
+         * Less abstract example: if user is at login screen (auth TLD),
+         * after pressing Auth icon on BottomNavBar,
+         * app will open auth screen (initial auth TLD destination)
+         */
+        if (topLevelDestination == currentTopLevelDestination) {
+            navController.popBackStack(
+                currentTopLevelDestination.route,
+                inclusive = false,
+                saveState = false,
+            )
+            return
+        }
+
+        val topLevelNavOptions = navOptions {
+            // Pop up to the start destination of the graph to
+            // avoid building up a large stack of destinations
+            // on the back stack as users select items
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
             }
+            // Avoid multiple copies of the same destination when
+            // reselecting the same item
+            launchSingleTop = true
+            // Restore state when reselecting a previously selected item
+            restoreState = true
+        }
 
-            val topLevelNavOptions = navOptions {
-                // Pop up to the start destination of the graph to
-                // avoid building up a large stack of destinations
-                // on the back stack as users select items
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                // Avoid multiple copies of the same destination when
-                // reselecting the same item
-                launchSingleTop = true
-                // Restore state when reselecting a previously selected item
-                restoreState = true
-            }
+        when (topLevelDestination) {
+            TopLevelDestination.HOME -> navController.navigate(
+                TopLevelDestination.HOME.route,
+                topLevelNavOptions
+            )
 
-            when (topLevelDestination) {
-                TopLevelDestination.HOME -> navController.navigate(
-                    TopLevelDestination.HOME.route,
-                    topLevelNavOptions
-                )
+            TopLevelDestination.PLANNER -> navController.navigate(
+                TopLevelDestination.PLANNER.route,
+                topLevelNavOptions
+            )
 
-                TopLevelDestination.PLANNER -> navController.navigate(
-                    TopLevelDestination.PLANNER.route,
-                    topLevelNavOptions
-                )
-
-                TopLevelDestination.PROFILE -> navController.navigate(
-                    TopLevelDestination.PROFILE.route,
-                    topLevelNavOptions
-                )
-            }
+            TopLevelDestination.PROFILE -> navController.navigate(
+                TopLevelDestination.PROFILE.route,
+                topLevelNavOptions
+            )
         }
     }
 

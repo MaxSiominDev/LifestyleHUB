@@ -7,10 +7,10 @@
     <string name="username">Username</string>
     <string name="lock_icon">Lock icon</string>
 
-    <string name="password_length_violated">Password must consist of $1$d to $2$d characters</string>
+    <string name="password_length_violated">Password must consist of %1$d to %2$d characters</string>
     <string name="password_must_consist_of_letters_and_digits">The password needs to contain at least one letter and digit</string>
 
-    <string name="username_length_violated">Username must consist of $1$d to $2$d characters</string>
+    <string name="username_length_violated">Username must consist of %1$d to %2$d characters</string>
 
     <string name="forgot_password">Forgot password?</string>
     <string name="forgot_password_dialog_text">Your password cannot be retrieved if you forget it. You can register one more account. However, you will lose all your data.</string>

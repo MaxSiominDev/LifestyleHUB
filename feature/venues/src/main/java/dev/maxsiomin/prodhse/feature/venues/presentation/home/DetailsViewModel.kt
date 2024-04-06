@@ -12,6 +12,7 @@ import dev.maxsiomin.prodhse.feature.venues.domain.repository.PlacesRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.net.URLEncoder
 import javax.inject.Inject
 
@@ -60,7 +61,9 @@ internal class DetailsViewModel @Inject constructor(
             repo.getPlaceDetails(id).collect { resource ->
                 when (resource) {
                     is Resource.Loading -> Unit
-                    is Resource.Error -> Unit
+                    is Resource.Error -> {
+                        Timber.e(resource.exception)
+                    }
                     is Resource.Success -> {
                         state = state.copy(placeDetails = resource.data)
                     }
