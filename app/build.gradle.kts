@@ -4,8 +4,6 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.daggerHilt)
     kotlin("kapt")
-    //id("com.google.gms.google-services")
-    //id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -64,7 +62,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    //implementation(libs.firebase.crashlytics)
 
     // Testing
     testImplementation(libs.junit)
