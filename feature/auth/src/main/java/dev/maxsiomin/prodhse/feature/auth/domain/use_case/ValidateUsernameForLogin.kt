@@ -4,7 +4,7 @@ import dev.maxsiomin.prodhse.core.util.UiText
 import dev.maxsiomin.prodhse.feature.auth.R
 import javax.inject.Inject
 
-class ValidateUsernameForLogin @Inject constructor() {
+class ValidateUsernameForLogin @Inject constructor(){
 
     fun execute(username: String): ValidationResult {
         if (username.isBlank()) {

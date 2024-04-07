@@ -1,7 +1,7 @@
 package dev.maxsiomin.prodhse.feature.auth.di
 
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
@@ -20,30 +20,30 @@ import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomUserRepository
 
 @InstallIn(ViewModelComponent::class)
 @Module
-object AuthModule {
+abstract class AuthModule {
 
     @ViewModelScoped
-    @Provides
-    fun provideRandomUserApi(impl: RandomUserApiImpl): RandomUserApi = impl
+    @Binds
+    abstract fun provideRandomUserApi(impl: RandomUserApiImpl): RandomUserApi
 
     @ViewModelScoped
-    @Provides
-    fun provideRandomUserRepository(impl: RandomUserRepositoryImpl): RandomUserRepository = impl
+    @Binds
+    abstract fun provideRandomUserRepository(impl: RandomUserRepositoryImpl): RandomUserRepository
 
     @ViewModelScoped
-    @Provides
-    fun provideRandomActivityApi(impl: RandomActivityApiImpl): RandomActivityApi = impl
+    @Binds
+    abstract fun provideRandomActivityApi(impl: RandomActivityApiImpl): RandomActivityApi
 
     @ViewModelScoped
-    @Provides
-    fun provideRandomActivityRepository(impl: RandomActivityRepositoryImpl): RandomActivityRepository = impl
+    @Binds
+    abstract fun provideRandomActivityRepository(impl: RandomActivityRepositoryImpl): RandomActivityRepository
 
     @ViewModelScoped
-    @Provides
-    fun provideNagerApi(impl: NagerApiImpl): NagerApi = impl
+    @Binds
+    abstract fun provideNagerApi(impl: NagerApiImpl): NagerApi
 
     @ViewModelScoped
-    @Provides
-    fun provideNagerRepository(impl: NagerRepositoryImpl): NagerRepository = impl
+    @Binds
+    abstract fun provideNagerRepository(impl: NagerRepositoryImpl): NagerRepository
 
 }

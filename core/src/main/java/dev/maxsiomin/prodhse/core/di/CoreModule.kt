@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,11 +52,6 @@ object CoreModule {
         return LocationServices.getFusedLocationProviderClient(context)
     }
 
-    @Provides
-    fun providePermissionChecker(@ApplicationContext context: Context): PermissionChecker {
-        return PermissionCheckerImpl(context)
-    }
-
     @Singleton
     @Provides
     fun provideLocationClient(
@@ -65,9 +61,6 @@ object CoreModule {
     ): LocationTracker {
         return DefaultLocationTracker(context, client, permissionChecker)
     }
-
-    @Provides
-    fun provideLocaleManager(impl: LocaleManagerImpl): LocaleManager = impl
 
     @Provides
     fun provideAuthManager(): AuthManager = AuthManager.instance
@@ -93,6 +86,11 @@ object CoreModule {
 
             else -> throw IllegalArgumentException("Locale is invalid")
         }
+    }
+
+    @Provides
+    fun providePermissionChecker(@ApplicationContext context: Context): PermissionChecker {
+        return PermissionCheckerImpl(context)
     }
 
 }

@@ -1,5 +1,6 @@
 package dev.maxsiomin.prodhse.feature.weather.di
 
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,14 +14,14 @@ import io.ktor.client.HttpClient
 
 @InstallIn(ViewModelComponent::class)
 @Module
-internal object WeatherModule {
+internal abstract class WeatherModule {
 
-    @Provides
+    @Binds
     @ViewModelScoped
-    fun provideWeatherApi(impl: WeatherApiImpl): WeatherApi = impl
+    abstract fun provideWeatherApi(impl: WeatherApiImpl): WeatherApi
 
-    @Provides
+    @Binds
     @ViewModelScoped
-    fun provideWeatherRepo(impl: WeatherRepositoryImpl): WeatherRepository = impl
+    abstract fun provideWeatherRepo(impl: WeatherRepositoryImpl): WeatherRepository
 
 }

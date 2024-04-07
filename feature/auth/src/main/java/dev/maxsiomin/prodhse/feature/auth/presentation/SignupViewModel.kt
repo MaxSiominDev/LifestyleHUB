@@ -24,8 +24,8 @@ import javax.inject.Inject
 class SignupViewModel @Inject constructor(
     private val repo: RandomUserRepository,
     private val authManager: AuthManager,
-    private val validateUsernameForSignup: ValidateUsernameForSignup,
-    private val validatePasswordForSignup: ValidatePasswordForSignup,
+    private val validateUsernameForSignup: ValidateUsernameForSignup = ValidateUsernameForSignup(),
+    private val validatePasswordForSignup: ValidatePasswordForSignup = ValidatePasswordForSignup(),
 ) : ViewModel() {
 
     data class State(
