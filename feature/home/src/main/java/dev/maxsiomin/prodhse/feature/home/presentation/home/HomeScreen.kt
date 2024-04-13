@@ -24,7 +24,7 @@ import dev.maxsiomin.prodhse.core.util.SnackbarCallback
 import dev.maxsiomin.prodhse.core.util.SnackbarInfo
 import dev.maxsiomin.prodhse.core.util.UiText
 import dev.maxsiomin.prodhse.feature.home.R
-import dev.maxsiomin.prodhse.feature.weather.presentation.weatherUi
+import dev.maxsiomin.prodhse.feature.home.presentation.weather.weatherUi
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
 

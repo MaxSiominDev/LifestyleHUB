@@ -5,8 +5,8 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
-import dev.maxsiomin.prodhse.feature.home.data.remote.PlacesApi
-import dev.maxsiomin.prodhse.feature.home.data.remote.PlacesApiImpl
+import dev.maxsiomin.prodhse.feature.home.data.remote.places_api.PlacesApi
+import dev.maxsiomin.prodhse.feature.home.data.remote.places_api.PlacesApiImpl
 import dev.maxsiomin.prodhse.feature.home.data.repository.PlacesRepositoryImpl
 import dev.maxsiomin.prodhse.feature.home.data.repository.PlansRepositoryImpl
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository

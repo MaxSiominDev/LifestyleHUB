@@ -17,4 +17,10 @@
     <string name="plan_not_found" translatable="false">Plan is not found in database. Go back and try again</string>
     <string name="save">Save</string>
     <string name="add_to_plans">Add to plans</string>
+
+    <string name="unknown_place">Unknown place</string>
+    <string name="temperature_unknown">Temperature unknown</string>
+    <string name="unknown_conditions">Unknown weather conditions</string>
+    <string name="weather">Weather</string>
+
 </resources>

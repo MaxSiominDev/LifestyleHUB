@@ -6,7 +6,7 @@ import dev.maxsiomin.prodhse.core.extensions.asResult
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlaceDetailsDtoToUoModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacesDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacesPhotosDtoToUiModelMapper
-import dev.maxsiomin.prodhse.feature.home.data.remote.PlacesApi
+import dev.maxsiomin.prodhse.feature.home.data.remote.places_api.PlacesApi
 import dev.maxsiomin.prodhse.feature.home.domain.PhotoModel
 import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
 import dev.maxsiomin.prodhse.feature.home.domain.PlaceModel

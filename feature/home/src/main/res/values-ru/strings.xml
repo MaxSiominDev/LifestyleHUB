@@ -16,4 +16,10 @@
     <string name="no_plans_saved">У вас нет планов</string>
     <string name="save">Сохранить</string>
     <string name="add_to_plans">Добавить в досуг</string>
+
+    <string name="unknown_place">Неизвестное место</string>
+    <string name="temperature_unknown">Температура неизвестна</string>
+    <string name="unknown_conditions">Неизвестные погодные условия</string>
+    <string name="weather">Погода</string>
+
 </resources>

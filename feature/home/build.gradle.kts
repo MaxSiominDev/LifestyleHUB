@@ -73,7 +73,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.ktor.client.logging)
 
-    implementation(project(":feature:weather"))
     implementation(project(":core"))
 
     // Hilt for DI

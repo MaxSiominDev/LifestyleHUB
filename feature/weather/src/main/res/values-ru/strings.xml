@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="unknown_place">Неизвестное место</string>
-    <string name="temperature_unknown">Температура неизвестна</string>
-    <string name="unknown_conditions">Неизвестные погодные условия</string>
-    <string name="weather">Погода</string>
-</resources>

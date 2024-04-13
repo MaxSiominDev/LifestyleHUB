@@ -85,7 +85,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(project(":navdestinations"))
 
-    implementation(project(":feature:weather"))
     implementation(project(":feature:home"))
     implementation(project(":feature:auth"))
     implementation(project(":authlib"))
