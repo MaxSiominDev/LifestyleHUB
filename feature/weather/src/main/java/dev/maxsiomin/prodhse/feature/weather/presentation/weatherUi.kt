@@ -28,7 +28,6 @@ import dev.maxsiomin.prodhse.feature.weather.R
 @Composable
 fun weatherUi(
     showSnackbar: SnackbarCallback,
-    endRefresh: () -> Unit,
     viewModel: WeatherViewModel = hiltViewModel()
 ): UpdateCallback {
 
@@ -40,7 +39,7 @@ fun weatherUi(
         }
     }
 
-    viewModel.endRefreshCallback = endRefresh
+    //viewModel.endRefreshCallback = endRefresh
 
     val isExpanded = viewModel.state.isExpanded
     val bottomPadding = if (isExpanded) 16.dp else 0.dp

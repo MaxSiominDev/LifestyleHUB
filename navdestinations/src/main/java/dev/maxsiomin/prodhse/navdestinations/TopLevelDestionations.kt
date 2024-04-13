@@ -25,9 +25,9 @@ enum class TopLevelDestination(
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home,
         titleTextId = R.string.home,
-        route = Screen.VenuesScreen.route,
+        route = Screen.HomeScreen.route,
         allScreens = listOf(
-            Screen.VenuesScreen.route,
+            Screen.HomeScreen.route,
             Screen.DetailsScreen.route,
             Screen.AddPlanScreen.route,
         ),

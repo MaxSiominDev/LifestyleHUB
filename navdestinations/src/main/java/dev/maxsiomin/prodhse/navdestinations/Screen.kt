@@ -8,7 +8,7 @@ import androidx.navigation.navArgument
 sealed class Screen(val route: String, val arguments: List<NamedNavArgument> = emptyList()) {
 
     // TLD
-    data object VenuesScreen : Screen("venues_screen")
+    data object HomeScreen : Screen("home_screen")
 
     data object DetailsScreen : Screen(
         route = "details_screen/{fsqId}",
