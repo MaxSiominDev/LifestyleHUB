@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import dev.maxsiomin.prodhse.ProdhseAppState
-import dev.maxsiomin.prodhse.core.util.SnackbarInfo
+import dev.maxsiomin.common.presentation.SnackbarInfo
 import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
 import kotlinx.coroutines.launch
 

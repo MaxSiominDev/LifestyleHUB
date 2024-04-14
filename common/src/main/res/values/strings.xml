@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="unknown_error">Unknown error</string>
+    <string name="server_error">Oops, something went wrong. Please try again.</string>
+    <string name="select_date">Select date</string>
+
+</resources>

@@ -39,11 +39,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import dev.maxsiomin.prodhse.core.util.CollectFlow
-import dev.maxsiomin.prodhse.core.extensions.linkString
-import dev.maxsiomin.prodhse.core.extensions.openEmail
-import dev.maxsiomin.prodhse.core.extensions.openLink
-import dev.maxsiomin.prodhse.core.extensions.openPhoneNumber
+import dev.maxsiomin.common.util.CollectFlow
+import dev.maxsiomin.common.extensions.linkString
+import dev.maxsiomin.common.extensions.openEmail
+import dev.maxsiomin.common.extensions.openLink
+import dev.maxsiomin.common.extensions.openPhoneNumber
 import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.home.domain.PhotoModel
 import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel

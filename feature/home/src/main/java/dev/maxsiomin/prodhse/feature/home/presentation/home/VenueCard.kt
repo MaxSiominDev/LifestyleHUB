@@ -26,8 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import dev.maxsiomin.prodhse.core.ui.grayShimmerColors
-import dev.maxsiomin.prodhse.core.ui.shimmerEffect
+import dev.maxsiomin.common.presentation.components.grayShimmerColors
+import dev.maxsiomin.common.presentation.components.shimmerEffect
 import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.home.domain.PlaceModel
 import dev.maxsiomin.prodhse.feature.home.R

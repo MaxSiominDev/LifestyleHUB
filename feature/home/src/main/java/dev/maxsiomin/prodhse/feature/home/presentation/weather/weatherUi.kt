@@ -19,10 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import dev.maxsiomin.prodhse.core.util.CollectFlow
-import dev.maxsiomin.prodhse.core.util.SnackbarCallback
-import dev.maxsiomin.prodhse.core.util.SnackbarInfo
-import dev.maxsiomin.prodhse.core.util.UiText
+import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.common.util.CollectFlow
+import dev.maxsiomin.common.presentation.SnackbarInfo
+import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.prodhse.feature.home.R
 
 @Composable
@@ -64,8 +64,7 @@ fun weatherUi(
         Modifier
             .animateContentSize()
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-    )
-    {
+    ) {
         if (viewModel.state.isExpanded) {
             WeatherCard(
                 weather = viewModel.state.weather,

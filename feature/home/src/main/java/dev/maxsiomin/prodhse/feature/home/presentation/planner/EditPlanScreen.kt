@@ -22,10 +22,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import dev.maxsiomin.prodhse.core.ui.DatePickerDialog
-import dev.maxsiomin.prodhse.core.util.CollectFlow
-import dev.maxsiomin.prodhse.core.util.SnackbarCallback
-import dev.maxsiomin.prodhse.core.util.SnackbarInfo
+import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.common.presentation.components.DatePickerDialog
+import dev.maxsiomin.common.util.CollectFlow
+import dev.maxsiomin.common.presentation.SnackbarInfo
 import dev.maxsiomin.prodhse.feature.home.R
 import kotlinx.coroutines.flow.Flow
 

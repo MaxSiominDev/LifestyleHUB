@@ -43,7 +43,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.10"
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
     packaging {
         resources {
@@ -89,6 +89,7 @@ dependencies {
     implementation(project(":feature:auth"))
     implementation(project(":authlib"))
     implementation(project(":core"))
+    implementation(project(":common"))
 
     implementation(libs.timber)
 

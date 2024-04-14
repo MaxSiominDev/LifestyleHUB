@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.authlib.domain.AuthStatus
-import dev.maxsiomin.prodhse.core.domain.Resource
+import dev.maxsiomin.common.domain.Resource
 import dev.maxsiomin.prodhse.feature.auth.domain.HolidayModel
 import dev.maxsiomin.prodhse.feature.auth.domain.RandomActivityModel
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.NagerRepository

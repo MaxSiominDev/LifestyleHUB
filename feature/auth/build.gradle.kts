@@ -37,7 +37,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.10"
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
 }
 
@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(project(":core"))
+    implementation(project(":common"))
     implementation(project(":authlib"))
 
     // Network requests with Ktor

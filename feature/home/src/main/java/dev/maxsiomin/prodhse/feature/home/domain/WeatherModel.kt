@@ -5,7 +5,7 @@ data class WeatherModel(
     val temperatureInfo: TemperatureInfo,
     val weatherCondition: WeatherCondition,
     val date: String,
-) {}
+)
 
 data class WeatherCondition(
     val name: String,

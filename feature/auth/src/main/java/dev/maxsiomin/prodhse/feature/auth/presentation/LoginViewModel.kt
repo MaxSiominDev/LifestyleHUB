@@ -9,7 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.authlib.domain.LoginInfo
 import dev.maxsiomin.authlib.domain.LoginStatus
-import dev.maxsiomin.prodhse.core.util.UiText
+import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForLogin
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForLogin
 import kotlinx.coroutines.channels.Channel

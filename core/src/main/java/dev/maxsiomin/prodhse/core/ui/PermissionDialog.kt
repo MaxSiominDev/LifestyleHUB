@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import dev.maxsiomin.prodhse.core.R
-import dev.maxsiomin.prodhse.core.util.UiText
+import dev.maxsiomin.common.presentation.UiText
 
 @Composable
 fun PermissionDialog(

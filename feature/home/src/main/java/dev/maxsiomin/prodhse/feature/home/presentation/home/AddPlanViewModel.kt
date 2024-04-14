@@ -6,10 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.prodhse.core.domain.Resource
-import dev.maxsiomin.prodhse.core.presentation.asErrorUiText
+import dev.maxsiomin.common.presentation.asErrorUiText
 import dev.maxsiomin.prodhse.core.util.DateFormatter
-import dev.maxsiomin.prodhse.core.util.UiText
+import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
 import dev.maxsiomin.prodhse.feature.home.domain.PlanModel
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
@@ -82,7 +81,7 @@ internal class AddPlanViewModel @Inject constructor(
             placesRepo.getPlaceDetails(id).collect { resource ->
                 when (resource) {
 
-                    is Resource.Error -> {
+                    is dev.maxsiomin.common.domain.Resource.Error -> {
                         state = state.copy(isLoading = false, isError = true)
                         _eventsFlow.send(
                             UiEvent.ShowSnackbar(
@@ -91,7 +90,7 @@ internal class AddPlanViewModel @Inject constructor(
                         )
                     }
 
-                    is Resource.Success -> {
+                    is dev.maxsiomin.common.domain.Resource.Success -> {
                         state = state.copy(placeDetails = resource.data, isError = false, isLoading = false)
                     }
                 }

@@ -30,12 +30,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import dev.maxsiomin.prodhse.core.util.CollectFlow
-import dev.maxsiomin.prodhse.core.util.SnackbarInfo
+import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.core.ui.FireworksAnimation
 import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
-import dev.maxsiomin.prodhse.core.ui.TopRoundedCornerShape
-import dev.maxsiomin.prodhse.core.util.SnackbarCallback
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.LineOrLine
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.PasswordTextField
@@ -78,7 +76,7 @@ fun SignupScreen(
             }
 
             is SignupViewModel.UiEvent.SignupError -> showSnackbar(
-                SnackbarInfo(event.reason)
+                dev.maxsiomin.common.presentation.SnackbarInfo(event.reason)
             )
 
         }
@@ -125,7 +123,7 @@ fun SignupScreen(
                 .align(Alignment.BottomCenter)
                 .padding(0.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),
-            shape = TopRoundedCornerShape(20.dp),
+            shape = dev.maxsiomin.common.presentation.components.TopRoundedCornerShape(20.dp),
         ) {
             Column(
                 Modifier.fillMaxWidth(),

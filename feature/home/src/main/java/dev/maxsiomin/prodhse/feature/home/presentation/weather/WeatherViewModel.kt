@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.prodhse.core.domain.Resource
 import dev.maxsiomin.prodhse.core.location.LocationTracker
 import dev.maxsiomin.prodhse.core.util.LocaleManager
 import dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse
@@ -93,12 +92,12 @@ class WeatherViewModel @Inject constructor(
         repo.getCurrentWeather(lat = lat, lon = lon, lang = lang).collect { weatherModelResource ->
             endRefreshCallback?.invoke()
             when (weatherModelResource) {
-                is Resource.Error -> {
+                is dev.maxsiomin.common.domain.Resource.Error -> {
                     state = state.copy(weatherStatus = WeatherStatus.Error)
                     _eventsFlow.send(UiEvent.FetchingError("Weather info is unavailable"))
                 }
 
-                is Resource.Success -> {
+                is dev.maxsiomin.common.domain.Resource.Success -> {
                     state = state.copy(
                         weather = weatherModelResource.data,
                         weatherStatus = WeatherStatus.Success,

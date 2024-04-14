@@ -38,7 +38,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.10"
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
 }
 
@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.ktor.client.logging)
 
     implementation(project(":core"))
+    implementation(project(":common"))
 
     // Hilt for DI
     implementation(libs.hilt.android)

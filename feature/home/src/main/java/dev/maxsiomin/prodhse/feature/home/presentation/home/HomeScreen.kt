@@ -14,21 +14,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import dev.maxsiomin.prodhse.core.extensions.openAppSettings
+import dev.maxsiomin.common.extensions.openAppSettings
+import dev.maxsiomin.common.presentation.SnackbarCallback
 import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.core.ui.LocationPermissionTextProvider
 import dev.maxsiomin.prodhse.core.ui.PermissionDialog
-import dev.maxsiomin.prodhse.core.ui.PullToRefreshLazyColumn
-import dev.maxsiomin.prodhse.core.util.CollectFlow
-import dev.maxsiomin.prodhse.core.util.SnackbarCallback
-import dev.maxsiomin.prodhse.core.util.SnackbarInfo
-import dev.maxsiomin.prodhse.core.util.UiText
+import dev.maxsiomin.common.presentation.components.PullToRefreshLazyColumn
+import dev.maxsiomin.common.util.CollectFlow
+import dev.maxsiomin.common.presentation.SnackbarInfo
+import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.feature.home.presentation.weather.weatherUi
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HomeScreen(
     state: HomeViewModel.State,

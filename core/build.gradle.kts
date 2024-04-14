@@ -35,12 +35,11 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
-        buildConfig = true
         compose = true
 
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.10"
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
 }
 
@@ -83,4 +82,6 @@ dependencies {
 
     // Shared prefs to save auth info
     implementation(libs.androidx.preference.ktx)
+
+    implementation(project(":common"))
 }

@@ -9,8 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import dev.maxsiomin.prodhse.core.ui.PullToRefreshLazyColumn
-import dev.maxsiomin.prodhse.core.util.CollectFlow
+import dev.maxsiomin.common.presentation.components.PullToRefreshLazyColumn
+import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow

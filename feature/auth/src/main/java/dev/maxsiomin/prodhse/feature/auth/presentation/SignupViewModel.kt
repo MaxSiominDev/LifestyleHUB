@@ -9,9 +9,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.authlib.domain.RegistrationInfo
 import dev.maxsiomin.authlib.domain.RegistrationStatus
-import dev.maxsiomin.prodhse.core.domain.Resource
-import dev.maxsiomin.prodhse.core.presentation.asUiText
-import dev.maxsiomin.prodhse.core.util.UiText
+import dev.maxsiomin.common.domain.Resource
+import dev.maxsiomin.common.presentation.asUiText
+import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomUserRepository
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForSignup

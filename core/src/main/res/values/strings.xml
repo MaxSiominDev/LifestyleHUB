@@ -4,9 +4,5 @@
     <string name="permission_required">Permission required</string>
     <string name="location_permission_declined">It seems you permanently declined location permission. You can go to the app settings to grant it.</string>
     <string name="location_permission_rationale">This app needs access to your location to fetch weather and venues info</string>
-    <string name="select_date">Select Date</string>
-
-    <string name="unknown_error">Unknown error</string>
-    <string name="server_error">Oops, something went wrong. Please try again.</string>
 
 </resources>

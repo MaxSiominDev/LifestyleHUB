@@ -1,7 +1,7 @@
 package dev.maxsiomin.prodhse.feature.home.data.repository
 
-import dev.maxsiomin.prodhse.core.domain.NetworkError
-import dev.maxsiomin.prodhse.core.domain.Resource
+import dev.maxsiomin.common.domain.NetworkError
+import dev.maxsiomin.common.domain.Resource
 import dev.maxsiomin.prodhse.feature.home.data.mappers.WeatherDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.remote.weather_api.WeatherApi
 import dev.maxsiomin.prodhse.feature.home.domain.WeatherModel

@@ -1,6 +1,6 @@
 package dev.maxsiomin.prodhse.feature.auth.domain.use_case
 
-import dev.maxsiomin.prodhse.core.util.UiText
+import dev.maxsiomin.common.presentation.UiText
 
 data class ValidationResult(
     val successful: Boolean,

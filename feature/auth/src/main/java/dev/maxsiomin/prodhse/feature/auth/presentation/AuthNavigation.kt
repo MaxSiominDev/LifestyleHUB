@@ -4,13 +4,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import dev.maxsiomin.prodhse.core.util.SnackbarCallback
+import dev.maxsiomin.common.presentation.SnackbarCallback
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
 
 fun NavGraphBuilder.addAuthNavigation(
     navController: NavController,
-    showSnackbar: SnackbarCallback
+    showSnackbar: SnackbarCallback,
 ) {
 
     composable(route = TopLevelDestination.PROFILE.route) {

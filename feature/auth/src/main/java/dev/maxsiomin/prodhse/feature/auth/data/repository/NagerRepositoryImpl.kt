@@ -1,7 +1,7 @@
 package dev.maxsiomin.prodhse.feature.auth.data.repository
 
-import dev.maxsiomin.prodhse.core.domain.NetworkError
-import dev.maxsiomin.prodhse.core.domain.Resource
+import dev.maxsiomin.common.domain.NetworkError
+import dev.maxsiomin.common.domain.Resource
 import dev.maxsiomin.prodhse.feature.auth.data.mappers.HolidayDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.auth.data.remote.nager.NagerApi
 import dev.maxsiomin.prodhse.feature.auth.domain.HolidayModel

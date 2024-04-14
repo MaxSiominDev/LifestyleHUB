@@ -2,13 +2,12 @@ package dev.maxsiomin.prodhse.ui
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
+import dev.maxsiomin.common.presentation.SnackbarCallback
 import dev.maxsiomin.prodhse.ProdhseAppState
-import dev.maxsiomin.prodhse.core.util.SnackbarCallback
-import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
 import dev.maxsiomin.prodhse.feature.auth.presentation.addAuthNavigation
 import dev.maxsiomin.prodhse.feature.home.presentation.home.addHomeNavigation
 import dev.maxsiomin.prodhse.feature.home.presentation.planner.addPlannerNavigation
-
+import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
 
 @Composable
 fun ProdhseNavHost(appState: ProdhseAppState, showSnackbar: SnackbarCallback) {
