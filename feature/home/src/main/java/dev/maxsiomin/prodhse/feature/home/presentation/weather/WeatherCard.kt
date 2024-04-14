@@ -39,7 +39,7 @@ import dev.maxsiomin.prodhse.feature.home.presentation.nightBackground
 import dev.maxsiomin.prodhse.feature.home.presentation.nightTextColor
 
 @Composable
-internal fun WeatherCard(weather: dev.maxsiomin.prodhse.feature.home.domain.WeatherModel, weatherStatus: WeatherViewModel.WeatherStatus) {
+internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherViewModel.WeatherStatus) {
 
     val isPreview = LocalInspectionMode.current
 

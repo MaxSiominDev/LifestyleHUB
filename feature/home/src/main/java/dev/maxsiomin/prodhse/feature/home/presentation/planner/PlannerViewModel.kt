@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.prodhse.core.util.Resource
+import dev.maxsiomin.prodhse.core.domain.Resource
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
 import kotlinx.coroutines.async
@@ -69,13 +69,7 @@ internal class PlannerViewModel @Inject constructor(
                     val placeModel = placesRepo.getPlaceDetails(currentPlan.placeFsqId)
                     placeModel.collect { resource ->
                         when (resource) {
-                            is Resource.Loading -> {
-                                Timber.i("Details data is loading...")
-                            }
-
-                            is Resource.Error -> {
-                                Timber.e(resource.exception)
-                            }
+                            is Resource.Error -> Unit
 
                             is Resource.Success -> {
                                 feedItem = PlannerFeedItem.Venue(resource.data, currentPlan)

@@ -1,16 +1,13 @@
 package dev.maxsiomin.prodhse.feature.home.data.remote.weather_api
 
 import dev.maxsiomin.prodhse.core.ApiKeys
-import dev.maxsiomin.prodhse.core.util.ResponseWithException
+import dev.maxsiomin.prodhse.core.data.safeGet
+import dev.maxsiomin.prodhse.core.domain.NetworkError
+import dev.maxsiomin.prodhse.core.domain.Resource
+import dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.RedirectResponseException
-import io.ktor.client.plugins.ServerResponseException
-import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
-import timber.log.Timber
 import javax.inject.Inject
 
 internal class WeatherApiImpl @Inject constructor(private val client: HttpClient) : WeatherApi {
@@ -19,33 +16,14 @@ internal class WeatherApiImpl @Inject constructor(private val client: HttpClient
         lat: String,
         lon: String,
         lang: String
-    ): ResponseWithException<dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse, Exception> {
-        try {
-            val response: dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse? = client.get {
-                url(HttpRoutes.CURRENT_WEATHER)
-                parameter("lat", lat)
-                parameter("lon", lon)
-                parameter("lang", lang)
-                parameter("units", "metric")
-                parameter("appid", ApiKeys.OPEN_WEATHER_MAP)
-            }.body()
-            if (response == null) {
-                Timber.e("Response is null")
-                return ResponseWithException(null, Exception("Response is null"))
-            }
-            return ResponseWithException(response, null)
-        } catch (e: RedirectResponseException) {
-            Timber.e(e.response.status.description)
-            return ResponseWithException(null, e)
-        } catch (e: ClientRequestException) {
-            Timber.e(e.response.status.description)
-            return ResponseWithException(null, e)
-        } catch (e: ServerResponseException) {
-            Timber.e(e.response.status.description)
-            return ResponseWithException(null, e)
-        } catch (e: Exception) {
-            Timber.e(e.message)
-            return ResponseWithException(null, e)
+    ): Resource<CurrentWeatherResponse, NetworkError> {
+        return client.safeGet {
+            url(HttpRoutes.CURRENT_WEATHER)
+            parameter("lat", lat)
+            parameter("lon", lon)
+            parameter("lang", lang)
+            parameter("units", "metric")
+            parameter("appid", ApiKeys.OPEN_WEATHER_MAP)
         }
 
     }

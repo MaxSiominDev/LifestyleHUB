@@ -1,5 +1,6 @@
 package dev.maxsiomin.prodhse.feature.home.data.mappers
 
+import dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse
 import dev.maxsiomin.prodhse.feature.home.domain.TemperatureInfo
 import dev.maxsiomin.prodhse.feature.home.domain.WeatherCondition
 import dev.maxsiomin.prodhse.feature.home.domain.WeatherModel
@@ -9,22 +10,22 @@ import java.util.Date
 import java.util.Locale
 import kotlin.math.roundToInt
 
-internal class WeatherDtoToUiModelMapper : (dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse, Boolean?) -> WeatherModel {
+internal class WeatherDtoToUiModelMapper : (CurrentWeatherResponse) -> WeatherModel {
 
-    override fun invoke(weatherDto: dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse, previousIsNight: Boolean?): WeatherModel {
+    override fun invoke(weatherDto: CurrentWeatherResponse): WeatherModel {
         return WeatherModel(
             city = getCity(weatherDto),
-            weatherCondition = getWeatherCondition(weatherDto, previousIsNight),
+            weatherCondition = getWeatherCondition(weatherDto),
             temperatureInfo = getTemperatureInfo(weatherDto),
             date = getDate(),
         )
     }
 
-    private fun getCity(weatherDto: dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse): String {
+    private fun getCity(weatherDto: CurrentWeatherResponse): String {
         return weatherDto.name ?: UNKNOWN
     }
 
-    private fun getWeatherCondition(weatherDto: dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse, previousIsNight: Boolean?): WeatherCondition {
+    private fun getWeatherCondition(weatherDto: CurrentWeatherResponse): WeatherCondition {
         val weatherFromDto = weatherDto.weather?.firstOrNull()
         var weatherType = weatherFromDto?.description
         if (weatherType.isNullOrBlank()) {
@@ -42,11 +43,11 @@ internal class WeatherDtoToUiModelMapper : (dev.maxsiomin.prodhse.feature.home.d
         return WeatherCondition(
             name = weatherType,
             iconUrl = "https://openweathermap.org/img/wn/$weatherIcon.png",
-            isNight = (lastLetterIsNight ?: previousIsNight) ?: false
+            isNight = lastLetterIsNight ?: false
         )
     }
 
-    private fun getTemperatureInfo(weatherDto: dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse): TemperatureInfo {
+    private fun getTemperatureInfo(weatherDto: CurrentWeatherResponse): TemperatureInfo {
         val currentTemperature = weatherDto.main?.temp?.formatTemperature() ?: UNKNOWN
 
         val minTemp = weatherDto.main?.tempMin?.formatTemperature()

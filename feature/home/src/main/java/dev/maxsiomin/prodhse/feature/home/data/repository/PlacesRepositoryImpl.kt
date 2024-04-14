@@ -1,8 +1,8 @@
 package dev.maxsiomin.prodhse.feature.home.data.repository
 
 import android.content.SharedPreferences
-import dev.maxsiomin.prodhse.core.util.Resource
-import dev.maxsiomin.prodhse.core.extensions.asResult
+import dev.maxsiomin.prodhse.core.domain.NetworkError
+import dev.maxsiomin.prodhse.core.domain.Resource
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlaceDetailsDtoToUoModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacesDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacesPhotosDtoToUiModelMapper
@@ -25,52 +25,56 @@ internal class PlacesRepositoryImpl @Inject constructor(
         lat: String,
         lon: String,
         lang: String
-    ): Flow<Resource<List<PlaceModel>>> {
+    ): Flow<Resource<List<PlaceModel>, NetworkError>> {
         return flow {
             val apiResponse = api.getPlaces(lat = lat, lon = lon, lang = lang)
             val mapper = PlacesDtoToUiModelMapper()
-            val remoteData =
-                apiResponse.response?.results?.filterNotNull()?.mapNotNull { mapper.invoke(it) }
-            if (remoteData != null) {
-                emit(remoteData)
-            } else {
-                throw (apiResponse.error ?: Exception("Unknown error"))
+            when (apiResponse) {
+                is Resource.Error -> emit(Resource.Error(apiResponse.error))
+                is Resource.Success -> {
+                    apiResponse.data.results?.filterNotNull()?.mapNotNull { mapper.invoke(it) }
+                        ?.let {
+                            emit(Resource.Success(it))
+                        } ?: emit(Resource.Error(NetworkError.EmptyResponse))
+                }
             }
-        }.asResult()
+        }
     }
 
-    override suspend fun getPhotos(id: String): Flow<Resource<List<PhotoModel>>> {
+    override suspend fun getPhotos(id: String): Flow<Resource<List<PhotoModel>, NetworkError>> {
         return flow {
             val apiResponse = api.getPhotos(id = id)
             val mapper = PlacesPhotosDtoToUiModelMapper()
-            val remoteData = apiResponse.response?.let { mapper(it, id) }
-            if (remoteData != null) {
-                emit(remoteData)
-            } else {
-                throw (apiResponse.error ?: Exception("Unknown error"))
+            when (apiResponse) {
+                is Resource.Error -> emit(Resource.Error(apiResponse.error))
+                is Resource.Success -> {
+                    val remoteData = mapper(apiResponse.data, id)
+                    emit(Resource.Success(remoteData))
+                }
             }
-        }.asResult()
+        }
     }
 
-    override suspend fun getPlaceDetails(id: String): Flow<Resource<PlaceDetailsModel>> {
+    override suspend fun getPlaceDetails(id: String): Flow<Resource<PlaceDetailsModel, NetworkError>> {
         return flow {
             val localData = getPlaceDetailsFromSharedPrefs(id)
             val currentMillis = System.currentTimeMillis()
             if (localData != null && currentMillis - localData.timeUpdated < CACHE_EXPIRATION_PERIOD) {
-                emit(localData)
+                emit(Resource.Success(localData))
                 return@flow
             }
 
             val apiResponse = api.getPlaceDetails(id = id)
             val mapper = PlaceDetailsDtoToUoModelMapper()
-            val remoteData = apiResponse.response?.let(mapper)
-            if (remoteData != null) {
-                emit(remoteData)
-                savePlaceDetailsToSharedPrefs(place = remoteData)
-            } else {
-                throw (apiResponse.error ?: Exception("Unknown error"))
+            when (apiResponse) {
+                is Resource.Error -> emit(Resource.Error(apiResponse.error))
+                is Resource.Success -> {
+                    apiResponse.data.let(mapper)?.let {
+                        emit(Resource.Success(it))
+                    } ?: emit(Resource.Error(NetworkError.EmptyResponse))
+                }
             }
-        }.asResult()
+        }
     }
 
     private fun savePlaceDetailsToSharedPrefs(place: PlaceDetailsModel) {

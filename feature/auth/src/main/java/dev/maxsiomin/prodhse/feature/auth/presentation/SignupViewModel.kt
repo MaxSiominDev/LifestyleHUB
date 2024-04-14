@@ -9,7 +9,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.authlib.domain.RegistrationInfo
 import dev.maxsiomin.authlib.domain.RegistrationStatus
-import dev.maxsiomin.prodhse.core.util.Resource
+import dev.maxsiomin.prodhse.core.domain.Resource
+import dev.maxsiomin.prodhse.core.presentation.asUiText
 import dev.maxsiomin.prodhse.core.util.UiText
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomUserRepository
@@ -111,9 +112,8 @@ class SignupViewModel @Inject constructor(
 
             repo.getRandomUser().collect { resource ->
                 when (resource) {
-                    is Resource.Loading -> Unit
                     is Resource.Error -> {
-                        onRegistrationError(resource.exception?.localizedMessage ?: "Unknown error")
+                        onRegistrationError(resource.error.asUiText())
                     }
 
                     is Resource.Success -> {
@@ -130,7 +130,7 @@ class SignupViewModel @Inject constructor(
 
                         when (registrationStatus) {
                             is RegistrationStatus.Failure -> {
-                                onRegistrationError(registrationStatus.reason)
+                                onRegistrationError(UiText.DynamicString(registrationStatus.reason))
                             }
 
                             is RegistrationStatus.Success -> {
@@ -143,11 +143,9 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    private suspend fun onRegistrationError(message: String) {
+    private suspend fun onRegistrationError(message: UiText) {
         _eventsFlow.send(
-            UiEvent.SignupError(
-                UiText.DynamicString(message)
-            )
+            UiEvent.SignupError(message)
         )
     }
 

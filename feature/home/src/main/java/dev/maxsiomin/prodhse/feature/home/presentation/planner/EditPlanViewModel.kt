@@ -6,8 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.maxsiomin.prodhse.core.domain.Resource
+import dev.maxsiomin.prodhse.core.presentation.asErrorUiText
 import dev.maxsiomin.prodhse.core.util.DateFormatter
-import dev.maxsiomin.prodhse.core.util.Resource
 import dev.maxsiomin.prodhse.core.util.UiText
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
@@ -117,27 +118,19 @@ internal class EditPlanViewModel @Inject constructor(
     }
 
     private fun loadPlaceDetails(id: String) {
+        state = state.copy(isLoading = true)
         viewModelScope.launch {
             placesRepo.getPlaceDetails(id).collect { resource ->
                 when (resource) {
-
-                    is Resource.Loading -> {
-                        state = state.copy(isLoading = resource.isLoading)
-                    }
-
                     is Resource.Error -> {
                         state = state.copy(isLoading = false, isError = true)
                         _eventsFlow.send(
-                            UiEvent.ShowSnackbar(
-                                UiText.DynamicString(
-                                    resource.exception.localizedMessage ?: "Error"
-                                )
-                            )
+                            UiEvent.ShowSnackbar(resource.asErrorUiText())
                         )
                     }
 
                     is Resource.Success -> {
-                        state = state.copy(placeDetails = resource.data, isError = false)
+                        state = state.copy(placeDetails = resource.data, isError = false, isLoading = false)
                     }
                 }
             }

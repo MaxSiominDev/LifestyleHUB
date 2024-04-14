@@ -1,31 +1,32 @@
 package dev.maxsiomin.prodhse.feature.auth.data.repository
 
-import dev.maxsiomin.prodhse.core.util.Resource
-import dev.maxsiomin.prodhse.core.extensions.asResult
+import dev.maxsiomin.prodhse.core.domain.NetworkError
+import dev.maxsiomin.prodhse.core.domain.Resource
 import dev.maxsiomin.prodhse.feature.auth.data.mappers.RandomUserDtoToModelMapper
 import dev.maxsiomin.prodhse.feature.auth.data.remote.random_user.RandomUserApi
 import dev.maxsiomin.prodhse.feature.auth.domain.RandomUserModel
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomUserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.lang.Exception
 import javax.inject.Inject
 
 class RandomUserRepositoryImpl @Inject constructor(
     private val api: RandomUserApi
 ) : RandomUserRepository {
 
-    override suspend fun getRandomUser(): Flow<Resource<RandomUserModel>> {
+    override suspend fun getRandomUser(): Flow<Resource<RandomUserModel, NetworkError>> {
         return flow {
             val apiResponse = api.getRandomUser()
-            val remoteData = apiResponse.response?.results?.firstOrNull()
-            if (remoteData != null) {
-                val mapper = RandomUserDtoToModelMapper()
-                emit(mapper.invoke(remoteData))
-            } else {
-                throw (apiResponse.error ?: Exception("Unknown error"))
+            when (apiResponse) {
+                is Resource.Error -> emit(Resource.Error(apiResponse.error))
+                is Resource.Success -> {
+                    val mapper = RandomUserDtoToModelMapper()
+                    apiResponse.data.results.firstOrNull()?.let(mapper)?.let {
+                        emit(Resource.Success(it))
+                    } ?: emit(Resource.Error(NetworkError.EmptyResponse))
+                }
             }
-        }.asResult()
+        }
     }
 
 }

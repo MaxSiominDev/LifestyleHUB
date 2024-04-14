@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.maxsiomin.prodhse.core.domain.Resource
 import dev.maxsiomin.prodhse.core.util.LocaleManager
-import dev.maxsiomin.prodhse.core.util.Resource
 import dev.maxsiomin.prodhse.core.location.LocationTracker
 import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.feature.home.domain.PhotoModel
@@ -28,9 +28,6 @@ internal class HomeViewModel @Inject constructor(
     private val localeManager: LocaleManager,
     private val permissionChecker: PermissionChecker,
 ) : ViewModel() {
-
-    /** If you want loading widget to stay forever (for testing purposes only) set this to true */
-    private val forceLoading = false
 
     data class State(
         val places: List<PlaceModel> = listOf(),
@@ -119,12 +116,9 @@ internal class HomeViewModel @Inject constructor(
     }
 
     private suspend fun getCurrentWeather(lat: String, lon: String, lang: String) {
+        state = state.copy(isRefreshing = true)
         repo.getPlacesNearby(lat = lat, lon = lon, lang = lang).collect { placesResource ->
             when (placesResource) {
-                is Resource.Loading -> {
-                    state = state.copy(isRefreshing = placesResource.isLoading || forceLoading)
-                }
-
                 is Resource.Error -> {
                     _eventsFlow.send(UiEvent.FetchingError("Places info is unavailable"))
                 }
@@ -145,14 +139,7 @@ internal class HomeViewModel @Inject constructor(
                     var photoModel: PhotoModel? = null
                     repo.getPhotos(id = it.fsqId).collect { photosResource ->
                         when (photosResource) {
-                            is Resource.Loading -> {
-                                Timber.i("Photo data is loading...")
-                            }
-
-                            is Resource.Error -> {
-                                Timber.e(photosResource.exception)
-                            }
-
+                            is Resource.Error -> Unit
                             is Resource.Success -> {
                                 photoModel = photosResource.data.firstOrNull()
                             }

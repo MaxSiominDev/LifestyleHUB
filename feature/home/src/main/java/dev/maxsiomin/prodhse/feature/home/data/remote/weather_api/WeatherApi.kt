@@ -1,6 +1,7 @@
 package dev.maxsiomin.prodhse.feature.home.data.remote.weather_api
 
-import dev.maxsiomin.prodhse.core.util.ResponseWithException
+import dev.maxsiomin.prodhse.core.domain.NetworkError
+import dev.maxsiomin.prodhse.core.domain.Resource
 import dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse
 
 internal interface WeatherApi {
@@ -9,6 +10,6 @@ internal interface WeatherApi {
         lat: String,
         lon: String,
         lang: String
-    ): ResponseWithException<dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse, Exception>
+    ): Resource<CurrentWeatherResponse, NetworkError>
 
 }

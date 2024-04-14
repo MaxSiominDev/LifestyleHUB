@@ -67,30 +67,10 @@ fun weatherUi(
     )
     {
         if (viewModel.state.isExpanded) {
-            val weather = viewModel.state.weather
-
-            when {
-                weather != null && viewModel.state.weatherStatus is WeatherViewModel.WeatherStatus.Success -> {
-                    WeatherCard(
-                        weather = weather,
-                        WeatherViewModel.WeatherStatus.Success
-                    )
-                }
-
-                viewModel.state.weatherStatus is WeatherViewModel.WeatherStatus.Loading -> {
-                    WeatherCard(
-                        weather = viewModel.emptyCardContent,
-                        weatherStatus = WeatherViewModel.WeatherStatus.Loading
-                    )
-                }
-
-                else -> {
-                    WeatherCard(
-                        weather = viewModel.emptyCardContent,
-                        weatherStatus = WeatherViewModel.WeatherStatus.Error
-                    )
-                }
-            }
+            WeatherCard(
+                weather = viewModel.state.weather,
+                weatherStatus = viewModel.state.weatherStatus,
+            )
         }
     }
 
