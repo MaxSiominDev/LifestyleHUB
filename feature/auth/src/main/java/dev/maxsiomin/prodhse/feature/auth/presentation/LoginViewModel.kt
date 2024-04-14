@@ -73,8 +73,8 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun onLogin() {
-        val username = state.username
-        val password = state.password
+        val username = state.username.trim()
+        val password = state.password.trim()
         val validateUsername = validateUsernameForLogin.execute(username)
         val validatePassword = validatePasswordForLogin.execute(password)
 

@@ -83,8 +83,8 @@ class SignupViewModel @Inject constructor(
     }
 
     private fun onSignup() {
-        val username = state.username
-        val password = state.password
+        val username = state.username.trim()
+        val password = state.password.trim()
         val validateUsername = validateUsernameForSignup.execute(username)
         val validatePassword = validatePasswordForSignup.execute(password)
 
