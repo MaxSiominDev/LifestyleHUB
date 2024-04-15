@@ -5,8 +5,8 @@ import androidx.navigation.compose.NavHost
 import dev.maxsiomin.common.presentation.SnackbarCallback
 import dev.maxsiomin.prodhse.ProdhseAppState
 import dev.maxsiomin.prodhse.feature.auth.presentation.addAuthNavigation
-import dev.maxsiomin.prodhse.feature.home.presentation.home.addHomeNavigation
-import dev.maxsiomin.prodhse.feature.home.presentation.planner.addPlannerNavigation
+import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.addHomeNavigation
+import dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.addPlannerNavigation
 import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
 
 @Composable

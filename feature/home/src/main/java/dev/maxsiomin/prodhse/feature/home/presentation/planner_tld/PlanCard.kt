@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.home.presentation.planner
+package dev.maxsiomin.prodhse.feature.home.presentation.planner_tld
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

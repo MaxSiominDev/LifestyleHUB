@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.home.presentation.weather
+package dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
@@ -18,37 +18,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import dev.maxsiomin.common.presentation.SnackbarCallback
-import dev.maxsiomin.common.util.CollectFlow
-import dev.maxsiomin.common.presentation.SnackbarInfo
-import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.prodhse.feature.home.R
+import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home.HomeViewModel
+import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home.WeatherCard
 
 @Composable
-fun weatherUi(
-    showSnackbar: SnackbarCallback,
-    viewModel: WeatherViewModel = hiltViewModel()
-): UpdateCallback {
+internal fun WeatherItem(
+    state: HomeViewModel.State,
+    onEvent: (HomeViewModel.Event) -> Unit,
+) {
 
-    CollectFlow(viewModel.eventsFlow) { event ->
-        when (event) {
-            is WeatherViewModel.UiEvent.FetchingError -> {
-                showSnackbar(SnackbarInfo(UiText.DynamicString(event.message)))
-            }
-        }
-    }
-
-    //viewModel.endRefreshCallback = endRefresh
-
-    val isExpanded = viewModel.state.isExpanded
+    val isExpanded = state.weatherIsExpanded
     val bottomPadding = if (isExpanded) 16.dp else 0.dp
     Row(
         Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = bottomPadding)
             .clickable {
-                viewModel.onEvent(WeatherViewModel.Event.ExpandStateChanged)
+                onEvent(HomeViewModel.Event.ExpandStateChanged)
             },
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -65,16 +52,12 @@ fun weatherUi(
             .animateContentSize()
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
     ) {
-        if (viewModel.state.isExpanded) {
+        if (state.weatherIsExpanded) {
             WeatherCard(
-                weather = viewModel.state.weather,
-                weatherStatus = viewModel.state.weatherStatus,
+                weather = state.weather,
+                weatherStatus = state.weatherStatus,
             )
         }
-    }
-
-    return {
-        viewModel.onEvent(WeatherViewModel.Event.RefreshWeather)
     }
 }
 

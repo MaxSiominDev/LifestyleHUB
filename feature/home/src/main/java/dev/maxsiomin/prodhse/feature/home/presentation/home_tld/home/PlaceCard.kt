@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.home.presentation.home
+package dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -33,7 +33,7 @@ import dev.maxsiomin.prodhse.feature.home.domain.PlaceModel
 import dev.maxsiomin.prodhse.feature.home.R
 
 @Composable
-internal fun VenueCard(placeModel: PlaceModel, goToDetails: () -> Unit, addToPlans: () -> Unit) {
+internal fun PlaceCard(placeModel: PlaceModel, goToDetails: () -> Unit, addToPlans: () -> Unit) {
 
     val isPreview = LocalInspectionMode.current
 
@@ -103,7 +103,7 @@ internal fun VenueCard(placeModel: PlaceModel, goToDetails: () -> Unit, addToPla
 private fun VenueCardPreview() {
 
     ProdhseTheme {
-        VenueCard(
+        PlaceCard(
             placeModel = PlaceModel(
                 name = "Dodo Pizza",
                 address = "16, Odesskaya st., Moscow, Russia",

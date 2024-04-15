@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.home.presentation.home
+package dev.maxsiomin.prodhse.feature.home.presentation.home_tld
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,7 +12,6 @@ import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.net.URLEncoder
 import javax.inject.Inject
 

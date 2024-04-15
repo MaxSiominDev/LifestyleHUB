@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.home.presentation.planner
+package dev.maxsiomin.prodhse.feature.home.presentation.home_tld
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,40 +19,44 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.common.presentation.SnackbarInfo
 import dev.maxsiomin.common.presentation.components.DatePickerDialog
 import dev.maxsiomin.common.util.CollectFlow
-import dev.maxsiomin.common.presentation.SnackbarInfo
+import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.home.R
+import dev.maxsiomin.prodhse.feature.home.domain.PhotoModel
+import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import java.time.LocalDate
 
 @Composable
-internal fun EditPlanScreen(
-    state: EditPlanViewModel.State,
-    eventsFlow: Flow<EditPlanViewModel.UiEvent>,
-    onEvent: (EditPlanViewModel.Event) -> Unit,
-    showSnackbar: SnackbarCallback,
+internal fun AddPlanScreen(
+    fsqId: String,
     navController: NavController,
-    planId: Long,
+    snackbarCallback: SnackbarCallback,
+    state: AddPlanViewModel.State,
+    eventFlow: Flow<AddPlanViewModel.UiEvent>,
+    onEvent: (AddPlanViewModel.Event) -> Unit
 ) {
 
-    CollectFlow(eventsFlow) { event ->
+    CollectFlow(eventFlow) { event ->
         when (event) {
-            is EditPlanViewModel.UiEvent.NavigateBack -> {
-                navController.popBackStack()
-            }
-
-            is EditPlanViewModel.UiEvent.ShowSnackbar -> {
-                showSnackbar(SnackbarInfo(event.message))
-            }
+            is AddPlanViewModel.UiEvent.NavigateBack -> navController.popBackStack()
+            is AddPlanViewModel.UiEvent.ShowSnackbar -> snackbarCallback(
+                SnackbarInfo(message = event.message)
+            )
         }
     }
 
-    LaunchedEffect(planId) {
-        onEvent(EditPlanViewModel.Event.PassPlanId(planId))
+    LaunchedEffect(fsqId) {
+        onEvent(AddPlanViewModel.Event.PassPlaceId(fsqId))
     }
 
     Column(
@@ -78,7 +82,7 @@ internal fun EditPlanScreen(
 
             DatePickerDialog(
                 date = state.dateLocalDate,
-                onDateChange = { onEvent(EditPlanViewModel.Event.NewDateSelected(it)) }
+                onDateChange = { onEvent(AddPlanViewModel.Event.NewDateSelected(it)) }
             )
         }
 
@@ -89,14 +93,14 @@ internal fun EditPlanScreen(
             label = { Text(text = stringResource(R.string.title)) },
             value = state.noteTitle,
             onValueChange = {
-                onEvent(EditPlanViewModel.Event.NoteTitleChanged(it))
+                onEvent(AddPlanViewModel.Event.NoteTitleChanged(it))
             },
         )
 
         TextField(
             value = state.noteText,
             onValueChange = {
-                onEvent(EditPlanViewModel.Event.NoteTextChanged(it))
+                onEvent(AddPlanViewModel.Event.NoteTextChanged(it))
             },
             label = { Text(text = stringResource(R.string.description)) },
             modifier = Modifier
@@ -105,13 +109,10 @@ internal fun EditPlanScreen(
                 .padding(vertical = 16.dp),
         )
 
-        Button(
-            enabled = state.isNotSaved,
-            onClick = {
-                onEvent(EditPlanViewModel.Event.SaveClicked)
-            },
-        ) {
-            Text(text = stringResource(R.string.save))
+        Button(onClick = {
+            onEvent(AddPlanViewModel.Event.SaveClicked)
+        }) {
+            Text(text = stringResource(id = R.string.save))
         }
     }
 
@@ -122,7 +123,7 @@ internal fun EditPlanScreen(
             Button(
                 onClick = {
                     // Actually refreshes the data
-                    onEvent(EditPlanViewModel.Event.PassPlanId(planId))
+                    onEvent(AddPlanViewModel.Event.PassPlaceId(fsqId))
                 },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -133,4 +134,48 @@ internal fun EditPlanScreen(
         }
     }
 
+}
+
+@Preview
+@Composable
+private fun AddPlanScreenPreview() {
+    ProdhseTheme {
+        AddPlanScreen(
+            fsqId = "",
+            state = AddPlanViewModel.State(
+                placeDetails = PlaceDetailsModel(
+                    name = "Кафе Studio 89.5",
+                    address = "Маросейка, д. 13, 101000, Москва",
+                    photos = listOf(
+                        PhotoModel(id = "", url = ""),
+                        PhotoModel(id = "", url = ""),
+                        PhotoModel(id = "", url = ""),
+                        PhotoModel(id = "", url = ""),
+                        PhotoModel(id = "", url = ""),
+                        PhotoModel(id = "", url = ""),
+                    ),
+                    workingHours = listOf(
+                        "Mon-Thu 11:00-23:00",
+                        "Fri 11:00-24:00",
+                        "Sat-Sun 0:00-2:00",
+                    ),
+                    isVerified = true,
+                    rating = 9.3,
+                    website = "https://megapolism.ru",
+                    isOpenNow = true,
+                    fsqId = "",
+                    categories = "Cafe",
+                    timeUpdated = System.currentTimeMillis(),
+                    phone = "+79151236547",
+                    email = "rokymiel@gmail.com"
+                ),
+                dateString = "March 26, 2024",
+                dateLocalDate = LocalDate.now(),
+            ),
+            onEvent = {},
+            navController = rememberNavController(),
+            eventFlow = flow { },
+            snackbarCallback = {}
+        )
+    }
 }

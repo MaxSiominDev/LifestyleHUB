@@ -1,11 +1,10 @@
-package dev.maxsiomin.prodhse.feature.home.presentation.home
+package dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -16,15 +15,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import dev.maxsiomin.common.extensions.openAppSettings
 import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.common.presentation.SnackbarInfo
+import dev.maxsiomin.common.presentation.UiText
+import dev.maxsiomin.common.presentation.components.PullToRefreshLazyColumn
+import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.core.ui.LocationPermissionTextProvider
 import dev.maxsiomin.prodhse.core.ui.PermissionDialog
-import dev.maxsiomin.common.presentation.components.PullToRefreshLazyColumn
-import dev.maxsiomin.common.util.CollectFlow
-import dev.maxsiomin.common.presentation.SnackbarInfo
-import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.prodhse.feature.home.R
-import dev.maxsiomin.prodhse.feature.home.presentation.weather.weatherUi
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
 
@@ -100,7 +98,7 @@ internal fun HomeScreen(
     val items: List<HomeFeedItem> = remember(state.places) {
         buildList {
             add(HomeFeedItem.Weather)
-            addAll(state.places.map { HomeFeedItem.Venue(it) })
+            addAll(state.places.map { HomeFeedItem.Place(it) })
         }
     }
 
@@ -117,13 +115,13 @@ internal fun HomeScreen(
                 when (feedItem) {
 
                     is HomeFeedItem.Weather -> {
-                        weatherUi(
-                            showSnackbar = showSnackbar,
+                        WeatherItem(
+                            state = state, onEvent = onEvent,
                         )
                     }
 
-                    is HomeFeedItem.Venue -> {
-                        VenueCard(
+                    is HomeFeedItem.Place -> {
+                        PlaceCard(
                             placeModel = feedItem.placeModel,
                             goToDetails = {
                                 onEvent(HomeViewModel.Event.OnVenueClicked(feedItem.placeModel.fsqId))

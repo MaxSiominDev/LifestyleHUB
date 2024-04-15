@@ -1,10 +1,12 @@
-package dev.maxsiomin.prodhse.feature.home.presentation.home
+package dev.maxsiomin.prodhse.feature.home.presentation.home_tld
 
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home.HomeScreen
+import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home.HomeViewModel
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
 import java.net.URLDecoder

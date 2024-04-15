@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.home.presentation.weather
+package dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -39,7 +39,7 @@ import dev.maxsiomin.prodhse.feature.home.presentation.nightBackground
 import dev.maxsiomin.prodhse.feature.home.presentation.nightTextColor
 
 @Composable
-internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherViewModel.WeatherStatus) {
+internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherStatus) {
 
     val isPreview = LocalInspectionMode.current
 
@@ -53,7 +53,7 @@ internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherViewModel.
         if (isNight) nightTextColor else dayTextColor
     }
 
-    val isLoading = weatherStatus == WeatherViewModel.WeatherStatus.Loading
+    val isLoading = weatherStatus == WeatherStatus.Loading
     if (isLoading) {
         Box(
             modifier = Modifier
@@ -97,7 +97,7 @@ internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherViewModel.
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-                if (weatherStatus == WeatherViewModel.WeatherStatus.Success) {
+                if (weatherStatus == WeatherStatus.Success) {
                     Text(text = weather.temperatureInfo.range, color = textColor)
                 }
 
@@ -111,7 +111,7 @@ internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherViewModel.
             }
 
             // Right-aligned content
-            if (weatherStatus == WeatherViewModel.WeatherStatus.Success) {
+            if (weatherStatus == WeatherStatus.Success) {
                 Column(
                     modifier = Modifier.align(Alignment.BottomEnd),
                     horizontalAlignment = Alignment.End
@@ -138,7 +138,7 @@ internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherViewModel.
                         fontWeight = FontWeight.Bold
                     )
                 }
-            } else if (weatherStatus == WeatherViewModel.WeatherStatus.Loading) {
+            } else if (weatherStatus == WeatherStatus.Loading) {
                 CircularProgressIndicator(
                     color = Color.White,
                     modifier = Modifier.align(Alignment.BottomEnd)
@@ -167,7 +167,7 @@ private fun WeatherSuccessCardPreview() {
                 ),
                 date = "Wednesday, 20 March"
             ),
-            WeatherViewModel.WeatherStatus.Success
+            weatherStatus = WeatherStatus.Success,
         )
     }
 }
