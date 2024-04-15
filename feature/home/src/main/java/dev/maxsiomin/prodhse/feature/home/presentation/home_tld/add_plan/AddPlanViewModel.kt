@@ -50,7 +50,7 @@ internal class AddPlanViewModel @Inject constructor(
 
     sealed class UiEvent {
         data object NavigateBack : UiEvent()
-        data class ShowSnackbar(val message: UiText) : UiEvent()
+        data class OnError(val message: UiText) : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -84,7 +84,7 @@ internal class AddPlanViewModel @Inject constructor(
                     is dev.maxsiomin.common.domain.Resource.Error -> {
                         state = state.copy(isLoading = false, isError = true)
                         _eventsFlow.send(
-                            UiEvent.ShowSnackbar(
+                            UiEvent.OnError(
                                 resource.asErrorUiText()
                             )
                         )
@@ -124,7 +124,7 @@ internal class AddPlanViewModel @Inject constructor(
             )
             plansRepo.addPlan(plan)
 
-            _eventsFlow.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.plan_added, name)))
+            _eventsFlow.send(UiEvent.OnError(UiText.StringResource(R.string.plan_added, name)))
             _eventsFlow.send(UiEvent.NavigateBack)
         }
     }

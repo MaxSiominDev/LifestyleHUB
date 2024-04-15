@@ -75,8 +75,8 @@ fun SignupScreen(
                 }
             }
 
-            is SignupViewModel.UiEvent.SignupError -> showSnackbar(
-                dev.maxsiomin.common.presentation.SnackbarInfo(event.reason)
+            is SignupViewModel.UiEvent.ShowError -> showSnackbar(
+                dev.maxsiomin.common.presentation.SnackbarInfo(event.message)
             )
 
         }

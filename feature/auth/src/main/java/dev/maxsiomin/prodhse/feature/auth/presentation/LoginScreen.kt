@@ -72,9 +72,9 @@ fun LoginScreen(
                 navController.popBackStack(route = Screen.ProfileScreen.route, inclusive = false)
             }
 
-            is LoginViewModel.UiEvent.LoginError -> {
+            is LoginViewModel.UiEvent.ShowError -> {
                 showSnackbar(
-                    dev.maxsiomin.common.presentation.SnackbarInfo(event.reason)
+                    dev.maxsiomin.common.presentation.SnackbarInfo(event.message)
                 )
             }
         }

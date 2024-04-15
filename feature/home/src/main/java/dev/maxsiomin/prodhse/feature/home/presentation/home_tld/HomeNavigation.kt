@@ -44,6 +44,7 @@ fun NavGraphBuilder.addHomeNavigation(
             fsqId = fsqId,
             eventsFlow = viewModel.eventsFlow,
             navController = navController,
+            showSnackbar = showSnackbar,
         )
     }
 

@@ -84,4 +84,9 @@ dependencies {
     implementation(libs.androidx.preference.ktx)
 
     implementation(project(":common"))
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+    implementation(project(":navdestinations"))
+
 }

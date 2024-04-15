@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.common.domain.Resource
+import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.prodhse.core.location.LocationTracker
 import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.core.util.LocaleManager
@@ -61,7 +62,7 @@ internal class HomeViewModel @Inject constructor(
 
 
     sealed class UiEvent {
-        data class FetchingError(val message: String) : UiEvent()
+        data class ShowError(val message: UiText) : UiEvent()
         data object RequestLocationPermission : UiEvent()
         data class GoToDetailsScreen(val fsqId: String) : UiEvent()
         data class GoToAddPlanScreen(val fsqId: String) : UiEvent()
@@ -133,7 +134,7 @@ internal class HomeViewModel @Inject constructor(
         placesIsRefreshing = true
         viewModelScope.launch {
             val location = locationTracker.getCurrentLocation() ?: kotlin.run {
-                _eventsFlow.send(UiEvent.FetchingError("Location cannot be retrieved"))
+                _eventsFlow.send(UiEvent.ShowError(UiText.DynamicString("Location cannot be retrieved")))
                 placesIsRefreshing = false
                 return@launch
             }
@@ -149,7 +150,7 @@ internal class HomeViewModel @Inject constructor(
             placesIsRefreshing = false
 
             when (placesResource) {
-                is Resource.Error -> _eventsFlow.send(UiEvent.FetchingError("Places info is unavailable"))
+                is Resource.Error -> _eventsFlow.send(UiEvent.ShowError(UiText.DynamicString("Places info is unavailable")))
 
                 is Resource.Success -> {
                     state = state.copy(places = placesResource.data)
@@ -203,7 +204,7 @@ internal class HomeViewModel @Inject constructor(
                 when (weatherModelResource) {
                     is Resource.Error -> {
                         state = state.copy(weatherStatus = WeatherStatus.Error)
-                        _eventsFlow.send(UiEvent.FetchingError("Weather info is unavailable"))
+                        _eventsFlow.send(UiEvent.ShowError(UiText.DynamicString("Weather info is unavailable")))
                     }
 
                     is Resource.Success -> {

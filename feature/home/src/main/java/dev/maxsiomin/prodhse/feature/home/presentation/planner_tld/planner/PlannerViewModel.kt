@@ -68,9 +68,7 @@ internal class PlannerViewModel @Inject constructor(
                     val placeModel = placesRepo.getPlaceDetails(currentPlan.placeFsqId)
                     placeModel.collect { resource ->
                         when (resource) {
-                            is Resource.Error -> {
-                                println()
-                            }
+                            is Resource.Error -> Unit
 
                             is Resource.Success -> {
                                 feedItem = PlannerFeedItem.Place(resource.data, currentPlan)
@@ -79,10 +77,7 @@ internal class PlannerViewModel @Inject constructor(
                     }
                     feedItem?.let {
                         feedItems.add(it)
-                    } ?: kotlin.run {
-                        println()
                     }
-
                 }
             }.awaitAll()
             feedItems.sortByDescending {

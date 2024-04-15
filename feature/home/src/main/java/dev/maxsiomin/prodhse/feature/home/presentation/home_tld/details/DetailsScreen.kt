@@ -44,6 +44,8 @@ import dev.maxsiomin.common.extensions.linkString
 import dev.maxsiomin.common.extensions.openEmail
 import dev.maxsiomin.common.extensions.openLink
 import dev.maxsiomin.common.extensions.openPhoneNumber
+import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.common.presentation.SnackbarInfo
 import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.home.domain.PhotoModel
 import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
@@ -59,6 +61,7 @@ internal fun DetailsScreen(
     onEvent: (DetailsViewModel.Event) -> Unit,
     navController: NavController,
     fsqId: String,
+    showSnackbar: SnackbarCallback,
 ) {
 
     val isPreview = LocalInspectionMode.current
@@ -80,6 +83,10 @@ internal fun DetailsScreen(
                 navController.navigate(
                     Screen.AddPlanScreen.withArgs(event.fsqId)
                 )
+            }
+
+            is DetailsViewModel.UiEvent.OnError -> {
+                showSnackbar(SnackbarInfo(message = event.message))
             }
         }
     }
@@ -315,6 +322,7 @@ private fun DetailsScreenPreview() {
             fsqId = "",
             eventsFlow = flow { },
             navController = rememberNavController(),
+            showSnackbar = {},
         )
     }
 

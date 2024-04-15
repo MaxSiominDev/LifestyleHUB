@@ -3,29 +3,22 @@ package dev.maxsiomin.prodhse
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.util.trace
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import dev.maxsiomin.common.presentation.SnackbarInfo
 import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun rememberProdhseAppState(
-    coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController(),
 ): ProdhseAppState {
-    return remember(
-        navController,
-        coroutineScope,
-    ) {
+    return remember(navController) {
         ProdhseAppState(
             navController = navController,
-            coroutineScope = coroutineScope,
         )
     }
 }
@@ -33,7 +26,6 @@ fun rememberProdhseAppState(
 @Stable
 class ProdhseAppState(
     val navController: NavHostController,
-    coroutineScope: CoroutineScope,
 ) {
 
     val currentDestination: NavDestination?
@@ -101,6 +93,10 @@ class ProdhseAppState(
                 topLevelNavOptions
             )
         }
+    }
+
+    fun showSnackbar(snackbarInfo: SnackbarInfo) {
+
     }
 
 }

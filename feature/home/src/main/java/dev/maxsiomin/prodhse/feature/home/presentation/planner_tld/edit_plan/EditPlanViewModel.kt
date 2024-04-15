@@ -55,7 +55,7 @@ internal class EditPlanViewModel @Inject constructor(
 
     sealed class UiEvent {
         data object NavigateBack : UiEvent()
-        data class ShowSnackbar(val message: UiText) : UiEvent()
+        data class ShowError(val message: UiText) : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -101,7 +101,7 @@ internal class EditPlanViewModel @Inject constructor(
         viewModelScope.launch {
             val plan = plansRepo.getPlanById(id)
             if (plan == null) {
-                _eventsFlow.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.plan_not_found)))
+                _eventsFlow.send(UiEvent.ShowError(UiText.StringResource(R.string.plan_not_found)))
                 return@launch
             }
             state = state.copy(
@@ -124,7 +124,7 @@ internal class EditPlanViewModel @Inject constructor(
                     is dev.maxsiomin.common.domain.Resource.Error -> {
                         state = state.copy(isLoading = false, isError = true)
                         _eventsFlow.send(
-                            UiEvent.ShowSnackbar(resource.asErrorUiText())
+                            UiEvent.ShowError(resource.asErrorUiText())
                         )
                     }
 
@@ -151,7 +151,7 @@ internal class EditPlanViewModel @Inject constructor(
 
             val plan = plansRepo.getPlanById(planId)
             if (plan == null) {
-                _eventsFlow.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.plan_not_found)))
+                _eventsFlow.send(UiEvent.ShowError(UiText.StringResource(R.string.plan_not_found)))
                 return@launch
             }
 
@@ -165,7 +165,7 @@ internal class EditPlanViewModel @Inject constructor(
             )
             plansRepo.editPlan(newPlan)
 
-            _eventsFlow.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.plan_updated)))
+            _eventsFlow.send(UiEvent.ShowError(UiText.StringResource(R.string.plan_updated)))
             _eventsFlow.send(UiEvent.NavigateBack)
         }
     }

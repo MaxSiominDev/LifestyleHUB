@@ -49,7 +49,7 @@ internal fun AddPlanScreen(
     CollectFlow(eventFlow) { event ->
         when (event) {
             is AddPlanViewModel.UiEvent.NavigateBack -> navController.popBackStack()
-            is AddPlanViewModel.UiEvent.ShowSnackbar -> snackbarCallback(
+            is AddPlanViewModel.UiEvent.OnError -> snackbarCallback(
                 SnackbarInfo(message = event.message)
             )
         }

@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.common.domain.Resource
+import dev.maxsiomin.common.presentation.UiText
+import dev.maxsiomin.common.presentation.asErrorUiText
 import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import kotlinx.coroutines.channels.Channel
@@ -23,6 +25,7 @@ internal class DetailsViewModel @Inject constructor(
     sealed class UiEvent {
         data class NavigateToPhotoScreen(val url: String) : UiEvent()
         data class NavigateToAddPlanScreen(val fsqId: String) : UiEvent()
+        data class OnError(val message: UiText) : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -59,7 +62,7 @@ internal class DetailsViewModel @Inject constructor(
         viewModelScope.launch {
             repo.getPlaceDetails(id).collect { resource ->
                 when (resource) {
-                    is Resource.Error -> Unit
+                    is Resource.Error -> _eventsFlow.send(UiEvent.OnError(resource.asErrorUiText()))
                     is Resource.Success -> {
                         state = state.copy(placeDetails = resource.data)
                     }

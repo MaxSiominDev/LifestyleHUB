@@ -59,8 +59,8 @@ internal fun HomeScreen(
 
     CollectFlow(eventsFlow) { event ->
         when (event) {
-            is HomeViewModel.UiEvent.FetchingError -> {
-                showSnackbar(SnackbarInfo(UiText.DynamicString(event.message)))
+            is HomeViewModel.UiEvent.ShowError -> {
+                showSnackbar(SnackbarInfo(event.message))
             }
 
             HomeViewModel.UiEvent.RequestLocationPermission -> {
