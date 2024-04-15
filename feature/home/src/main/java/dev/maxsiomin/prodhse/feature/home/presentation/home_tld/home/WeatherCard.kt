@@ -33,10 +33,10 @@ import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.feature.home.domain.TemperatureInfo
 import dev.maxsiomin.prodhse.feature.home.domain.WeatherCondition
 import dev.maxsiomin.prodhse.feature.home.domain.WeatherModel
-import dev.maxsiomin.prodhse.feature.home.presentation.dayBackground
-import dev.maxsiomin.prodhse.feature.home.presentation.dayTextColor
-import dev.maxsiomin.prodhse.feature.home.presentation.nightBackground
-import dev.maxsiomin.prodhse.feature.home.presentation.nightTextColor
+import dev.maxsiomin.prodhse.feature.home.presentation.theme.dayBackground
+import dev.maxsiomin.prodhse.feature.home.presentation.theme.dayTextColor
+import dev.maxsiomin.prodhse.feature.home.presentation.theme.nightBackground
+import dev.maxsiomin.prodhse.feature.home.presentation.theme.nightTextColor
 
 @Composable
 internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherStatus) {

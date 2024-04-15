@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.home.presentation.home_tld
+package dev.maxsiomin.prodhse.feature.home.presentation.home_tld.add_plan
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

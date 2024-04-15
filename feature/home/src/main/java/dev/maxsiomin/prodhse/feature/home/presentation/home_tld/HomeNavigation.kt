@@ -5,6 +5,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.add_plan.AddPlanScreen
+import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.add_plan.AddPlanViewModel
+import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.details.DetailsScreen
+import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.details.DetailsViewModel
+import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.fullscreen_photo.FullscreenPhotoScreen
 import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home.HomeScreen
 import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home.HomeViewModel
 import dev.maxsiomin.prodhse.navdestinations.Screen
@@ -48,7 +53,7 @@ fun NavGraphBuilder.addHomeNavigation(
     ) { backStackEntry ->
         val encodedUrl = backStackEntry.arguments!!.getString("url")!!
         val url = URLDecoder.decode(encodedUrl, "UTF-8")
-        PhotoScreen(url = url)
+        FullscreenPhotoScreen(url = url)
     }
 
     composable(

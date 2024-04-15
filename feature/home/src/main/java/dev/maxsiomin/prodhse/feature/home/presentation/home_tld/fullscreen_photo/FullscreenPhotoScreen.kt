@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.home.presentation.home_tld
+package dev.maxsiomin.prodhse.feature.home.presentation.home_tld.fullscreen_photo
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,21 +19,21 @@ import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.home.R
 
 @Composable
-fun PhotoScreen(url: String) {
+fun FullscreenPhotoScreen(url: String) {
 
     val isPreview = LocalInspectionMode.current
 
     Box(modifier = Modifier.fillMaxSize().background(Color.Black), contentAlignment = Alignment.Center) {
-        val modifier = Modifier.fillMaxSize().padding(4.dp)
+        val imageModifier = Modifier.fillMaxSize().padding(4.dp)
         if (isPreview) {
             Image(
-                modifier = modifier,
+                modifier = imageModifier,
                 painter = painterResource(id = R.drawable.place_preview),
                 contentDescription = null
             )
         } else {
             AsyncImage(
-                modifier = modifier,
+                modifier = imageModifier,
                 model = url,
                 contentDescription = stringResource(id = R.string.fullscreen_image)
             )
@@ -44,8 +44,8 @@ fun PhotoScreen(url: String) {
 
 @Preview
 @Composable
-private fun PhotoScreenPreview() {
+private fun FullscreenPhotoScreenPreview() {
     ProdhseTheme {
-        PhotoScreen(url = "")
+        FullscreenPhotoScreen(url = "")
     }
 }

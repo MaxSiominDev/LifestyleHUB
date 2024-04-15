@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.home.presentation.planner_tld
+package dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.planner
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.home.presentation.planner_tld
+package dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.planner
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

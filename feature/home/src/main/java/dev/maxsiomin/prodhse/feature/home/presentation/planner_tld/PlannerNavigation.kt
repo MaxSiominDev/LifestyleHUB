@@ -5,6 +5,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.edit_plan.EditPlanScreen
+import dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.edit_plan.EditPlanViewModel
+import dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.planner.PlannerScreen
+import dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.planner.PlannerViewModel
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
 

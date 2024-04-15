@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.home.presentation.home_tld
+package dev.maxsiomin.prodhse.feature.home.presentation.home_tld.details
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

@@ -38,11 +38,13 @@ internal class HomeViewModel @Inject constructor(
             field = value
             state = state.copy(isRefreshing = field || placesIsRefreshing)
         }
+
     private var placesIsRefreshing = false
         set(value) {
             field = value
             state = state.copy(isRefreshing = field || weatherIsRefreshing)
         }
+
 
     data class State(
         val places: List<PlaceModel> = listOf(),
@@ -56,6 +58,7 @@ internal class HomeViewModel @Inject constructor(
 
     var state by mutableStateOf(State())
         private set
+
 
     sealed class UiEvent {
         data class FetchingError(val message: String) : UiEvent()

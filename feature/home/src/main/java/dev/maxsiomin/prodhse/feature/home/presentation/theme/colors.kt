@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.home.presentation
+package dev.maxsiomin.prodhse.feature.home.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
