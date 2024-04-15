@@ -41,7 +41,7 @@ internal fun PlannerScreen(
             content = { feedItem ->
                 when (feedItem) {
 
-                    is PlannerFeedItem.Venue -> {
+                    is PlannerFeedItem.Place -> {
                         PlanCard(
                             placeDetails = feedItem.place,
                             onClick = {

@@ -10,6 +10,7 @@ import dev.maxsiomin.common.domain.Resource
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -56,29 +57,37 @@ internal class PlannerViewModel @Inject constructor(
         }
     }
 
-    @Suppress("DeferredResultUnused")
     private fun loadPlans() {
         state = state.copy(isRefreshing = true)
         viewModelScope.launch {
             val feedItems = mutableListOf<PlannerFeedItem>()
             val plans = plansRepo.getPlans()
-            plans.forEach { currentPlan ->
+            plans.map { currentPlan ->
                 async {
                     var feedItem: PlannerFeedItem? = null
                     val placeModel = placesRepo.getPlaceDetails(currentPlan.placeFsqId)
                     placeModel.collect { resource ->
                         when (resource) {
-                            is Resource.Error -> Unit
+                            is Resource.Error -> {
+                                println()
+                            }
 
                             is Resource.Success -> {
-                                feedItem = PlannerFeedItem.Venue(resource.data, currentPlan)
+                                feedItem = PlannerFeedItem.Place(resource.data, currentPlan)
                             }
                         }
                     }
                     feedItem?.let {
                         feedItems.add(it)
+                    } ?: kotlin.run {
+                        println()
                     }
 
+                }
+            }.awaitAll()
+            feedItems.sortByDescending {
+                when (it) {
+                    is PlannerFeedItem.Place -> it.plan.date
                 }
             }
             state = state.copy(items = feedItems, isRefreshing = false)
