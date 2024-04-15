@@ -250,19 +250,6 @@ internal fun DetailsScreen(
             }
         }
 
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            IconButton(
-                onClick = {
-                    onEvent(DetailsViewModel.Event.IconAddToPlansClicked(fsqId))
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.AddCircleOutline,
-                    contentDescription = "Add to plans"
-                )
-            }
-        }
-
         Spacer(modifier = Modifier.height(10.dp))
 
     }
