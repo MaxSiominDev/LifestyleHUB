@@ -1,5 +1,6 @@
 package dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home
 
+import android.location.Location
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.common.domain.Resource
 import dev.maxsiomin.common.presentation.UiText
-import dev.maxsiomin.prodhse.core.location.LocationTracker
+import dev.maxsiomin.common.presentation.asErrorUiText
 import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.core.util.LocaleManager
 import dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse
@@ -16,6 +17,7 @@ import dev.maxsiomin.prodhse.feature.home.data.mappers.WeatherDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.domain.PhotoModel
 import dev.maxsiomin.prodhse.feature.home.domain.PlaceModel
 import dev.maxsiomin.prodhse.feature.home.domain.WeatherModel
+import dev.maxsiomin.prodhse.feature.home.domain.repository.LocationRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.WeatherRepository
 import kotlinx.coroutines.async
@@ -29,7 +31,7 @@ import javax.inject.Inject
 internal class HomeViewModel @Inject constructor(
     private val placesRepo: PlacesRepository,
     private val weatherRepo: WeatherRepository,
-    private val locationTracker: LocationTracker,
+    private val locationRepo: LocationRepository,
     private val localeManager: LocaleManager,
     private val permissionChecker: PermissionChecker,
 ) : ViewModel() {
@@ -85,7 +87,7 @@ internal class HomeViewModel @Inject constructor(
     fun onEvent(event: Event) {
         when (event) {
 
-            Event.Refresh -> refreshPlaces()
+            Event.Refresh -> refresh()
 
             is Event.LocationPermissionResult -> {
                 if (event.coarseIsGranted.not()) {
@@ -93,7 +95,7 @@ internal class HomeViewModel @Inject constructor(
                     return
                 }
                 state = state.copy(invokeWeatherCallback = true)
-                refreshPlaces()
+                refresh()
             }
 
             Event.DismissLocationDialog -> state = state.copy(showLocationPermissionDialog = false)
@@ -116,12 +118,10 @@ internal class HomeViewModel @Inject constructor(
 
 
     init {
-        refreshPlaces()
-        refreshWeather()
+        refresh()
     }
 
-
-    private fun refreshPlaces() {
+    private fun refresh() {
 
         if (permissionChecker.hasPermission(PermissionChecker.COARSE_LOCATION_PERMISSION).not()) {
             viewModelScope.launch {
@@ -130,31 +130,43 @@ internal class HomeViewModel @Inject constructor(
             return
         }
 
-        state = state.copy(places = emptyList())
-        placesIsRefreshing = true
         viewModelScope.launch {
-            val location = locationTracker.getCurrentLocation() ?: kotlin.run {
-                _eventsFlow.send(UiEvent.ShowError(UiText.DynamicString("Location cannot be retrieved")))
-                placesIsRefreshing = false
-                return@launch
+            val location = locationRepo.getCurrentLocation()
+            when (location) {
+                is Resource.Error -> {
+                    _eventsFlow.send(UiEvent.ShowError(location.asErrorUiText()))
+                    placesIsRefreshing = false
+                }
+
+                is Resource.Success -> {
+                    refreshPlaces(location.data)
+                    refreshWeather(location.data)
+                }
             }
-            val lat = location.latitude.toString()
-            val lon = location.longitude.toString()
-            val lang = localeManager.getLocaleLanguage()
-            getNearbyPlaces(lat = lat, lon = lon, lang = lang)
         }
     }
 
-    private suspend fun getNearbyPlaces(lat: String, lon: String, lang: String) {
-        placesRepo.getPlacesNearby(lat = lat, lon = lon, lang = lang).collect { placesResource ->
-            placesIsRefreshing = false
 
-            when (placesResource) {
-                is Resource.Error -> _eventsFlow.send(UiEvent.ShowError(UiText.DynamicString("Places info is unavailable")))
+    private fun refreshPlaces(location: Location) {
 
-                is Resource.Success -> {
-                    state = state.copy(places = placesResource.data)
-                    loadPhotos(placesResource.data)
+        state = state.copy(places = emptyList())
+        placesIsRefreshing = true
+
+        viewModelScope.launch {
+            val lat = location.latitude.toString()
+            val lon = location.longitude.toString()
+            val lang = localeManager.getLocaleLanguage()
+
+            placesRepo.getPlacesNearby(lat = lat, lon = lon, lang = lang).collect { resource ->
+                placesIsRefreshing = false
+
+                when (resource) {
+                    is Resource.Error -> _eventsFlow.send(UiEvent.ShowError(resource.asErrorUiText()))
+
+                    is Resource.Success -> {
+                        state = state.copy(places = resource.data)
+                        loadPhotos(resource.data)
+                    }
                 }
             }
         }
@@ -181,27 +193,18 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun refreshWeather() {
+    private fun refreshWeather(location: Location) {
         weatherIsRefreshing = true
+        state = state.copy(weatherStatus = WeatherStatus.Loading)
+
         viewModelScope.launch {
-            val location = locationTracker.getCurrentLocation() ?: kotlin.run {
-                weatherIsRefreshing = false
-                state = state.copy(weatherStatus = WeatherStatus.Error)
-                return@launch
-            }
             val lat = location.latitude.toString()
             val lon = location.longitude.toString()
             val lang = localeManager.getLocaleLanguage()
-            getCurrentWeather(lat = lat, lon = lon, lang = lang)
-        }
-    }
 
-    private suspend fun getCurrentWeather(lat: String, lon: String, lang: String) {
-        state = state.copy(weatherStatus = WeatherStatus.Loading)
-        weatherRepo.getCurrentWeather(lat = lat, lon = lon, lang = lang)
-            .collect { weatherModelResource ->
+            weatherRepo.getCurrentWeather(lat = lat, lon = lon, lang = lang).collect { resource ->
                 weatherIsRefreshing = false
-                when (weatherModelResource) {
+                when (resource) {
                     is Resource.Error -> {
                         state = state.copy(weatherStatus = WeatherStatus.Error)
                         _eventsFlow.send(UiEvent.ShowError(UiText.DynamicString("Weather info is unavailable")))
@@ -209,14 +212,14 @@ internal class HomeViewModel @Inject constructor(
 
                     is Resource.Success -> {
                         state = state.copy(
-                            weather = weatherModelResource.data,
+                            weather = resource.data,
                             weatherStatus = WeatherStatus.Success,
                         )
                     }
                 }
             }
+        }
     }
-
 }
 
 sealed class WeatherStatus {

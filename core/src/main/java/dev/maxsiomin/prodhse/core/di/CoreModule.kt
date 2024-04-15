@@ -54,7 +54,7 @@ object CoreModule {
         client: FusedLocationProviderClient,
         permissionChecker: PermissionChecker,
     ): LocationTracker {
-        return DefaultLocationTracker(context, client, permissionChecker)
+        return DefaultLocationTracker(context, client)
     }
 
     @Provides

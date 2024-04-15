@@ -5,4 +5,7 @@
     <string name="server_error">Oops, something went wrong. Please try again.</string>
     <string name="select_date">Select date</string>
 
+    <string name="gps_disabled">GPS unavailable</string>
+    <string name="missing_permission">Missing location permission</string>
+
 </resources>

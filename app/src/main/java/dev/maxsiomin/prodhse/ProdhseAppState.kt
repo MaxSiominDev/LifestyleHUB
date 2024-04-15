@@ -95,8 +95,4 @@ class ProdhseAppState(
         }
     }
 
-    fun showSnackbar(snackbarInfo: SnackbarInfo) {
-
-    }
-
 }
