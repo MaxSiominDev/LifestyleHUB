@@ -7,10 +7,17 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.tasks.Task
 import dev.maxsiomin.common.domain.LocationError
 import dev.maxsiomin.common.domain.Resource
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.suspendCancellableCoroutine
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
@@ -21,7 +28,7 @@ class DefaultLocationTracker @Inject constructor(
 
     @SuppressLint("MissingPermission")
     override suspend fun getCurrentLocation(): Resource<Location, LocationError> {
-
+        Timber.tag("Location").i("0")
         val hasAccessCoarseLocationPermission = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_COARSE_LOCATION
@@ -31,35 +38,26 @@ class DefaultLocationTracker @Inject constructor(
             return Resource.Error(LocationError.MissingPermission)
         }
 
-        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        val locationManager = context.getSystemService<LocationManager>()!!
+        val isGpsEnabled =
+            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
+                    locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         if (isGpsEnabled.not()) {
             return Resource.Error(LocationError.GpsDisabled)
         }
 
+        val deferred = CompletableDeferred<Resource<Location, LocationError>>()
 
-        return suspendCancellableCoroutine { cont ->
-            locationClient.lastLocation.apply {
-                if(isComplete) {
-                    if(isSuccessful) {
-                        cont.resume(Resource.Success(result))
-                    } else {
-                        cont.resume(Resource.Error(LocationError.Unknown))
-                    }
-                    return@suspendCancellableCoroutine
-                }
-                addOnSuccessListener {
-                    cont.resume(Resource.Success(it))
-                }
-                addOnFailureListener {
-                    cont.resume(Resource.Error(LocationError.Unknown))
-                }
-                addOnCanceledListener {
-                    cont.cancel()
-                }
+        locationClient.lastLocation.apply {
+            addOnSuccessListener {
+                deferred.complete(Resource.Success(result))
+            }
+            addOnFailureListener {
+                deferred.complete(Resource.Error(LocationError.Unknown))
             }
         }
+
+        return deferred.await()
     }
 
 }

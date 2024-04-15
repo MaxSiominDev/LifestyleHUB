@@ -254,9 +254,10 @@ internal fun DetailsScreen(
 
     }
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp),
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         contentAlignment = Alignment.BottomEnd,
     ) {
         FloatingActionButton(

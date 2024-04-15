@@ -53,6 +53,7 @@ internal class PlannerViewModel @Inject constructor(
             is Event.PlanClicked -> viewModelScope.launch {
                 _eventFlow.send(UiEvent.GoToEditPlanScreen(event.planId))
             }
+
             Event.Refresh -> loadPlans()
         }
     }
@@ -80,12 +81,24 @@ internal class PlannerViewModel @Inject constructor(
                     }
                 }
             }.awaitAll()
-            feedItems.sortByDescending {
-                when (it) {
-                    is PlannerFeedItem.Place -> it.plan.date
+
+            val sortedItems = feedItems.sortedWith(
+                compareByDescending<PlannerFeedItem> {
+                    when (it) {
+                        is PlannerFeedItem.Place -> it.plan.date
+                    }
+                }.thenBy {
+                    when (it) {
+                        is PlannerFeedItem.Place -> it.place.name
+                    }
+                }.thenBy {
+                    when (it) {
+                        is PlannerFeedItem.Place -> it.plan.noteTitle
+                    }
                 }
-            }
-            state = state.copy(items = feedItems, isRefreshing = false)
+            )
+
+            state = state.copy(items = sortedItems, isRefreshing = false)
         }
     }
 

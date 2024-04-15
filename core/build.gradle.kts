@@ -89,4 +89,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(project(":navdestinations"))
 
+    implementation(libs.timber)
+
 }

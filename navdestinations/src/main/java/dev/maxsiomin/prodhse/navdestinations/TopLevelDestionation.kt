@@ -9,11 +9,6 @@ import androidx.compose.material.icons.outlined.Event
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 
-/**
- * Type for the top level destinations in the application. Each of these destinations
- * can contain one or more screens. Navigation from one screen to the
- * next within a single destination will be handled directly in composables.
- */
 data class TopLevelDestination(
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,

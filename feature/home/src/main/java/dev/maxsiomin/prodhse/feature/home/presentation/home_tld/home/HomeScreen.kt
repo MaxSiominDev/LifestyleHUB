@@ -25,6 +25,7 @@ import dev.maxsiomin.prodhse.core.ui.PermissionDialog
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
+import timber.log.Timber
 
 @Composable
 internal fun HomeScreen(
@@ -136,6 +137,7 @@ internal fun HomeScreen(
             },
             isRefreshing = state.isRefreshing,
             onRefresh = {
+                Timber.tag("Location").i("-1")
                 onEvent(HomeViewModel.Event.Refresh)
             }
         )

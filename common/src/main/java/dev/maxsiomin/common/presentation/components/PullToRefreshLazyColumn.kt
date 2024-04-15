@@ -52,9 +52,7 @@ fun <T> PullToRefreshLazyColumn(
         }
 
         LaunchedEffect(isRefreshing) {
-            if (isRefreshing) {
-                pullToRefreshState.startRefresh()
-            } else {
+            if (isRefreshing.not()) {
                 pullToRefreshState.endRefresh()
             }
         }
