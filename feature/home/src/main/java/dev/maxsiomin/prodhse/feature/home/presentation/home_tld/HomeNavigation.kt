@@ -1,5 +1,6 @@
 package dev.maxsiomin.prodhse.feature.home.presentation.home_tld
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -13,15 +14,18 @@ import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.fullscreen_photo
 import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home.HomeScreen
 import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home.HomeViewModel
 import dev.maxsiomin.prodhse.navdestinations.Screen
-import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
 import java.net.URLDecoder
 
 fun NavGraphBuilder.addHomeNavigation(
     navController: NavController,
-    showSnackbar: SnackbarCallback
+    showSnackbar: SnackbarCallback,
+    onTldChanged: (Int) -> Unit,
 ) {
 
-    composable(route = TopLevelDestination.HOME.route) {
+    composable(route = Screen.HomeScreen.route) {
+        LaunchedEffect(Unit) {
+            onTldChanged(0)
+        }
         val viewModel: HomeViewModel = hiltViewModel()
         HomeScreen(
             state = viewModel.state,

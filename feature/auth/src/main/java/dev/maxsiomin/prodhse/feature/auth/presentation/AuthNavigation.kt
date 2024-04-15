@@ -1,19 +1,23 @@
 package dev.maxsiomin.prodhse.feature.auth.presentation
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import dev.maxsiomin.common.presentation.SnackbarCallback
 import dev.maxsiomin.prodhse.navdestinations.Screen
-import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
 
 fun NavGraphBuilder.addAuthNavigation(
     navController: NavController,
     showSnackbar: SnackbarCallback,
+    onTldChanged: (Int) -> Unit,
 ) {
 
-    composable(route = TopLevelDestination.PROFILE.route) {
+    composable(route = Screen.ProfileScreen.route) {
+        LaunchedEffect(Unit) {
+            onTldChanged(2)
+        }
         val viewModel: ProfileViewModel = hiltViewModel()
         ProfileScreen(
             state = viewModel.state,

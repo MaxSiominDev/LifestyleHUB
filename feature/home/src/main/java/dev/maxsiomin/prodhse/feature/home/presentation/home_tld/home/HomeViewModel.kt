@@ -49,6 +49,17 @@ internal class HomeViewModel @Inject constructor(
         }
 
 
+    sealed class WeatherStatus {
+        // Show shimmering loader
+        data object Loading : WeatherStatus()
+
+        // Show actual weather data
+        data object Success : WeatherStatus()
+
+        // Show that something went wrong
+        data object Error : WeatherStatus()
+    }
+
     data class State(
         val places: List<PlaceModel> = listOf(),
         val isRefreshing: Boolean = false,
@@ -220,15 +231,4 @@ internal class HomeViewModel @Inject constructor(
             }
         }
     }
-}
-
-sealed class WeatherStatus {
-    // Show shimmering loader
-    data object Loading : WeatherStatus()
-
-    // Show actual weather data
-    data object Success : WeatherStatus()
-
-    // Show that something went wrong
-    data object Error : WeatherStatus()
 }

@@ -12,8 +12,13 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -21,7 +26,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import dev.maxsiomin.prodhse.ProdhseAppState
 import dev.maxsiomin.common.presentation.SnackbarInfo
-import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
+import dev.maxsiomin.prodhse.navdestinations.topLevelDestinations
 import kotlinx.coroutines.launch
 
 @Composable
@@ -43,21 +48,24 @@ fun ProdhseApp(appState: ProdhseAppState) {
         }
     }
 
+    var selectedIndex by rememberSaveable {
+        mutableIntStateOf(0)
+    }
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             NavigationBar {
-
-                appState.topLevelDestinations.forEach { destination ->
-                    val currentDestination = appState.currentTopLevelDestination
-                    val isSelected = currentDestination == destination
+                topLevelDestinations.forEachIndexed { index, destination ->
+                    val isSelected = selectedIndex == index
                     NavigationBarItem(
                         selected = isSelected,
                         onClick = {
                             appState.navigateToTopLevelDestination(
                                 topLevelDestination = destination,
-                                currentTopLevelDestination = currentDestination,
+                                currentTopLevelDestination = topLevelDestinations[selectedIndex],
                             )
+                            selectedIndex = index
                         },
                         icon = {
                             val vector =
@@ -79,18 +87,12 @@ fun ProdhseApp(appState: ProdhseAppState) {
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            ProdhseNavHost(appState = appState, showSnackbar = showSnackbar)
+            ProdhseNavHost(
+                appState = appState,
+                showSnackbar = showSnackbar,
+                onTldChanged = { selectedIndex = it },
+            )
         }
     }
 
 }
-
-private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination): Boolean {
-    val hierarchy = this?.hierarchy?.toList() ?: return false
-    val result = hierarchy.any {
-        val route = it.route ?: return@any false
-        route.contains(destination.route, true)
-    }
-    return result
-}
-

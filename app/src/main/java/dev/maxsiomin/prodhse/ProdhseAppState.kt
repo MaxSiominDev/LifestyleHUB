@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import dev.maxsiomin.common.presentation.SnackbarInfo
+import dev.maxsiomin.prodhse.navdestinations.Screen
 import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
 
 @Composable
@@ -28,26 +28,13 @@ class ProdhseAppState(
     val navController: NavHostController,
 ) {
 
-    val currentDestination: NavDestination?
+    private val currentDestination: NavDestination?
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    val currentTopLevelDestination: TopLevelDestination?
-        @Composable get() {
-            val route = currentDestination?.route ?: return null
-            return when (route) {
-                in TopLevelDestination.HOME.allScreens -> TopLevelDestination.HOME
-                in TopLevelDestination.PLANNER.allScreens -> TopLevelDestination.PLANNER
-                in TopLevelDestination.PROFILE.allScreens -> TopLevelDestination.PROFILE
-                else -> null
-            }
-        }
-
-    val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
-
     fun navigateToTopLevelDestination(
         topLevelDestination: TopLevelDestination,
-        currentTopLevelDestination: TopLevelDestination?
+        currentTopLevelDestination: TopLevelDestination,
     ) {
         /** Restore TLD state to initial if users clicks TLD being on this TLD
          * Less abstract example: if user is at login screen (auth TLD),
@@ -77,22 +64,11 @@ class ProdhseAppState(
             restoreState = true
         }
 
-        when (topLevelDestination) {
-            TopLevelDestination.HOME -> navController.navigate(
-                TopLevelDestination.HOME.route,
-                topLevelNavOptions
-            )
+        navController.navigate(
+            topLevelDestination.route,
+            topLevelNavOptions
+        )
 
-            TopLevelDestination.PLANNER -> navController.navigate(
-                TopLevelDestination.PLANNER.route,
-                topLevelNavOptions
-            )
-
-            TopLevelDestination.PROFILE -> navController.navigate(
-                TopLevelDestination.PROFILE.route,
-                topLevelNavOptions
-            )
-        }
     }
 
 }

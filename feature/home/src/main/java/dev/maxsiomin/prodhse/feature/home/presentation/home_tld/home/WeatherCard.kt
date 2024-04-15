@@ -39,7 +39,7 @@ import dev.maxsiomin.prodhse.feature.home.presentation.theme.nightBackground
 import dev.maxsiomin.prodhse.feature.home.presentation.theme.nightTextColor
 
 @Composable
-internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherStatus) {
+internal fun WeatherCard(weather: WeatherModel, weatherStatus: HomeViewModel.WeatherStatus) {
 
     val isPreview = LocalInspectionMode.current
 
@@ -53,7 +53,7 @@ internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherStatus) {
         if (isNight) nightTextColor else dayTextColor
     }
 
-    val isLoading = weatherStatus == WeatherStatus.Loading
+    val isLoading = weatherStatus == HomeViewModel.WeatherStatus.Loading
     if (isLoading) {
         Box(
             modifier = Modifier
@@ -97,7 +97,7 @@ internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherStatus) {
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-                if (weatherStatus == WeatherStatus.Success) {
+                if (weatherStatus == HomeViewModel.WeatherStatus.Success) {
                     Text(text = weather.temperatureInfo.range, color = textColor)
                 }
 
@@ -111,7 +111,7 @@ internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherStatus) {
             }
 
             // Right-aligned content
-            if (weatherStatus == WeatherStatus.Success) {
+            if (weatherStatus == HomeViewModel.WeatherStatus.Success) {
                 Column(
                     modifier = Modifier.align(Alignment.BottomEnd),
                     horizontalAlignment = Alignment.End
@@ -138,7 +138,7 @@ internal fun WeatherCard(weather: WeatherModel, weatherStatus: WeatherStatus) {
                         fontWeight = FontWeight.Bold
                     )
                 }
-            } else if (weatherStatus == WeatherStatus.Loading) {
+            } else if (weatherStatus == HomeViewModel.WeatherStatus.Loading) {
                 CircularProgressIndicator(
                     color = Color.White,
                     modifier = Modifier.align(Alignment.BottomEnd)
@@ -167,7 +167,7 @@ private fun WeatherSuccessCardPreview() {
                 ),
                 date = "Wednesday, 20 March"
             ),
-            weatherStatus = WeatherStatus.Success,
+            weatherStatus = HomeViewModel.WeatherStatus.Success,
         )
     }
 }
