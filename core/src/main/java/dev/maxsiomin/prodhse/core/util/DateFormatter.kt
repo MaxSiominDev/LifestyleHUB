@@ -19,7 +19,7 @@ class DefaultDateFormatter @Inject constructor() : DateFormatter {
 
 }
 
-class RussianDateFormatter @Inject constructor() : DateFormatter {
+/**class RussianDateFormatter @Inject constructor() : DateFormatter {
 
     override fun formatDate(epochMillis: Long): String {
         val date = Date(epochMillis)
@@ -27,4 +27,4 @@ class RussianDateFormatter @Inject constructor() : DateFormatter {
         return dateFormat.format(date)
     }
 
-}
+}*/

@@ -17,7 +17,7 @@ class LocaleManagerImpl @Inject constructor() : LocaleManager {
 
     private val localeLanguage = currentLocale.language
 
-    private val supportedLocales = listOf(LocaleManager.DEFAULE_LOCALE, "ru")
+    private val supportedLocales = listOf(LocaleManager.DEFAULE_LOCALE)
 
     override fun getLocaleLanguage(): String {
         return if (localeLanguage in supportedLocales) localeLanguage else "en"

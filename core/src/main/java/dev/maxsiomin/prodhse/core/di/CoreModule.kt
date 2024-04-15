@@ -18,7 +18,6 @@ import dev.maxsiomin.prodhse.core.location.PermissionCheckerImpl
 import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.prodhse.core.util.DefaultDateFormatter
 import dev.maxsiomin.prodhse.core.util.LocaleManager
-import dev.maxsiomin.prodhse.core.util.RussianDateFormatter
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -69,15 +68,12 @@ object CoreModule {
 
     @Provides
     @Singleton
+    /** Was used for providing date formatting for different languages but I removed supporting any languages except English */
     fun provideDateFormatter(localeManager: LocaleManager): DateFormatter {
         return when (localeManager.getLocaleLanguage()) {
 
             LocaleManager.DEFAULE_LOCALE -> {
                 DefaultDateFormatter()
-            }
-
-            "ru" -> {
-                RussianDateFormatter()
             }
 
             else -> throw IllegalArgumentException("Locale is invalid")
