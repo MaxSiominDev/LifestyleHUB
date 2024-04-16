@@ -32,14 +32,14 @@ import dev.maxsiomin.common.presentation.components.shimmerEffect
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.feature.home.domain.TemperatureInfo
 import dev.maxsiomin.prodhse.feature.home.domain.WeatherCondition
-import dev.maxsiomin.prodhse.feature.home.domain.WeatherModel
+import dev.maxsiomin.prodhse.feature.home.domain.Weather
 import dev.maxsiomin.prodhse.feature.home.presentation.theme.dayBackground
 import dev.maxsiomin.prodhse.feature.home.presentation.theme.dayTextColor
 import dev.maxsiomin.prodhse.feature.home.presentation.theme.nightBackground
 import dev.maxsiomin.prodhse.feature.home.presentation.theme.nightTextColor
 
 @Composable
-internal fun WeatherCard(weather: WeatherModel, weatherStatus: HomeViewModel.WeatherStatus) {
+internal fun WeatherCard(weather: Weather, weatherStatus: HomeViewModel.WeatherStatus) {
 
     val isPreview = LocalInspectionMode.current
 
@@ -153,7 +153,7 @@ internal fun WeatherCard(weather: WeatherModel, weatherStatus: HomeViewModel.Wea
 private fun WeatherSuccessCardPreview() {
     ProdhseTheme {
         WeatherCard(
-            WeatherModel(
+            Weather(
                 city = "Chertanovo",
                 temperatureInfo = TemperatureInfo(
                     current = "+5°",

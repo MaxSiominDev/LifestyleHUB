@@ -3,7 +3,7 @@ package dev.maxsiomin.prodhse.feature.home.domain
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PhotoModel(
+data class Photo(
     val id: String,
     val url: String,
 )

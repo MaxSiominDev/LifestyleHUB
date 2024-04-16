@@ -9,8 +9,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.authlib.domain.AuthStatus
 import dev.maxsiomin.common.domain.resource.Resource
-import dev.maxsiomin.prodhse.feature.auth.domain.HolidayModel
-import dev.maxsiomin.prodhse.feature.auth.domain.RandomActivityModel
+import dev.maxsiomin.prodhse.feature.auth.domain.Holiday
+import dev.maxsiomin.prodhse.feature.auth.domain.RandomActivity
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.NagerRepository
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomActivityRepository
 import kotlinx.coroutines.launch
@@ -26,9 +26,9 @@ internal class ProfileViewModel @Inject constructor(
 
     data class State(
         val authStatus: AuthStatus = AuthStatus.Loading,
-        val randomActivity: RandomActivityModel? = null,
+        val randomActivity: RandomActivity? = null,
         val showRandomActivityDialog: Boolean = false,
-        val nearestHoliday: HolidayModel? = null,
+        val nearestHoliday: Holiday? = null,
         val showNearestHolidayDialog: Boolean = false,
     )
 
@@ -99,7 +99,7 @@ internal class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun processHolidays(holidays: List<HolidayModel>) {
+    private fun processHolidays(holidays: List<Holiday>) {
         val sorted = holidays.sortedBy { it.date }
         val nearest = sorted.firstOrNull {
             it.date > System.currentTimeMillis()

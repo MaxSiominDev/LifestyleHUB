@@ -4,7 +4,7 @@ import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.auth.data.mappers.RandomUserDtoToModelMapper
 import dev.maxsiomin.prodhse.feature.auth.data.remote.random_user.RandomUserApi
-import dev.maxsiomin.prodhse.feature.auth.domain.RandomUserModel
+import dev.maxsiomin.prodhse.feature.auth.domain.RandomUser
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomUserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -14,7 +14,7 @@ class RandomUserRepositoryImpl @Inject constructor(
     private val api: RandomUserApi
 ) : RandomUserRepository {
 
-    override suspend fun getRandomUser(): Flow<Resource<RandomUserModel, NetworkError>> {
+    override suspend fun getRandomUser(): Flow<Resource<RandomUser, NetworkError>> {
         return flow {
             val apiResponse = api.getRandomUser()
             when (apiResponse) {

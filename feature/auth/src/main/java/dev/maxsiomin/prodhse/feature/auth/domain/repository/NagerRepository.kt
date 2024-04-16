@@ -2,11 +2,11 @@ package dev.maxsiomin.prodhse.feature.auth.domain.repository
 
 import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
-import dev.maxsiomin.prodhse.feature.auth.domain.HolidayModel
+import dev.maxsiomin.prodhse.feature.auth.domain.Holiday
 import kotlinx.coroutines.flow.Flow
 
 interface NagerRepository {
 
-    suspend fun getHolidays(year: String, countryCode: String): Flow<Resource<List<HolidayModel>, NetworkError>>
+    suspend fun getHolidays(year: String, countryCode: String): Flow<Resource<List<Holiday>, NetworkError>>
 
 }

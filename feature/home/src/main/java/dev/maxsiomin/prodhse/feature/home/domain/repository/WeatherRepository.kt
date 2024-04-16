@@ -2,7 +2,7 @@ package dev.maxsiomin.prodhse.feature.home.domain.repository
 
 import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
-import dev.maxsiomin.prodhse.feature.home.domain.WeatherModel
+import dev.maxsiomin.prodhse.feature.home.domain.Weather
 import kotlinx.coroutines.flow.Flow
 
 interface WeatherRepository {
@@ -11,6 +11,6 @@ interface WeatherRepository {
         lat: String,
         lon: String,
         lang: String,
-    ): Flow<Resource<WeatherModel, NetworkError>>
+    ): Flow<Resource<Weather, NetworkError>>
 
 }

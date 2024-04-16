@@ -1,6 +1,6 @@
 package dev.maxsiomin.prodhse.feature.auth.domain
 
-data class RandomActivityModel(
+data class RandomActivity(
     val name: String,
     val participants: Int,
 )

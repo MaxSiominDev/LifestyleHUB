@@ -1,6 +1,6 @@
 package dev.maxsiomin.prodhse.feature.home.domain
 
-data class PlanModel(
+data class Plan(
     val databaseId: Long,
     val placeFsqId: String,
     val noteTitle: String,

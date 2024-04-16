@@ -3,11 +3,11 @@ package dev.maxsiomin.prodhse.feature.home.domain
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PlaceDetailsModel(
+data class PlaceDetails(
     val timeUpdated: Long,
     val name: String,
     val address: String,
-    val photos: List<PhotoModel>,
+    val photos: List<Photo>,
     val fsqId: String,
     val categories: String,
     val workingHours: List<String>? = null,

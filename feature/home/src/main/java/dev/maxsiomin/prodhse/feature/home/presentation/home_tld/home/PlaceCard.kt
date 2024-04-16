@@ -29,11 +29,11 @@ import coil.compose.AsyncImage
 import dev.maxsiomin.common.presentation.components.grayShimmerColors
 import dev.maxsiomin.common.presentation.components.shimmerEffect
 import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceModel
+import dev.maxsiomin.prodhse.feature.home.domain.Place
 import dev.maxsiomin.prodhse.feature.home.R
 
 @Composable
-internal fun PlaceCard(placeModel: PlaceModel, goToDetails: () -> Unit, addToPlans: () -> Unit) {
+internal fun PlaceCard(place: Place, goToDetails: () -> Unit, addToPlans: () -> Unit) {
 
     val isPreview = LocalInspectionMode.current
 
@@ -53,7 +53,7 @@ internal fun PlaceCard(placeModel: PlaceModel, goToDetails: () -> Unit, addToPla
             val modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-            if (placeModel.photoUrl == null) {
+            if (place.photoUrl == null) {
                 Box(modifier = modifier.shimmerEffect(grayShimmerColors))
             } else {
                 if (isPreview) {
@@ -64,7 +64,7 @@ internal fun PlaceCard(placeModel: PlaceModel, goToDetails: () -> Unit, addToPla
                     )
                 } else {
                     AsyncImage(
-                        model = placeModel.photoUrl,
+                        model = place.photoUrl,
                         contentDescription = "Attraction Image",
                         modifier = modifier,
                         contentScale = ContentScale.Crop
@@ -73,15 +73,15 @@ internal fun PlaceCard(placeModel: PlaceModel, goToDetails: () -> Unit, addToPla
             }
 
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = placeModel.name, fontWeight = FontWeight.Bold)
-            Text(text = placeModel.address)
+            Text(text = place.name, fontWeight = FontWeight.Bold)
+            Text(text = place.address)
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
             ) {
-                Text(text = placeModel.categories, modifier = Modifier.weight(1f))
+                Text(text = place.categories, modifier = Modifier.weight(1f))
                 IconButton(
                     onClick = {
                         addToPlans()
@@ -104,7 +104,7 @@ private fun VenueCardPreview() {
 
     ProdhseTheme {
         PlaceCard(
-            placeModel = PlaceModel(
+            place = Place(
                 name = "Dodo Pizza",
                 address = "16, Odesskaya st., Moscow, Russia",
                 photoUrl = "",

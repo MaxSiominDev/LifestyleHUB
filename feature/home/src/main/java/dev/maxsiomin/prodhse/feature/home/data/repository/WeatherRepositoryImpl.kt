@@ -4,7 +4,7 @@ import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.data.mappers.WeatherDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.remote.weather_api.WeatherApi
-import dev.maxsiomin.prodhse.feature.home.domain.WeatherModel
+import dev.maxsiomin.prodhse.feature.home.domain.Weather
 import dev.maxsiomin.prodhse.feature.home.domain.repository.WeatherRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -17,7 +17,7 @@ internal class WeatherRepositoryImpl @Inject constructor(private val api: Weathe
         lat: String,
         lon: String,
         lang: String,
-    ): Flow<Resource<WeatherModel, NetworkError>> {
+    ): Flow<Resource<Weather, NetworkError>> {
         return flow {
             val apiResponse = api.getCurrentWeather(lat = lat, lon = lon, lang = lang)
             val mapper = WeatherDtoToUiModelMapper()

@@ -30,8 +30,8 @@ import dev.maxsiomin.common.presentation.components.DatePickerDialog
 import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.home.R
-import dev.maxsiomin.prodhse.feature.home.domain.PhotoModel
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
+import dev.maxsiomin.prodhse.feature.home.domain.Photo
+import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
@@ -143,16 +143,16 @@ private fun AddPlanScreenPreview() {
         AddPlanScreen(
             fsqId = "",
             state = AddPlanViewModel.State(
-                placeDetails = PlaceDetailsModel(
+                placeDetails = PlaceDetails(
                     name = "Кафе Studio 89.5",
                     address = "Маросейка, д. 13, 101000, Москва",
                     photos = listOf(
-                        PhotoModel(id = "", url = ""),
-                        PhotoModel(id = "", url = ""),
-                        PhotoModel(id = "", url = ""),
-                        PhotoModel(id = "", url = ""),
-                        PhotoModel(id = "", url = ""),
-                        PhotoModel(id = "", url = ""),
+                        Photo(id = "", url = ""),
+                        Photo(id = "", url = ""),
+                        Photo(id = "", url = ""),
+                        Photo(id = "", url = ""),
+                        Photo(id = "", url = ""),
+                        Photo(id = "", url = ""),
                     ),
                     workingHours = listOf(
                         "Mon-Thu 11:00-23:00",

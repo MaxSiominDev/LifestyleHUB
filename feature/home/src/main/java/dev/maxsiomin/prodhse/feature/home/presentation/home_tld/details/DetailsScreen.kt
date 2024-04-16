@@ -45,8 +45,8 @@ import dev.maxsiomin.common.extensions.openPhoneNumber
 import dev.maxsiomin.common.presentation.SnackbarCallback
 import dev.maxsiomin.common.presentation.SnackbarInfo
 import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
-import dev.maxsiomin.prodhse.feature.home.domain.PhotoModel
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
+import dev.maxsiomin.prodhse.feature.home.domain.Photo
+import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
@@ -277,16 +277,16 @@ private fun DetailsScreenPreview() {
     ProdhseTheme {
         DetailsScreen(
             state = DetailsViewModel.State(
-                placeDetails = PlaceDetailsModel(
+                placeDetails = PlaceDetails(
                     name = "Кафе Studio 89.5",
                     address = "Маросейка, д. 13, 101000, Москва",
                     photos = listOf(
-                        PhotoModel(id = "", url = ""),
-                        PhotoModel(id = "", url = ""),
-                        PhotoModel(id = "", url = ""),
-                        PhotoModel(id = "", url = ""),
-                        PhotoModel(id = "", url = ""),
-                        PhotoModel(id = "", url = ""),
+                        Photo(id = "", url = ""),
+                        Photo(id = "", url = ""),
+                        Photo(id = "", url = ""),
+                        Photo(id = "", url = ""),
+                        Photo(id = "", url = ""),
+                        Photo(id = "", url = ""),
                     ),
                     workingHours = listOf(
                         "Mon-Thu 11:00-23:00",

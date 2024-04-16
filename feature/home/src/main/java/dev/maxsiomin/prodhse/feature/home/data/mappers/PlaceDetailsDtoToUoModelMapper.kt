@@ -1,12 +1,12 @@
 package dev.maxsiomin.prodhse.feature.home.data.mappers
 
 import dev.maxsiomin.prodhse.feature.home.data.dto.place_details.PlaceDetailsResponse
-import dev.maxsiomin.prodhse.feature.home.domain.PhotoModel
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
+import dev.maxsiomin.prodhse.feature.home.domain.Photo
+import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
 
-internal class PlaceDetailsDtoToUoModelMapper : (PlaceDetailsResponse) -> PlaceDetailsModel? {
+internal class PlaceDetailsDtoToUoModelMapper : (PlaceDetailsResponse) -> PlaceDetails? {
 
-    override fun invoke(detailsDto: PlaceDetailsResponse): PlaceDetailsModel? {
+    override fun invoke(detailsDto: PlaceDetailsResponse): PlaceDetails? {
         val timeUpdated = System.currentTimeMillis()
         val category = detailsDto.categories?.mapNotNull { it?.name }
         if (category.isNullOrEmpty()) return null
@@ -20,13 +20,13 @@ internal class PlaceDetailsDtoToUoModelMapper : (PlaceDetailsResponse) -> PlaceD
         val isOpenNow = detailsDto.hours?.openNow
         val photos = detailsDto.photos?.mapNotNull {
             it?.let {
-                PhotoModel(id = id, url = "${it.prefix}original${it.suffix}")
+                Photo(id = id, url = "${it.prefix}original${it.suffix}")
             }
         } ?: emptyList()
         val phone = detailsDto.phone
         val email = detailsDto.email
 
-        return PlaceDetailsModel(
+        return PlaceDetails(
             timeUpdated = timeUpdated,
             categories = category.joinToString(separator = ","),
             address = address,

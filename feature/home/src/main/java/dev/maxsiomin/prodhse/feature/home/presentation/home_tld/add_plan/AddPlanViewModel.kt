@@ -12,8 +12,8 @@ import dev.maxsiomin.common.presentation.asErrorUiText
 import dev.maxsiomin.common.util.DateConverters
 import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.prodhse.feature.home.R
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
-import dev.maxsiomin.prodhse.feature.home.domain.PlanModel
+import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
+import dev.maxsiomin.prodhse.feature.home.domain.Plan
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
 import kotlinx.coroutines.channels.Channel
@@ -32,7 +32,7 @@ internal class AddPlanViewModel @Inject constructor(
     private var fsqId: String? = null
 
     data class State(
-        val placeDetails: PlaceDetailsModel? = null,
+        val placeDetails: PlaceDetails? = null,
         val dateString: String,
         val dateLocalDate: LocalDate,
         val noteTitle: String = "",
@@ -111,7 +111,7 @@ internal class AddPlanViewModel @Inject constructor(
             val name = state.placeDetails?.name
             if (fsqId == null || name == null) return@launch
 
-            val plan = PlanModel(
+            val plan = Plan(
                 placeFsqId = fsqId,
                 noteTitle = state.noteTitle,
                 noteText = state.noteText,

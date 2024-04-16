@@ -121,12 +121,12 @@ internal fun HomeScreen(
 
                     is HomeFeedItem.Place -> {
                         PlaceCard(
-                            placeModel = feedItem.placeModel,
+                            place = feedItem.place,
                             goToDetails = {
-                                onEvent(HomeViewModel.Event.OnVenueClicked(feedItem.placeModel.fsqId))
+                                onEvent(HomeViewModel.Event.OnVenueClicked(feedItem.place.fsqId))
                             },
                             addToPlans = {
-                                onEvent(HomeViewModel.Event.AddToPlans(feedItem.placeModel.fsqId))
+                                onEvent(HomeViewModel.Event.AddToPlans(feedItem.place.fsqId))
                             }
                         )
                     }

@@ -7,9 +7,9 @@ import dev.maxsiomin.prodhse.feature.home.data.mappers.PlaceDetailsDtoToUoModelM
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacesDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacesPhotosDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.remote.places_api.PlacesApi
-import dev.maxsiomin.prodhse.feature.home.domain.PhotoModel
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceModel
+import dev.maxsiomin.prodhse.feature.home.domain.Photo
+import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
+import dev.maxsiomin.prodhse.feature.home.domain.Place
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -25,7 +25,7 @@ internal class PlacesRepositoryImpl @Inject constructor(
         lat: String,
         lon: String,
         lang: String
-    ): Flow<Resource<List<PlaceModel>, NetworkError>> {
+    ): Flow<Resource<List<Place>, NetworkError>> {
         return flow {
             val apiResponse = api.getPlaces(lat = lat, lon = lon, lang = lang)
             val mapper = PlacesDtoToUiModelMapper()
@@ -41,7 +41,7 @@ internal class PlacesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPhotos(id: String): Flow<Resource<List<PhotoModel>, NetworkError>> {
+    override suspend fun getPhotos(id: String): Flow<Resource<List<Photo>, NetworkError>> {
         return flow {
             val apiResponse = api.getPhotos(id = id)
             val mapper = PlacesPhotosDtoToUiModelMapper()
@@ -55,7 +55,7 @@ internal class PlacesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPlaceDetails(id: String): Flow<Resource<PlaceDetailsModel, NetworkError>> {
+    override suspend fun getPlaceDetails(id: String): Flow<Resource<PlaceDetails, NetworkError>> {
         return flow {
             val localData = getPlaceDetailsFromSharedPrefs(id)
             val currentMillis = System.currentTimeMillis()
@@ -77,18 +77,18 @@ internal class PlacesRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun savePlaceDetailsToSharedPrefs(place: PlaceDetailsModel) {
+    private fun savePlaceDetailsToSharedPrefs(place: PlaceDetails) {
         prefs.edit().apply {
-            val jsonString = Json.encodeToString(PlaceDetailsModel.serializer(), place)
+            val jsonString = Json.encodeToString(PlaceDetails.serializer(), place)
             val key = getPlacePrefsKey(place.fsqId)
             putString(key, jsonString)
         }.apply()
     }
 
-    private fun getPlaceDetailsFromSharedPrefs(id: String): PlaceDetailsModel? {
+    private fun getPlaceDetailsFromSharedPrefs(id: String): PlaceDetails? {
         val key = getPlacePrefsKey(id)
         val jsonString = prefs.getString(key, null) ?: return null
-        return Json.decodeFromString(PlaceDetailsModel.serializer(), jsonString)
+        return Json.decodeFromString(PlaceDetails.serializer(), jsonString)
     }
 
     companion object {

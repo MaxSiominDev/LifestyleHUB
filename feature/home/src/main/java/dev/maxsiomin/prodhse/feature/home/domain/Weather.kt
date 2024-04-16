@@ -1,6 +1,6 @@
 package dev.maxsiomin.prodhse.feature.home.domain
 
-data class WeatherModel(
+data class Weather(
     val city: String,
     val temperatureInfo: TemperatureInfo,
     val weatherCondition: WeatherCondition,

@@ -6,10 +6,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import dev.maxsiomin.prodhse.feature.auth.R
-import dev.maxsiomin.prodhse.feature.auth.domain.RandomActivityModel
+import dev.maxsiomin.prodhse.feature.auth.domain.RandomActivity
 
 @Composable
-fun RandomActivityDialog(activity: RandomActivityModel, onDismissRequest: () -> Unit) {
+fun RandomActivityDialog(activity: RandomActivity, onDismissRequest: () -> Unit) {
     AlertDialog(
         title = {
             Text(text = stringResource(id = R.string.random_activity))

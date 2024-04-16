@@ -3,17 +3,17 @@ package dev.maxsiomin.prodhse.feature.home.data.mappers
 import dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse
 import dev.maxsiomin.prodhse.feature.home.domain.TemperatureInfo
 import dev.maxsiomin.prodhse.feature.home.domain.WeatherCondition
-import dev.maxsiomin.prodhse.feature.home.domain.WeatherModel
+import dev.maxsiomin.prodhse.feature.home.domain.Weather
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.math.roundToInt
 
-internal class WeatherDtoToUiModelMapper : (CurrentWeatherResponse) -> WeatherModel {
+internal class WeatherDtoToUiModelMapper : (CurrentWeatherResponse) -> Weather {
 
-    override fun invoke(weatherDto: CurrentWeatherResponse): WeatherModel {
-        return WeatherModel(
+    override fun invoke(weatherDto: CurrentWeatherResponse): Weather {
+        return Weather(
             city = getCity(weatherDto),
             weatherCondition = getWeatherCondition(weatherDto),
             temperatureInfo = getTemperatureInfo(weatherDto),

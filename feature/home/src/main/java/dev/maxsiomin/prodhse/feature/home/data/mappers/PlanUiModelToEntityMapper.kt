@@ -1,11 +1,11 @@
 package dev.maxsiomin.prodhse.feature.home.data.mappers
 
 import dev.maxsiomin.prodhse.feature.home.data.local.PlanEntity
-import dev.maxsiomin.prodhse.feature.home.domain.PlanModel
+import dev.maxsiomin.prodhse.feature.home.domain.Plan
 
-internal class PlanUiModelToEntityMapper : (PlanModel) -> PlanEntity {
+internal class PlanUiModelToEntityMapper : (Plan) -> PlanEntity {
 
-    override fun invoke(plan: PlanModel): PlanEntity {
+    override fun invoke(plan: Plan): PlanEntity {
         return PlanEntity(
             id = plan.databaseId,
             placeId = plan.placeFsqId,

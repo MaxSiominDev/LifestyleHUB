@@ -9,7 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.presentation.asErrorUiText
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
+import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -32,7 +32,7 @@ internal class DetailsViewModel @Inject constructor(
     val eventsFlow = _eventsFlow.receiveAsFlow()
 
     data class State(
-        val placeDetails: PlaceDetailsModel? = null,
+        val placeDetails: PlaceDetails? = null,
     )
 
     var state by mutableStateOf(State())

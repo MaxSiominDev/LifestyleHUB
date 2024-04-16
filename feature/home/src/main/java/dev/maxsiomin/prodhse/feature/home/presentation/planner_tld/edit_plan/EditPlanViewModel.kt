@@ -13,7 +13,7 @@ import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.util.DateConverters
 import dev.maxsiomin.prodhse.feature.home.R
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
+import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
 import kotlinx.coroutines.channels.Channel
@@ -32,7 +32,7 @@ internal class EditPlanViewModel @Inject constructor(
     private var planId: Long? = null
 
     data class State(
-        val placeDetails: PlaceDetailsModel? = null,
+        val placeDetails: PlaceDetails? = null,
         val dateString: String,
         val originalLocalDate: LocalDate,
         val dateLocalDate: LocalDate,

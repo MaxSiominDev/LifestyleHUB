@@ -1,6 +1,6 @@
 package dev.maxsiomin.prodhse.feature.home.domain
 
-data class PlaceModel(
+data class Place(
     val name: String,
     val address: String,
     val photoUrl: String?,

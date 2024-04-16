@@ -4,7 +4,7 @@ import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.auth.data.mappers.HolidayDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.auth.data.remote.nager.NagerApi
-import dev.maxsiomin.prodhse.feature.auth.domain.HolidayModel
+import dev.maxsiomin.prodhse.feature.auth.domain.Holiday
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.NagerRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,7 +18,7 @@ class NagerRepositoryImpl @Inject constructor(
     override suspend fun getHolidays(
         year: String,
         countryCode: String
-    ): Flow<Resource<List<HolidayModel>, NetworkError>> {
+    ): Flow<Resource<List<Holiday>, NetworkError>> {
         return flow {
             val apiResponse = api.getHolidays(year = year, countryCode = countryCode)
             when (apiResponse) {

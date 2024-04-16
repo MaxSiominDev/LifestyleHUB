@@ -20,13 +20,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
-import dev.maxsiomin.prodhse.feature.home.domain.PhotoModel
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
-import dev.maxsiomin.prodhse.feature.home.domain.PlanModel
+import dev.maxsiomin.prodhse.feature.home.domain.Photo
+import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
+import dev.maxsiomin.prodhse.feature.home.domain.Plan
 import dev.maxsiomin.prodhse.feature.home.R
 
 @Composable
-internal fun PlanCard(placeDetails: PlaceDetailsModel, plan: PlanModel, onClick: () -> Unit) {
+internal fun PlanCard(placeDetails: PlaceDetails, plan: Plan, onClick: () -> Unit) {
 
     val isPreview = LocalInspectionMode.current
 
@@ -84,16 +84,16 @@ private fun VenueCardPreview() {
 
     ProdhseTheme {
         PlanCard(
-            placeDetails = PlaceDetailsModel(
+            placeDetails = PlaceDetails(
                 name = "Кафе Studio 89.5",
                 address = "Маросейка, д. 13, 101000, Москва",
                 photos = listOf(
-                    PhotoModel(id = "", url = ""),
-                    PhotoModel(id = "", url = ""),
-                    PhotoModel(id = "", url = ""),
-                    PhotoModel(id = "", url = ""),
-                    PhotoModel(id = "", url = ""),
-                    PhotoModel(id = "", url = ""),
+                    Photo(id = "", url = ""),
+                    Photo(id = "", url = ""),
+                    Photo(id = "", url = ""),
+                    Photo(id = "", url = ""),
+                    Photo(id = "", url = ""),
+                    Photo(id = "", url = ""),
                 ),
                 workingHours = listOf(
                     "Mon-Thu 11:00-23:00",
@@ -111,7 +111,7 @@ private fun VenueCardPreview() {
                 phone = "+79291234576",
             ),
             onClick = {},
-            plan = PlanModel(
+            plan = Plan(
                 databaseId = 0,
                 placeFsqId = "",
                 noteTitle = "Go to museum with rokymiel",

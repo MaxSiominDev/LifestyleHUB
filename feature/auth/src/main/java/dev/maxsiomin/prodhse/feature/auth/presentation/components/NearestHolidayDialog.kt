@@ -6,11 +6,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import dev.maxsiomin.prodhse.feature.auth.R
-import dev.maxsiomin.prodhse.feature.auth.domain.HolidayModel
-import dev.maxsiomin.prodhse.feature.auth.domain.RandomActivityModel
+import dev.maxsiomin.prodhse.feature.auth.domain.Holiday
 
 @Composable
-fun NearestHolidayDialog(holiday: HolidayModel, onDismissRequest: () -> Unit) {
+fun NearestHolidayDialog(holiday: Holiday, onDismissRequest: () -> Unit) {
     AlertDialog(
         title = {
             Text(text = stringResource(id = R.string.nearest_holiday))

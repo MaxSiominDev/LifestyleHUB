@@ -14,9 +14,9 @@ import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.core.util.LocaleManager
 import dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse
 import dev.maxsiomin.prodhse.feature.home.data.mappers.WeatherDtoToUiModelMapper
-import dev.maxsiomin.prodhse.feature.home.domain.PhotoModel
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceModel
-import dev.maxsiomin.prodhse.feature.home.domain.WeatherModel
+import dev.maxsiomin.prodhse.feature.home.domain.Photo
+import dev.maxsiomin.prodhse.feature.home.domain.Place
+import dev.maxsiomin.prodhse.feature.home.domain.Weather
 import dev.maxsiomin.prodhse.feature.home.domain.repository.LocationRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.WeatherRepository
@@ -61,11 +61,11 @@ internal class HomeViewModel @Inject constructor(
     }
 
     data class State(
-        val places: List<PlaceModel> = listOf(),
+        val places: List<Place> = listOf(),
         val isRefreshing: Boolean = false,
         val showLocationPermissionDialog: Boolean = false,
         val invokeWeatherCallback: Boolean = false,
-        val weather: WeatherModel = WeatherDtoToUiModelMapper().invoke(CurrentWeatherResponse()),
+        val weather: Weather = WeatherDtoToUiModelMapper().invoke(CurrentWeatherResponse()),
         val weatherStatus: WeatherStatus = WeatherStatus.Loading,
         val weatherIsExpanded: Boolean = true,
     )
@@ -183,21 +183,21 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun loadPhotos(places: List<PlaceModel>) {
+    private fun loadPhotos(places: List<Place>) {
         val placeHolderUrl = "file:///android_asset/placeholder.png"
         viewModelScope.launch {
             val placesWithPhoto = places.map {
                 async {
-                    var photoModel: PhotoModel? = null
+                    var photo: Photo? = null
                     placesRepo.getPhotos(id = it.fsqId).collect { photosResource ->
                         when (photosResource) {
                             is Resource.Error -> Unit
                             is Resource.Success -> {
-                                photoModel = photosResource.data.firstOrNull()
+                                photo = photosResource.data.firstOrNull()
                             }
                         }
                     }
-                    it.copy(photoUrl = photoModel?.url ?: placeHolderUrl)
+                    it.copy(photoUrl = photo?.url ?: placeHolderUrl)
                 }
             }.awaitAll()
             state = state.copy(places = placesWithPhoto)
