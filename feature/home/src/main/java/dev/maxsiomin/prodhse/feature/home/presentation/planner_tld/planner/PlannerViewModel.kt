@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.common.domain.Resource
+import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
 import kotlinx.coroutines.async

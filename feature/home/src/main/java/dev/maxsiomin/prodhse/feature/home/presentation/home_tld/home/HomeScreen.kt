@@ -137,7 +137,6 @@ internal fun HomeScreen(
             },
             isRefreshing = state.isRefreshing,
             onRefresh = {
-                Timber.tag("Location").i("-1")
                 onEvent(HomeViewModel.Event.Refresh)
             }
         )

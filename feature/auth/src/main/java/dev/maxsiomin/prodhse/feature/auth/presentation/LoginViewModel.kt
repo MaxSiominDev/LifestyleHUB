@@ -9,7 +9,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.authlib.domain.LoginInfo
 import dev.maxsiomin.authlib.domain.LoginStatus
+import dev.maxsiomin.common.domain.resource.Resource
+import dev.maxsiomin.common.domain.resource.errorOrNull
 import dev.maxsiomin.common.presentation.UiText
+import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForLogin
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForLogin
 import kotlinx.coroutines.channels.Channel
@@ -75,17 +78,32 @@ class LoginViewModel @Inject constructor(
     private fun onLogin() {
         val username = state.username.trim()
         val password = state.password.trim()
-        val validateUsername = validateUsernameForLogin.execute(username)
-        val validatePassword = validatePasswordForLogin.execute(password)
+        val validateUsername =
+            validateUsernameForLogin.execute(username)
+        val validatePassword =
+            validatePasswordForLogin.execute(password)
 
-        val hasError = listOf(validateUsername, validatePassword).any {
-            it.successful.not()
+        val hasError =
+            listOf(validateUsername, validatePassword).any { it !is Resource.Success }
+
+        val usernameError: UiText? = when (validateUsername.errorOrNull()) {
+            null -> null
+            ValidateUsernameForLogin.UsernameForLoginError.IsBlank -> {
+                UiText.StringResource(R.string.blank_username)
+            }
+        }
+
+        val passwordError: UiText? = when (validatePassword.errorOrNull()) {
+            null -> null
+            ValidatePasswordForLogin.PasswordForLoginError.IsBlank -> {
+                UiText.StringResource(R.string.blank_password)
+            }
         }
 
         if (hasError) {
             state = state.copy(
-                usernameError = validateUsername.errorMessage,
-                passwordError = validatePassword.errorMessage
+                usernameError = usernameError,
+                passwordError = passwordError,
             )
             return
         }

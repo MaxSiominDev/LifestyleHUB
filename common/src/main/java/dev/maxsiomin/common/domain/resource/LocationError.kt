@@ -1,4 +1,4 @@
-package dev.maxsiomin.common.domain
+package dev.maxsiomin.common.domain.resource
 
 sealed interface LocationError : Error {
 

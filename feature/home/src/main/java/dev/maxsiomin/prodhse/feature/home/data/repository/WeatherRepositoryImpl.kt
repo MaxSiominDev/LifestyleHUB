@@ -1,14 +1,13 @@
 package dev.maxsiomin.prodhse.feature.home.data.repository
 
-import dev.maxsiomin.common.domain.NetworkError
-import dev.maxsiomin.common.domain.Resource
+import dev.maxsiomin.common.domain.resource.NetworkError
+import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.data.mappers.WeatherDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.remote.weather_api.WeatherApi
 import dev.maxsiomin.prodhse.feature.home.domain.WeatherModel
 import dev.maxsiomin.prodhse.feature.home.domain.repository.WeatherRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.lang.Exception
 import javax.inject.Inject
 
 internal class WeatherRepositoryImpl @Inject constructor(private val api: WeatherApi) :

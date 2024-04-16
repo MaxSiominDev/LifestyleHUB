@@ -6,19 +6,20 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.common.presentation.asErrorUiText
-import dev.maxsiomin.prodhse.core.util.DateFormatter
+import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.presentation.UiText
+import dev.maxsiomin.common.presentation.asErrorUiText
+import dev.maxsiomin.common.util.DateConverters
+import dev.maxsiomin.prodhse.core.util.DateFormatter
+import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
 import dev.maxsiomin.prodhse.feature.home.domain.PlanModel
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
-import dev.maxsiomin.prodhse.feature.home.R
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -81,16 +82,12 @@ internal class AddPlanViewModel @Inject constructor(
             placesRepo.getPlaceDetails(id).collect { resource ->
                 when (resource) {
 
-                    is dev.maxsiomin.common.domain.Resource.Error -> {
+                    is Resource.Error -> {
                         state = state.copy(isLoading = false, isError = true)
-                        _eventsFlow.send(
-                            UiEvent.OnError(
-                                resource.asErrorUiText()
-                            )
-                        )
+                        _eventsFlow.send(UiEvent.OnError(resource.asErrorUiText()))
                     }
 
-                    is dev.maxsiomin.common.domain.Resource.Success -> {
+                    is Resource.Success -> {
                         state = state.copy(placeDetails = resource.data, isError = false, isLoading = false)
                     }
                 }
@@ -99,7 +96,7 @@ internal class AddPlanViewModel @Inject constructor(
     }
 
     private fun onNewDate(newDate: LocalDate) {
-        val epochMillis = newDate.toEpochMillis()
+        val epochMillis = DateConverters.localDateToEpochMillis(newDate)
 
         state = state.copy(
             dateString = dateFormatter.formatDate(epochMillis),
@@ -109,6 +106,7 @@ internal class AddPlanViewModel @Inject constructor(
 
     private fun onSaveClicked() {
         viewModelScope.launch {
+            val state = state
             val fsqId = fsqId
             val name = state.placeDetails?.name
             if (fsqId == null || name == null) return@launch
@@ -117,7 +115,7 @@ internal class AddPlanViewModel @Inject constructor(
                 placeFsqId = fsqId,
                 noteTitle = state.noteTitle,
                 noteText = state.noteText,
-                date = state.dateLocalDate.toEpochMillis(),
+                date = DateConverters.localDateToEpochMillis(state.dateLocalDate),
                 // Room will create new record
                 databaseId = 0,
                 dateString = state.dateString,
@@ -127,13 +125,6 @@ internal class AddPlanViewModel @Inject constructor(
             _eventsFlow.send(UiEvent.OnError(UiText.StringResource(R.string.plan_added, name)))
             _eventsFlow.send(UiEvent.NavigateBack)
         }
-    }
-
-    private fun LocalDate.toEpochMillis(): Long {
-        val zoneId: ZoneId = ZoneId.systemDefault()
-        val startOfDay = this.atStartOfDay(zoneId)
-        val epochMillis = startOfDay.toInstant().toEpochMilli()
-        return epochMillis
     }
 
 }

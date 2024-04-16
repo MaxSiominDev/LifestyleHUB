@@ -1,25 +1,20 @@
 package dev.maxsiomin.prodhse.feature.auth.domain.use_case
 
-import dev.maxsiomin.common.presentation.UiText
-import dev.maxsiomin.prodhse.feature.auth.R
+import dev.maxsiomin.common.domain.resource.Error
+import dev.maxsiomin.common.domain.resource.Resource
 import javax.inject.Inject
 
 class ValidateUsernameForSignup @Inject constructor() {
 
-    fun execute(username: String): ValidationResult {
-        if (username.length < MIN_USERNAME_LENGTH) {
-            return ValidationResult(
-                successful = false,
-                errorMessage = UiText.StringResource(
-                    R.string.username_length_violated,
-                    MIN_USERNAME_LENGTH,
-                    MAX_USERNAME_LENGTH,
-                )
-            )
+    fun execute(username: String): Resource<Unit, UsernameForSignupError> {
+        if (username.length !in MIN_USERNAME_LENGTH..MAX_USERNAME_LENGTH) {
+            return Resource.Error(UsernameForSignupError.InvalidLength)
         }
-        return ValidationResult(
-            successful = true
-        )
+        return Resource.Success(Unit)
+    }
+
+    sealed interface UsernameForSignupError : Error {
+        data object InvalidLength : UsernameForSignupError
     }
 
     companion object {

@@ -1,21 +1,20 @@
 package dev.maxsiomin.prodhse.feature.auth.domain.use_case
 
-import dev.maxsiomin.common.presentation.UiText
-import dev.maxsiomin.prodhse.feature.auth.R
+import dev.maxsiomin.common.domain.resource.Error
+import dev.maxsiomin.common.domain.resource.Resource
 import javax.inject.Inject
 
 class ValidateUsernameForLogin @Inject constructor(){
 
-    fun execute(username: String): ValidationResult {
+    fun execute(username: String): Resource<Unit, UsernameForLoginError> {
         if (username.isBlank()) {
-            return ValidationResult(
-                successful = false,
-                errorMessage = UiText.StringResource(R.string.blank_username)
-            )
+            return Resource.Error(UsernameForLoginError.IsBlank)
         }
-        return ValidationResult(
-            successful = true
-        )
+        return Resource.Success(Unit)
+    }
+
+    sealed interface UsernameForLoginError : Error {
+        data object IsBlank : UsernameForLoginError
     }
 
 }

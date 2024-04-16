@@ -6,9 +6,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.maxsiomin.common.domain.resource.DatabaseError
+import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.presentation.asErrorUiText
 import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.common.presentation.UiText
+import dev.maxsiomin.common.util.DateConverters
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetailsModel
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
@@ -16,9 +19,7 @@ import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,7 +56,7 @@ internal class EditPlanViewModel @Inject constructor(
 
     sealed class UiEvent {
         data object NavigateBack : UiEvent()
-        data class ShowError(val message: UiText) : UiEvent()
+        data class OnError(val message: UiText) : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -76,14 +77,17 @@ internal class EditPlanViewModel @Inject constructor(
                 onNewDate(newDate = event.newDate)
                 checkIfNotSaved()
             }
+
             is Event.NoteTitleChanged -> {
                 state = state.copy(noteTitle = event.newValue)
                 checkIfNotSaved()
             }
+
             is Event.NoteTextChanged -> {
                 state = state.copy(noteText = event.newValue)
                 checkIfNotSaved()
             }
+
             Event.SaveClicked -> onSaveClicked()
         }
     }
@@ -99,10 +103,16 @@ internal class EditPlanViewModel @Inject constructor(
     private fun loadPlan(id: Long) {
         planId = id
         viewModelScope.launch {
-            val plan = plansRepo.getPlanById(id)
-            if (plan == null) {
-                _eventsFlow.send(UiEvent.ShowError(UiText.StringResource(R.string.plan_not_found)))
-                return@launch
+            val plan = when (val planResource = plansRepo.getPlanById(id)) {
+                is Resource.Error -> {
+                    val message: UiText = when (planResource.error) {
+                        DatabaseError.NotFound -> UiText.StringResource(R.string.plan_not_found)
+                    }
+                    _eventsFlow.send(UiEvent.OnError(message))
+                    return@launch
+                }
+
+                is Resource.Success -> planResource.data
             }
             state = state.copy(
                 originalNoteTitle = plan.noteTitle,
@@ -110,7 +120,7 @@ internal class EditPlanViewModel @Inject constructor(
                 originalNoteText = plan.noteText,
                 noteText = plan.noteText,
                 dateString = plan.dateString,
-                dateLocalDate = Instant.ofEpochMilli(plan.date).toLocalDate()
+                dateLocalDate = DateConverters.epochMillisToLocalDate(plan.date)
             )
             loadPlaceDetails(plan.placeFsqId)
         }
@@ -121,15 +131,19 @@ internal class EditPlanViewModel @Inject constructor(
         viewModelScope.launch {
             placesRepo.getPlaceDetails(id).collect { resource ->
                 when (resource) {
-                    is dev.maxsiomin.common.domain.Resource.Error -> {
+                    is Resource.Error -> {
                         state = state.copy(isLoading = false, isError = true)
                         _eventsFlow.send(
-                            UiEvent.ShowError(resource.asErrorUiText())
+                            UiEvent.OnError(resource.asErrorUiText())
                         )
                     }
 
-                    is dev.maxsiomin.common.domain.Resource.Success -> {
-                        state = state.copy(placeDetails = resource.data, isError = false, isLoading = false)
+                    is Resource.Success -> {
+                        state = state.copy(
+                            placeDetails = resource.data,
+                            isError = false,
+                            isLoading = false
+                        )
                     }
                 }
             }
@@ -137,7 +151,7 @@ internal class EditPlanViewModel @Inject constructor(
     }
 
     private fun onNewDate(newDate: LocalDate) {
-        val epochMillis = newDate.toEpochMillis()
+        val epochMillis = DateConverters.localDateToEpochMillis(newDate)
 
         state = state.copy(
             dateString = dateFormatter.formatDate(epochMillis),
@@ -149,13 +163,19 @@ internal class EditPlanViewModel @Inject constructor(
         viewModelScope.launch {
             val planId = planId ?: return@launch
 
-            val plan = plansRepo.getPlanById(planId)
-            if (plan == null) {
-                _eventsFlow.send(UiEvent.ShowError(UiText.StringResource(R.string.plan_not_found)))
-                return@launch
+            val plan = when (val planResource = plansRepo.getPlanById(planId)) {
+                is Resource.Error -> {
+                    val message: UiText = when (planResource.error) {
+                        DatabaseError.NotFound -> UiText.StringResource(R.string.plan_not_found)
+                    }
+                    _eventsFlow.send(UiEvent.OnError(message))
+                    return@launch
+                }
+
+                is Resource.Success -> planResource.data
             }
 
-            val millis = state.dateLocalDate.toEpochMillis()
+            val millis = DateConverters.localDateToEpochMillis(state.dateLocalDate)
 
             val newPlan = plan.copy(
                 noteTitle = state.noteTitle,
@@ -165,23 +185,9 @@ internal class EditPlanViewModel @Inject constructor(
             )
             plansRepo.editPlan(newPlan)
 
-            _eventsFlow.send(UiEvent.ShowError(UiText.StringResource(R.string.plan_updated)))
+            _eventsFlow.send(UiEvent.OnError(UiText.StringResource(R.string.plan_updated)))
             _eventsFlow.send(UiEvent.NavigateBack)
         }
-    }
-
-    private fun LocalDate.toEpochMillis(): Long {
-        val zoneId: ZoneId = ZoneId.systemDefault()
-        val startOfDay = this.atStartOfDay(zoneId)
-        val epochMillis = startOfDay.toInstant().toEpochMilli()
-        return epochMillis
-    }
-
-    private fun Instant.toLocalDate(): LocalDate {
-        val zoneId = ZoneId.systemDefault()
-        return this
-            .atZone(zoneId)
-            .toLocalDate()
     }
 
 }

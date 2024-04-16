@@ -2,21 +2,15 @@ package dev.maxsiomin.prodhse.feature.home.data.remote.places_api
 
 import dev.maxsiomin.prodhse.core.ApiKeys
 import dev.maxsiomin.common.data.safeGet
-import dev.maxsiomin.common.domain.NetworkError
-import dev.maxsiomin.common.domain.Resource
+import dev.maxsiomin.common.domain.resource.NetworkError
+import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.data.dto.place_details.PlaceDetailsResponse
 import dev.maxsiomin.prodhse.feature.home.data.dto.place_photos.PlacePhotosResponseItem
 import dev.maxsiomin.prodhse.feature.home.data.dto.places_nearby.PlacesResponse
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.RedirectResponseException
-import io.ktor.client.plugins.ServerResponseException
-import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
-import timber.log.Timber
 import javax.inject.Inject
 
 internal class PlacesApiImpl @Inject constructor(private val client: HttpClient) : PlacesApi {

@@ -1,5 +1,7 @@
 package dev.maxsiomin.prodhse.feature.home.data.repository
 
+import dev.maxsiomin.common.domain.resource.DatabaseError
+import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.data.local.PlansDao
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlanEntityToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlanUiModelToEntityMapper
@@ -29,7 +31,12 @@ internal class PlansRepositoryImpl @Inject constructor(
         dao.updatePlan(entity)
     }
 
-    override suspend fun getPlanById(id: Long): PlanModel? {
-        return dao.getPlanById(id)?.let(planEntityToUiModelMapper)
+    override suspend fun getPlanById(id: Long): Resource<PlanModel, DatabaseError> {
+        val plan = dao.getPlanById(id)?.let(planEntityToUiModelMapper)
+        return if (plan != null) {
+            Resource.Success(plan)
+        } else {
+            Resource.Error(DatabaseError.NotFound)
+        }
     }
 }

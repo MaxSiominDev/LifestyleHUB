@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.common.domain.Resource
+import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.presentation.asErrorUiText
 import dev.maxsiomin.prodhse.core.location.PermissionChecker

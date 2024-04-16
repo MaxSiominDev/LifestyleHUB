@@ -1,8 +1,8 @@
 package dev.maxsiomin.common.presentation
 
 import dev.maxsiomin.common.R
-import dev.maxsiomin.common.domain.NetworkError
-import dev.maxsiomin.common.domain.Resource
+import dev.maxsiomin.common.domain.resource.NetworkError
+import dev.maxsiomin.common.domain.resource.Resource
 
 fun NetworkError.asUiText(): UiText {
     return when (this) {

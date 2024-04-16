@@ -1,7 +1,7 @@
 package dev.maxsiomin.common.data
 
-import dev.maxsiomin.common.domain.NetworkError
-import dev.maxsiomin.common.domain.Resource
+import dev.maxsiomin.common.domain.resource.NetworkError
+import dev.maxsiomin.common.domain.resource.Resource
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException

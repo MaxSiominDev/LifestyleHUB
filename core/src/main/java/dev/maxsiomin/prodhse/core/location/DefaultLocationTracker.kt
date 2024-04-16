@@ -9,17 +9,10 @@ import android.location.LocationManager
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.tasks.Task
-import dev.maxsiomin.common.domain.LocationError
-import dev.maxsiomin.common.domain.Resource
+import dev.maxsiomin.common.domain.resource.LocationError
+import dev.maxsiomin.common.domain.resource.Resource
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.suspendCancellableCoroutine
-import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.resume
 
 class DefaultLocationTracker @Inject constructor(
     private val context: Context,
@@ -28,7 +21,6 @@ class DefaultLocationTracker @Inject constructor(
 
     @SuppressLint("MissingPermission")
     override suspend fun getCurrentLocation(): Resource<Location, LocationError> {
-        Timber.tag("Location").i("0")
         val hasAccessCoarseLocationPermission = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_COARSE_LOCATION
