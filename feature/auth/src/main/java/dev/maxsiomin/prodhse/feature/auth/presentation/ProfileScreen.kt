@@ -2,10 +2,8 @@ package dev.maxsiomin.prodhse.feature.auth.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -118,18 +116,18 @@ internal fun ProfileScreen(
 
         Spacer(modifier = Modifier.weight(0.25f))
 
-        val modifier = Modifier
+        val imageModifier = Modifier
             .size(200.dp)
             .clip(CircleShape)
         if (isPreview) {
             Image(
-                modifier = modifier,
+                modifier = imageModifier,
                 painter = painterResource(id = R.drawable.preview_avatar),
                 contentDescription = null,
             )
         } else {
             AsyncImage(
-                modifier = modifier,
+                modifier = imageModifier,
                 model = userInfo.avatarUrl,
                 contentDescription = stringResource(id = R.string.avatar)
             )

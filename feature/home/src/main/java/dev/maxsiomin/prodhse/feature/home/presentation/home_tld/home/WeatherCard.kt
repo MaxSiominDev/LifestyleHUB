@@ -43,9 +43,7 @@ internal fun WeatherCard(weather: Weather, weatherStatus: HomeViewModel.WeatherS
 
     val isPreview = LocalInspectionMode.current
 
-    val isNight = remember {
-        weather.weatherCondition.isNight
-    }
+    val isNight = weather.weatherCondition.isNight
     val background = remember(isNight) {
         if (isNight) nightBackground else dayBackground
     }
@@ -116,18 +114,18 @@ internal fun WeatherCard(weather: Weather, weatherStatus: HomeViewModel.WeatherS
                     modifier = Modifier.align(Alignment.BottomEnd),
                     horizontalAlignment = Alignment.End
                 ) {
-                    val modifier = Modifier.size(48.dp)
+                    val imageModifier = Modifier.size(48.dp)
                     if (LocalInspectionMode.current) {
                         Image(
                             painter = painterResource(id = R.drawable.d03),
                             contentDescription = null,
-                            modifier = modifier,
+                            modifier = imageModifier,
                         )
                     } else {
                         AsyncImage(
                             model = weather.weatherCondition.iconUrl,
                             contentDescription = "Weather Icon",
-                            modifier = modifier,
+                            modifier = imageModifier,
                         )
                     }
 

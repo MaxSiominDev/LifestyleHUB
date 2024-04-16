@@ -43,13 +43,13 @@ internal fun PlanCard(placeDetails: PlaceDetails, plan: Plan, onClick: () -> Uni
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
 
-            val modifier = Modifier
+            val imageModifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
 
             if (isPreview) {
                 Image(
-                    modifier = modifier,
+                    modifier = imageModifier,
                     painter = painterResource(id = R.drawable.place_preview),
                     contentDescription = null,
                 )
@@ -58,7 +58,7 @@ internal fun PlanCard(placeDetails: PlaceDetails, plan: Plan, onClick: () -> Uni
                     AsyncImage(
                         model = url,
                         contentDescription = "Attraction Image",
-                        modifier = modifier,
+                        modifier = imageModifier,
                         contentScale = ContentScale.Crop
                     )
                 }

@@ -50,15 +50,15 @@ internal fun PlaceCard(place: Place, goToDetails: () -> Unit, addToPlans: () -> 
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
 
-            val modifier = Modifier
+            val imageModifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
             if (place.photoUrl == null) {
-                Box(modifier = modifier.shimmerEffect(grayShimmerColors))
+                Box(modifier = imageModifier.shimmerEffect(grayShimmerColors))
             } else {
                 if (isPreview) {
                     Image(
-                        modifier = modifier,
+                        modifier = imageModifier,
                         painter = painterResource(id = R.drawable.place_preview),
                         contentDescription = null,
                     )
@@ -66,7 +66,7 @@ internal fun PlaceCard(place: Place, goToDetails: () -> Unit, addToPlans: () -> 
                     AsyncImage(
                         model = place.photoUrl,
                         contentDescription = "Attraction Image",
-                        modifier = modifier,
+                        modifier = imageModifier,
                         contentScale = ContentScale.Crop
                     )
                 }

@@ -139,7 +139,7 @@ internal fun HomeScreen(
             }
         )
 
-        if (state.places.isEmpty()) {
+        if (state.places.isEmpty() && !state.isRefreshing) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = stringResource(R.string.no_places_nearby)
