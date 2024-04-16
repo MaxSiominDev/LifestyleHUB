@@ -167,7 +167,7 @@ internal fun DetailsScreen(
             Icon(
                 tint = Color(0xFF1BA35C),
                 painter = painterResource(id = R.drawable.verified),
-                contentDescription = "Verified"
+                contentDescription = stringResource(R.string.verified)
             )
         }
 

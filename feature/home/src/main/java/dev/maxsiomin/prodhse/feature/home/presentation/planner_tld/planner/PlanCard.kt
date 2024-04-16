@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,7 +58,7 @@ internal fun PlanCard(placeDetails: PlaceDetails, plan: Plan, onClick: () -> Uni
                 placeDetails.photos.firstOrNull()?.url?.let { url ->
                     AsyncImage(
                         model = url,
-                        contentDescription = "Attraction Image",
+                        contentDescription = stringResource(id = R.string.attraction_image),
                         modifier = imageModifier,
                         contentScale = ContentScale.Crop
                     )

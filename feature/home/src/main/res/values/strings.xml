@@ -22,5 +22,10 @@
     <string name="temperature_unknown">Temperature unknown</string>
     <string name="unknown_conditions">Unknown weather conditions</string>
     <string name="weather">Weather</string>
+    <string name="attraction_image">Attraction Image</string>
+    <string name="verified">Verified</string>
+    <string name="weather_icon">Weather Icon</string>
+    <string name="collapse">Collapse</string>
+    <string name="expand">Expand</string>
 
 </resources>

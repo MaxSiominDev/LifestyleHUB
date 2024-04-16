@@ -41,7 +41,9 @@ internal fun WeatherItem(
     ) {
         Icon(
             imageVector = if (isExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-            contentDescription = if (isExpanded) "Collapse" else "Expand"
+            contentDescription = stringResource(
+                id = if (isExpanded) R.string.collapse else R.string.expand
+            )
         )
         Spacer(modifier = Modifier.width(20.dp))
         Text(text = stringResource(id = R.string.weather))
@@ -60,5 +62,3 @@ internal fun WeatherItem(
         }
     }
 }
-
-typealias UpdateCallback = () -> Unit
