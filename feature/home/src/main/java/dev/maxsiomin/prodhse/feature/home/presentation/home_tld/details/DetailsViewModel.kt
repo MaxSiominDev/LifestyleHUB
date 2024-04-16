@@ -25,7 +25,7 @@ internal class DetailsViewModel @Inject constructor(
     sealed class UiEvent {
         data class NavigateToPhotoScreen(val url: String) : UiEvent()
         data class NavigateToAddPlanScreen(val fsqId: String) : UiEvent()
-        data class OnError(val message: UiText) : UiEvent()
+        data class ShowMessage(val message: UiText) : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -62,7 +62,7 @@ internal class DetailsViewModel @Inject constructor(
         viewModelScope.launch {
             repo.getPlaceDetails(id).collect { resource ->
                 when (resource) {
-                    is Resource.Error -> _eventsFlow.send(UiEvent.OnError(resource.asErrorUiText()))
+                    is Resource.Error -> _eventsFlow.send(UiEvent.ShowMessage(resource.asErrorUiText()))
                     is Resource.Success -> {
                         state = state.copy(placeDetails = resource.data)
                     }

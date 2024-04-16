@@ -56,7 +56,7 @@ internal class EditPlanViewModel @Inject constructor(
 
     sealed class UiEvent {
         data object NavigateBack : UiEvent()
-        data class OnError(val message: UiText) : UiEvent()
+        data class ShowMessage(val message: UiText) : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -108,7 +108,7 @@ internal class EditPlanViewModel @Inject constructor(
                     val message: UiText = when (planResource.error) {
                         DatabaseError.NotFound -> UiText.StringResource(R.string.plan_not_found)
                     }
-                    _eventsFlow.send(UiEvent.OnError(message))
+                    _eventsFlow.send(UiEvent.ShowMessage(message))
                     return@launch
                 }
 
@@ -134,7 +134,7 @@ internal class EditPlanViewModel @Inject constructor(
                     is Resource.Error -> {
                         state = state.copy(isLoading = false, isError = true)
                         _eventsFlow.send(
-                            UiEvent.OnError(resource.asErrorUiText())
+                            UiEvent.ShowMessage(resource.asErrorUiText())
                         )
                     }
 
@@ -168,7 +168,7 @@ internal class EditPlanViewModel @Inject constructor(
                     val message: UiText = when (planResource.error) {
                         DatabaseError.NotFound -> UiText.StringResource(R.string.plan_not_found)
                     }
-                    _eventsFlow.send(UiEvent.OnError(message))
+                    _eventsFlow.send(UiEvent.ShowMessage(message))
                     return@launch
                 }
 
@@ -185,7 +185,7 @@ internal class EditPlanViewModel @Inject constructor(
             )
             plansRepo.editPlan(newPlan)
 
-            _eventsFlow.send(UiEvent.OnError(UiText.StringResource(R.string.plan_updated)))
+            _eventsFlow.send(UiEvent.ShowMessage(UiText.StringResource(R.string.plan_updated)))
             _eventsFlow.send(UiEvent.NavigateBack)
         }
     }

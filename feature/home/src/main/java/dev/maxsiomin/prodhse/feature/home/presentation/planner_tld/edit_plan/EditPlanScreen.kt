@@ -45,7 +45,7 @@ internal fun EditPlanScreen(
                 navController.popBackStack()
             }
 
-            is EditPlanViewModel.UiEvent.OnError -> {
+            is EditPlanViewModel.UiEvent.ShowMessage -> {
                 showSnackbar(SnackbarInfo(event.message))
             }
         }

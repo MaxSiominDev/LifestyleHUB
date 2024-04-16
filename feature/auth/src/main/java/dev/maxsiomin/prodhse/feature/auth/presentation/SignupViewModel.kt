@@ -44,7 +44,7 @@ class SignupViewModel @Inject constructor(
     sealed class UiEvent {
         data object NavigateToLoginScreen : UiEvent()
         data object NavigateToSuccessfulRegistrationScreen : UiEvent()
-        data class ShowError(val message: UiText) : UiEvent()
+        data class ShowMessage(val message: UiText) : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -172,7 +172,7 @@ class SignupViewModel @Inject constructor(
 
     private suspend fun onRegistrationError(message: UiText) {
         _eventsFlow.send(
-            UiEvent.ShowError(message)
+            UiEvent.ShowMessage(message)
         )
     }
 

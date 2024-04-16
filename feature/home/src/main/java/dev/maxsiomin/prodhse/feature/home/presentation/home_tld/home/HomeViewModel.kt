@@ -75,7 +75,7 @@ internal class HomeViewModel @Inject constructor(
 
 
     sealed class UiEvent {
-        data class ShowError(val message: UiText) : UiEvent()
+        data class ShowMessage(val message: UiText) : UiEvent()
         data object RequestLocationPermission : UiEvent()
         data class GoToDetailsScreen(val fsqId: String) : UiEvent()
         data class GoToAddPlanScreen(val fsqId: String) : UiEvent()
@@ -145,7 +145,7 @@ internal class HomeViewModel @Inject constructor(
             val location = locationRepo.getCurrentLocation()
             when (location) {
                 is Resource.Error -> {
-                    _eventsFlow.send(UiEvent.ShowError(location.asErrorUiText()))
+                    _eventsFlow.send(UiEvent.ShowMessage(location.asErrorUiText()))
                     placesIsRefreshing = false
                 }
 
@@ -172,7 +172,7 @@ internal class HomeViewModel @Inject constructor(
                 placesIsRefreshing = false
 
                 when (resource) {
-                    is Resource.Error -> _eventsFlow.send(UiEvent.ShowError(resource.asErrorUiText()))
+                    is Resource.Error -> _eventsFlow.send(UiEvent.ShowMessage(resource.asErrorUiText()))
 
                     is Resource.Success -> {
                         state = state.copy(places = resource.data)
@@ -218,7 +218,7 @@ internal class HomeViewModel @Inject constructor(
                 when (resource) {
                     is Resource.Error -> {
                         state = state.copy(weatherStatus = WeatherStatus.Error)
-                        _eventsFlow.send(UiEvent.ShowError(UiText.DynamicString("Weather info is unavailable")))
+                        _eventsFlow.send(UiEvent.ShowMessage(UiText.DynamicString("Weather info is unavailable")))
                     }
 
                     is Resource.Success -> {

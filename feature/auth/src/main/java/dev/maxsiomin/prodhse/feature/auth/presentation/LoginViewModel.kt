@@ -41,7 +41,7 @@ class LoginViewModel @Inject constructor(
     sealed class UiEvent {
         data object NavigateToSignupScreen : UiEvent()
         data object NavigateToProfileScreen : UiEvent()
-        data class ShowError(val message: UiText) : UiEvent()
+        data class ShowMessage(val message: UiText) : UiEvent()
     }
 
     private val _eventsFlow = Channel<UiEvent>()
@@ -119,7 +119,7 @@ class LoginViewModel @Inject constructor(
 
                 is LoginStatus.Failure -> {
                     _eventsFlow.send(
-                        UiEvent.ShowError(
+                        UiEvent.ShowMessage(
                             UiText.DynamicString(loginStatus.reason)
                         )
                     )

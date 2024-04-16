@@ -2,7 +2,6 @@ package dev.maxsiomin.prodhse.feature.home.presentation.home_tld.details
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddCircleOutline
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -85,7 +83,7 @@ internal fun DetailsScreen(
                 )
             }
 
-            is DetailsViewModel.UiEvent.OnError -> {
+            is DetailsViewModel.UiEvent.ShowMessage -> {
                 showSnackbar(SnackbarInfo(message = event.message))
             }
         }
