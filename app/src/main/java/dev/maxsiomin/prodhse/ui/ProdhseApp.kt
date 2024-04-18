@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -22,10 +21,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
-import dev.maxsiomin.prodhse.ProdhseAppState
 import dev.maxsiomin.common.presentation.SnackbarInfo
+import dev.maxsiomin.prodhse.ProdhseAppState
 import dev.maxsiomin.prodhse.navdestinations.topLevelDestinations
 import kotlinx.coroutines.launch
 
@@ -41,7 +38,7 @@ fun ProdhseApp(appState: ProdhseAppState) {
                 snackbarHostState.showSnackbar(
                     message = info.message.asString(context),
                     withDismissAction = true,
-                    duration = SnackbarDuration.Short
+                    duration = SnackbarDuration.Short,
                 )
             }
             Unit
@@ -72,7 +69,7 @@ fun ProdhseApp(appState: ProdhseAppState) {
                                 if (isSelected) destination.selectedIcon else destination.unselectedIcon
                             Icon(
                                 imageVector = vector,
-                                contentDescription = stringResource(id = destination.titleTextId)
+                                contentDescription = stringResource(id = destination.titleTextId),
                             )
                         },
                         label = { Text(text = stringResource(id = destination.titleTextId)) }
@@ -85,7 +82,7 @@ fun ProdhseApp(appState: ProdhseAppState) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(paddingValues),
         ) {
             ProdhseNavHost(
                 appState = appState,

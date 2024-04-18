@@ -8,4 +8,7 @@
     <string name="gps_disabled">GPS unavailable</string>
     <string name="missing_permission">Missing location permission</string>
 
+    <string name="grant_permission">Grant permission</string>
+    <string name="permission_required">Permission required</string>
+
 </resources>

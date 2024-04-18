@@ -16,11 +16,11 @@ import androidx.navigation.NavController
 import dev.maxsiomin.common.extensions.openAppSettings
 import dev.maxsiomin.common.presentation.SnackbarCallback
 import dev.maxsiomin.common.presentation.SnackbarInfo
+import dev.maxsiomin.common.presentation.components.PermissionDialog
 import dev.maxsiomin.common.presentation.components.PullToRefreshLazyColumn
 import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.core.ui.LocationPermissionTextProvider
-import dev.maxsiomin.prodhse.core.ui.PermissionDialog
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow

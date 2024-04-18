@@ -83,3 +83,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 jetbrainsKotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerialization" }
+roomCompiler = { id = "androidx.room", version.ref = "roomKtx" }

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.daggerHilt)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.roomCompiler)
     kotlin("kapt")
 }
 
@@ -39,6 +40,9 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.11"
+    }
+    room {
+        schemaDirectory("$projectDir/schemas")
     }
 }
 
