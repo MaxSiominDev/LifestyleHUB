@@ -44,7 +44,7 @@ import dev.maxsiomin.common.extensions.openLink
 import dev.maxsiomin.common.extensions.openPhoneNumber
 import dev.maxsiomin.common.presentation.SnackbarCallback
 import dev.maxsiomin.common.presentation.SnackbarInfo
-import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
+import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.home.domain.Photo
 import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.R

@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
+import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.home.domain.Photo
 import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.domain.Plan

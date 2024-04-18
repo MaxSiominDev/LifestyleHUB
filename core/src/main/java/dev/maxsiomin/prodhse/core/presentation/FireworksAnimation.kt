@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.core.ui
+package dev.maxsiomin.prodhse.core.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

@@ -36,7 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import dev.maxsiomin.authlib.domain.AuthStatus
 import dev.maxsiomin.authlib.domain.UserInfo
-import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
+import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.NearestHolidayDialog
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.RandomActivityDialog

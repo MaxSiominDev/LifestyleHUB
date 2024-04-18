@@ -20,7 +20,7 @@ import dev.maxsiomin.common.presentation.components.PermissionDialog
 import dev.maxsiomin.common.presentation.components.PullToRefreshLazyColumn
 import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.core.location.PermissionChecker
-import dev.maxsiomin.prodhse.core.ui.LocationPermissionTextProvider
+import dev.maxsiomin.prodhse.core.presentation.LocationPermissionTextProvider
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
@@ -78,7 +78,7 @@ internal fun HomeScreen(
 
     if (state.showLocationPermissionDialog) {
         PermissionDialog(
-            permissionTextProvider = LocationPermissionTextProvider(),
+            permissionTextProvider = LocationPermissionTextProvider,
             isPermanentlyDeclined = !activity.shouldShowRequestPermissionRationale(PermissionChecker.COARSE_LOCATION_PERMISSION),
             onDismiss = {
                 onEvent(HomeViewModel.Event.DismissLocationDialog)

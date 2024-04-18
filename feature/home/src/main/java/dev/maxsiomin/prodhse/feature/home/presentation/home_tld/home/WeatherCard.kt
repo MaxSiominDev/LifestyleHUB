@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import dev.maxsiomin.common.presentation.components.blueShimmerColors
-import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
+import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.common.presentation.components.shimmerEffect
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.feature.home.domain.TemperatureInfo

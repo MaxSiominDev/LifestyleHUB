@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.common.presentation.SnackbarCallback
-import dev.maxsiomin.prodhse.core.ui.theme.ProdhseTheme
+import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.ForgotPasswordDialog
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.LineOrLine
