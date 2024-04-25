@@ -40,11 +40,10 @@ class DefaultLocationTracker @Inject constructor(
 
         val deferred = CompletableDeferred<Resource<Location, LocationError>>()
 
-        locationClient.lastLocation.apply {
-            addOnSuccessListener {
-                deferred.complete(Resource.Success(result))
-            }
-            addOnFailureListener {
+        locationClient.lastLocation.addOnCompleteListener {
+            if (it.isSuccessful) {
+                deferred.complete(Resource.Success(it.result))
+            } else {
                 deferred.complete(Resource.Error(LocationError.Unknown))
             }
         }
