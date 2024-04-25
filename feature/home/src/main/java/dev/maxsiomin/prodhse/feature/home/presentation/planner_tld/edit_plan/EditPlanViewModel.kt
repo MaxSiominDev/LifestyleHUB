@@ -3,11 +3,13 @@ package dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.edit_plan
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.common.domain.resource.DatabaseError
 import dev.maxsiomin.common.domain.resource.Resource
+import dev.maxsiomin.common.extensions.requireArg
 import dev.maxsiomin.common.presentation.asErrorUiText
 import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.common.presentation.UiText
@@ -16,6 +18,7 @@ import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
+import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -27,9 +30,11 @@ internal class EditPlanViewModel @Inject constructor(
     private val dateFormatter: DateFormatter,
     private val plansRepo: PlansRepository,
     private val placesRepo: PlacesRepository,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private var planId: Long? = null
+    private val planId: Long =
+        savedStateHandle.requireArg<String>(Screen.EditPlanScreenArgs.PLAN_ID).toLong()
 
     data class State(
         val placeDetails: PlaceDetails? = null,
@@ -63,16 +68,19 @@ internal class EditPlanViewModel @Inject constructor(
     val eventsFlow = _eventsFlow.receiveAsFlow()
 
     sealed class Event {
-        data class PassPlanId(val planId: Long) : Event()
         data class NewDateSelected(val newDate: LocalDate) : Event()
         data class NoteTitleChanged(val newValue: String) : Event()
         data class NoteTextChanged(val newValue: String) : Event()
         data object SaveClicked : Event()
+        data object Refresh : Event()
+    }
+
+    init {
+        loadPlan(id = planId)
     }
 
     fun onEvent(event: Event) {
         when (event) {
-            is Event.PassPlanId -> loadPlan(event.planId)
             is Event.NewDateSelected -> {
                 onNewDate(newDate = event.newDate)
                 checkIfNotSaved()
@@ -89,6 +97,8 @@ internal class EditPlanViewModel @Inject constructor(
             }
 
             Event.SaveClicked -> onSaveClicked()
+
+            Event.Refresh -> loadPlan(id = planId)
         }
     }
 
@@ -101,7 +111,6 @@ internal class EditPlanViewModel @Inject constructor(
     }
 
     private fun loadPlan(id: Long) {
-        planId = id
         viewModelScope.launch {
             val plan = when (val planResource = plansRepo.getPlanById(id)) {
                 is Resource.Error -> {

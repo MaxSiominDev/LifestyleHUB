@@ -19,7 +19,7 @@ import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.home.R
 
 @Composable
-fun FullscreenPhotoScreen(url: String) {
+fun BrowsePhotoScreen(state: BrowsePhotoViewModel.State) {
 
     val isPreview = LocalInspectionMode.current
 
@@ -34,7 +34,7 @@ fun FullscreenPhotoScreen(url: String) {
         } else {
             AsyncImage(
                 modifier = imageModifier,
-                model = url,
+                model = state.url,
                 contentDescription = stringResource(id = R.string.fullscreen_image)
             )
         }
@@ -44,8 +44,8 @@ fun FullscreenPhotoScreen(url: String) {
 
 @Preview
 @Composable
-private fun FullscreenPhotoScreenPreview() {
+private fun BrowsePhotoScreenPreview() {
     ProdhseTheme {
-        FullscreenPhotoScreen(url = "")
+        BrowsePhotoScreen(BrowsePhotoViewModel.State(""))
     }
 }

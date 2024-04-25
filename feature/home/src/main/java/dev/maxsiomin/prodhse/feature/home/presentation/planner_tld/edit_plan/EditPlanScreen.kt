@@ -36,7 +36,6 @@ internal fun EditPlanScreen(
     onEvent: (EditPlanViewModel.Event) -> Unit,
     showSnackbar: SnackbarCallback,
     navController: NavController,
-    planId: Long,
 ) {
 
     CollectFlow(eventsFlow) { event ->
@@ -49,10 +48,6 @@ internal fun EditPlanScreen(
                 showSnackbar(SnackbarInfo(event.message))
             }
         }
-    }
-
-    LaunchedEffect(planId) {
-        onEvent(EditPlanViewModel.Event.PassPlanId(planId))
     }
 
     Column(
@@ -121,8 +116,7 @@ internal fun EditPlanScreen(
         } else if (state.isError) {
             Button(
                 onClick = {
-                    // Actually refreshes the data
-                    onEvent(EditPlanViewModel.Event.PassPlanId(planId))
+                    onEvent(EditPlanViewModel.Event.Refresh)
                 },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)

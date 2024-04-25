@@ -36,14 +36,12 @@ fun NavGraphBuilder.addPlannerNavigation(
         arguments = Screen.EditPlanScreen.arguments,
     ) { backStackEntry ->
         val viewModel: EditPlanViewModel = hiltViewModel()
-        val planId = backStackEntry.arguments?.getString("planId")!!
         EditPlanScreen(
             state = viewModel.state,
             eventsFlow = viewModel.eventsFlow,
             onEvent = viewModel::onEvent,
             showSnackbar = showSnackbar,
             navController = navController,
-            planId = planId.toLong(),
         )
     }
 

@@ -38,7 +38,6 @@ import java.time.LocalDate
 
 @Composable
 internal fun AddPlanScreen(
-    fsqId: String,
     navController: NavController,
     snackbarCallback: SnackbarCallback,
     state: AddPlanViewModel.State,
@@ -53,10 +52,6 @@ internal fun AddPlanScreen(
                 SnackbarInfo(message = event.message)
             )
         }
-    }
-
-    LaunchedEffect(fsqId) {
-        onEvent(AddPlanViewModel.Event.PassPlaceId(fsqId))
     }
 
     Column(
@@ -122,8 +117,7 @@ internal fun AddPlanScreen(
         } else if (state.isError) {
             Button(
                 onClick = {
-                    // Actually refreshes the data
-                    onEvent(AddPlanViewModel.Event.PassPlaceId(fsqId))
+                    onEvent(AddPlanViewModel.Event.Refresh)
                 },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -141,7 +135,6 @@ internal fun AddPlanScreen(
 private fun AddPlanScreenPreview() {
     ProdhseTheme {
         AddPlanScreen(
-            fsqId = "",
             state = AddPlanViewModel.State(
                 placeDetails = PlaceDetails(
                     name = "Кафе Studio 89.5",

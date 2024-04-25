@@ -10,34 +10,52 @@ sealed class Screen(val route: String, val arguments: List<NamedNavArgument> = e
     // TLD
     data object HomeScreen : Screen("home_screen")
 
+    object DetailsScreenArgs {
+        const val FSQ_ID = "fsqId"
+    }
+
     data object DetailsScreen : Screen(
-        route = "details_screen/{fsqId}",
+        route = "details_screen".arg(DetailsScreenArgs.FSQ_ID),
         arguments = listOf(
-            navArgument("fsqId") { type = NavType.StringType }
+            navArgument(DetailsScreenArgs.FSQ_ID) { type = NavType.StringType }
         )
     )
 
-    data object PhotoScreen : Screen(
-        route = "photo_screen/{url}",
+
+    object BrowsePhotoScreenArgs {
+        const val URL = "url"
+    }
+
+    data object BrowsePhotoScreen : Screen(
+        route = "browse_photo_screen".arg(BrowsePhotoScreenArgs.URL),
         arguments = listOf(
-            navArgument("url") { type = NavType.StringType }
+            navArgument(BrowsePhotoScreenArgs.URL) { type = NavType.StringType }
         )
     )
+
+
+    object AddPlanScreenArgs {
+        const val FSQ_ID = "fsqId"
+    }
 
     data object AddPlanScreen : Screen(
-        route = "add_plan_screen/{fsqId}",
+        route = "add_plan_screen".arg(AddPlanScreenArgs.FSQ_ID),
         arguments = listOf(
-            navArgument("fsqId") { type = NavType.StringType }
+            navArgument(AddPlanScreenArgs.FSQ_ID) { type = NavType.StringType }
         )
     )
 
     // TLD
     data object PlannerScreen : Screen("planner_screen")
 
+    object EditPlanScreenArgs {
+        const val PLAN_ID = "planId"
+    }
+
     data object EditPlanScreen : Screen(
-        route = "edit_plan_screen/{planId}",
+        route = "edit_plan_screen".arg(EditPlanScreenArgs.PLAN_ID),
         arguments = listOf(
-            navArgument("planId") { type = NavType.StringType }
+            navArgument(EditPlanScreenArgs.PLAN_ID) { type = NavType.StringType }
         )
     )
 
@@ -55,6 +73,12 @@ sealed class Screen(val route: String, val arguments: List<NamedNavArgument> = e
             args.forEach { arg ->
                 append("/$arg")
             }
+        }
+    }
+
+    private companion object {
+        fun String.arg(name: String): String {
+            return "$this/{$name}"
         }
     }
 

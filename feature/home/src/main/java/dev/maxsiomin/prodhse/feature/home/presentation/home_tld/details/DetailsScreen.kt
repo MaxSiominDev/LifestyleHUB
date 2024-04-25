@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddCircleOutline
@@ -23,7 +22,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,7 +36,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import dev.maxsiomin.common.util.CollectFlow
-import dev.maxsiomin.common.extensions.linkString
+import dev.maxsiomin.common.extensions.underlinedText
 import dev.maxsiomin.common.extensions.openEmail
 import dev.maxsiomin.common.extensions.openLink
 import dev.maxsiomin.common.extensions.openPhoneNumber
@@ -58,22 +56,17 @@ internal fun DetailsScreen(
     eventsFlow: Flow<DetailsViewModel.UiEvent>,
     onEvent: (DetailsViewModel.Event) -> Unit,
     navController: NavController,
-    fsqId: String,
     showSnackbar: SnackbarCallback,
 ) {
 
     val isPreview = LocalInspectionMode.current
     val context = LocalContext.current
 
-    LaunchedEffect(fsqId) {
-        onEvent(DetailsViewModel.Event.PassPlaceId(fsqId))
-    }
-
     CollectFlow(eventsFlow) { event ->
         when (event) {
             is DetailsViewModel.UiEvent.NavigateToPhotoScreen -> {
                 navController.navigate(
-                    Screen.PhotoScreen.withArgs(event.url)
+                    Screen.BrowsePhotoScreen.withArgs(event.url)
                 )
             }
 
@@ -187,32 +180,38 @@ internal fun DetailsScreen(
         }
 
         placeDetails.website?.let { link ->
-            ClickableText(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = linkString(link),
-                onClick = {
-                    context.openLink(link)
-                }
+            Text(
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .clickable {
+                        context.openLink(link)
+                    },
+                text = underlinedText(value = link),
+                fontSize = 18.sp,
             )
         }
 
         placeDetails.phone?.let { phone ->
-            ClickableText(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = linkString(phone),
-                onClick = {
-                    context.openPhoneNumber(phone)
-                }
+            Text(
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .clickable {
+                        context.openPhoneNumber(phone)
+                    },
+                text = underlinedText(phone),
+                fontSize = 18.sp,
             )
         }
 
         placeDetails.email?.let { email ->
-            ClickableText(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = linkString(email),
-                onClick = {
-                    context.openEmail(email)
-                }
+            Text(
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .clickable {
+                        context.openEmail(email)
+                    },
+                text = underlinedText(email),
+                fontSize = 18.sp,
             )
         }
 
@@ -259,7 +258,7 @@ internal fun DetailsScreen(
         contentAlignment = Alignment.BottomEnd,
     ) {
         FloatingActionButton(
-            onClick = { onEvent(DetailsViewModel.Event.IconAddToPlansClicked(fsqId)) }
+            onClick = { onEvent(DetailsViewModel.Event.IconAddToPlansClicked) }
         ) {
             Icon(
                 imageVector = Icons.Outlined.AddCircleOutline,
@@ -305,7 +304,6 @@ private fun DetailsScreenPreview() {
                 )
             ),
             onEvent = {},
-            fsqId = "",
             eventsFlow = flow { },
             navController = rememberNavController(),
             showSnackbar = {},

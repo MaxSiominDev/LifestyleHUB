@@ -218,7 +218,7 @@ internal class HomeViewModel @Inject constructor(
                 when (resource) {
                     is Resource.Error -> {
                         state = state.copy(weatherStatus = WeatherStatus.Error)
-                        _eventsFlow.send(UiEvent.ShowMessage(UiText.DynamicString("Weather info is unavailable")))
+                        _eventsFlow.send(UiEvent.ShowMessage(resource.asErrorUiText()))
                     }
 
                     is Resource.Success -> {

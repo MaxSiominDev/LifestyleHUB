@@ -5,17 +5,15 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.sp
 
-fun linkString(input: String): AnnotatedString {
+fun underlinedText(value: String): AnnotatedString {
     return buildAnnotatedString {
         withStyle(
             style = SpanStyle(
-                fontSize = 18.sp,
                 textDecoration = TextDecoration.Underline
             )
         ) {
-            append(input)
+            append(value)
         }
     }
 }
