@@ -15,11 +15,11 @@ fun ProdhseNavHost(appState: ProdhseAppState, showSnackbar: SnackbarCallback, on
     val rootNavController = appState.navController
     NavHost(navController = rootNavController, startDestination = Screen.Tld.Home.route) {
 
-        addHomeNavigation(showSnackbar = showSnackbar, onTldChanged = onTldChanged)
+        addHomeNavigation(showSnackbar = showSnackbar, onOpened = { onTldChanged(0) })
 
-        addPlannerNavigation(showSnackbar = showSnackbar, onTldChanged = onTldChanged)
+        addPlannerNavigation(showSnackbar = showSnackbar, onOpened = { onTldChanged(1) })
 
-        addProfileNavigation(showSnackbar = showSnackbar, onTldChanged = onTldChanged)
+        addProfileNavigation(showSnackbar = showSnackbar, onOpened = { onTldChanged(2) } )
 
     }
 

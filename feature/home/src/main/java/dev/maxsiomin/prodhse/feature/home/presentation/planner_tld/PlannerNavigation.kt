@@ -3,7 +3,6 @@ package dev.maxsiomin.prodhse.feature.home.presentation.planner_tld
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -18,12 +17,12 @@ import dev.maxsiomin.prodhse.navdestinations.Screen
 
 fun NavGraphBuilder.addPlannerNavigation(
     showSnackbar: SnackbarCallback,
-    onTldChanged: (Int) -> Unit
+    onOpened: () -> Unit
 ) {
 
     composable(route = Screen.Tld.Planner.route) {
         LaunchedEffect(Unit) {
-            onTldChanged(1)
+            onOpened()
         }
         val navController = rememberNavController()
         PlannerNavHost(navController = navController, showSnackbar = showSnackbar)

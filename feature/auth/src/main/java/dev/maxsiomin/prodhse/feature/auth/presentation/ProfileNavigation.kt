@@ -13,12 +13,12 @@ import dev.maxsiomin.prodhse.navdestinations.Screen
 
 fun NavGraphBuilder.addProfileNavigation(
     showSnackbar: SnackbarCallback,
-    onTldChanged: (Int) -> Unit,
+    onOpened: () -> Unit,
 ) {
 
     composable(route = Screen.Tld.Profile.route) {
         LaunchedEffect(Unit) {
-            onTldChanged(2)
+            onOpened()
         }
         val navController = rememberNavController()
         ProfileNavHost(navController = navController, showSnackbar = showSnackbar)
