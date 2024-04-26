@@ -20,7 +20,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import dev.maxsiomin.common.presentation.SnackbarInfo
 import dev.maxsiomin.prodhse.ProdhseAppState
 import dev.maxsiomin.prodhse.navdestinations.topLevelDestinations
@@ -69,10 +68,10 @@ fun ProdhseApp(appState: ProdhseAppState) {
                                 if (isSelected) destination.selectedIcon else destination.unselectedIcon
                             Icon(
                                 imageVector = vector,
-                                contentDescription = stringResource(id = destination.titleTextId),
+                                contentDescription = destination.title.asString(),
                             )
                         },
-                        label = { Text(text = stringResource(id = destination.titleTextId)) }
+                        label = { Text(text = destination.title.asString()) }
                     )
                 }
 

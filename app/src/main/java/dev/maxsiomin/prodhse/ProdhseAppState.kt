@@ -61,7 +61,7 @@ class ProdhseAppState(
 
         navController.navigate(
             topLevelDestination.route,
-            topLevelNavOptions
+            topLevelNavOptions,
         )
 
     }
