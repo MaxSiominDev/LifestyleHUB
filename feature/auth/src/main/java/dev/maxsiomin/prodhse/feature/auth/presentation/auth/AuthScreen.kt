@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.auth.presentation
+package dev.maxsiomin.prodhse.feature.auth.presentation.auth
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke

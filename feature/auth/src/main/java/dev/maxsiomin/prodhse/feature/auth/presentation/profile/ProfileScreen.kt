@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.auth.presentation
+package dev.maxsiomin.prodhse.feature.auth.presentation.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

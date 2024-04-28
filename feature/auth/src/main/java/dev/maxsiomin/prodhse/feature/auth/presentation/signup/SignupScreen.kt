@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.auth.presentation
+package dev.maxsiomin.prodhse.feature.auth.presentation.signup
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

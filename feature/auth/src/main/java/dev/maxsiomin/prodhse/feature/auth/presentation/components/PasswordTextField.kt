@@ -22,7 +22,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import dev.maxsiomin.prodhse.feature.auth.R
-import dev.maxsiomin.prodhse.feature.auth.presentation.LoginViewModel
 import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColor
 
 @Composable

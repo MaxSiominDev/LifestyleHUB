@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.auth.presentation.components
+package dev.maxsiomin.prodhse.feature.auth.presentation.login
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text

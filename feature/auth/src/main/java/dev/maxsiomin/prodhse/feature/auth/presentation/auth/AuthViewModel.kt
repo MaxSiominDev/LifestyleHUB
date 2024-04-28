@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.auth.presentation
+package dev.maxsiomin.prodhse.feature.auth.presentation.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

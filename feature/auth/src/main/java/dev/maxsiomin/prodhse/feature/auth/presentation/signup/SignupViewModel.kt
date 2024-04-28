@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.auth.presentation
+package dev.maxsiomin.prodhse.feature.auth.presentation.signup
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

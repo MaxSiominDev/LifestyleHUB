@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.auth.presentation
+package dev.maxsiomin.prodhse.feature.auth.presentation.login
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -37,7 +36,6 @@ import dev.maxsiomin.common.presentation.SnackbarCallback
 import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.auth.R
-import dev.maxsiomin.prodhse.feature.auth.presentation.components.ForgotPasswordDialog
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.LineOrLine
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.PasswordTextField
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.UsernameTextField

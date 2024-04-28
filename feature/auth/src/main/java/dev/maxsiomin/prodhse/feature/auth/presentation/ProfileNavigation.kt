@@ -9,6 +9,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.prodhse.feature.auth.presentation.auth.AuthScreen
+import dev.maxsiomin.prodhse.feature.auth.presentation.auth.AuthViewModel
+import dev.maxsiomin.prodhse.feature.auth.presentation.login.LoginScreen
+import dev.maxsiomin.prodhse.feature.auth.presentation.login.LoginViewModel
+import dev.maxsiomin.prodhse.feature.auth.presentation.profile.ProfileScreen
+import dev.maxsiomin.prodhse.feature.auth.presentation.profile.ProfileViewModel
+import dev.maxsiomin.prodhse.feature.auth.presentation.signup.SignupScreen
+import dev.maxsiomin.prodhse.feature.auth.presentation.signup.SignupViewModel
+import dev.maxsiomin.prodhse.feature.auth.presentation.successful_registration.SuccessfulRegistrationScreen
+import dev.maxsiomin.prodhse.feature.auth.presentation.successful_registration.SuccessfulRegistrationViewModel
 import dev.maxsiomin.prodhse.navdestinations.Screen
 
 fun NavGraphBuilder.addProfileNavigation(

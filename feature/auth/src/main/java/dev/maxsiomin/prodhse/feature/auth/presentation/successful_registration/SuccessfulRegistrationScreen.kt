@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.auth.presentation
+package dev.maxsiomin.prodhse.feature.auth.presentation.successful_registration
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

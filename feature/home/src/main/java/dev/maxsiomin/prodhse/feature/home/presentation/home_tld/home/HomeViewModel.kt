@@ -36,22 +36,22 @@ internal class HomeViewModel @Inject constructor(
     private val permissionChecker: PermissionChecker,
 ) : ViewModel() {
 
+    private var locationIsRefreshing = false
+        set(value) {
+            field = value
+            state = state.copy(isRefreshing = value || weatherIsRefreshing || placesIsRefreshing)
+        }
+
     private var weatherIsRefreshing = false
         set(value) {
             field = value
-            state = state.copy(isRefreshing = value || placesIsRefreshing || locationIsRefreshing)
+            state = state.copy(isRefreshing = locationIsRefreshing || value || placesIsRefreshing)
         }
 
     private var placesIsRefreshing = false
         set(value) {
             field = value
-            state = state.copy(isRefreshing = weatherIsRefreshing || value || locationIsRefreshing)
-        }
-
-    private var locationIsRefreshing = false
-        set(value) {
-            field = value
-            state = state.copy(isRefreshing = weatherIsRefreshing || placesIsRefreshing || value)
+            state = state.copy(isRefreshing = locationIsRefreshing || weatherIsRefreshing || value)
         }
 
 
