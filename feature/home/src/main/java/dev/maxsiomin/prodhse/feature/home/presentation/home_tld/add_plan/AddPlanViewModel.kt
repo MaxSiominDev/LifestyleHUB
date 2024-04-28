@@ -87,22 +87,22 @@ internal class AddPlanViewModel @Inject constructor(
     private fun loadPlaceDetails(id: String) {
         viewModelScope.launch {
             state = state.copy(isLoading = true)
-            placesRepo.getPlaceDetails(id).collect { resource ->
-                when (resource) {
+            val placeDetailsResource = placesRepo.getPlaceDetails(id)
+            when (placeDetailsResource) {
 
-                    is Resource.Error -> {
-                        state = state.copy(isLoading = false, isError = true)
-                        _eventsFlow.send(UiEvent.ShowMessage(resource.asErrorUiText()))
-                    }
-
-                    is Resource.Success -> {
-                        state = state.copy(
-                            placeDetails = resource.data,
-                            isError = false,
-                            isLoading = false
-                        )
-                    }
+                is Resource.Error -> {
+                    state = state.copy(isLoading = false, isError = true)
+                    _eventsFlow.send(UiEvent.ShowMessage(placeDetailsResource.asErrorUiText()))
                 }
+
+                is Resource.Success -> {
+                    state = state.copy(
+                        placeDetails = placeDetailsResource.data,
+                        isError = false,
+                        isLoading = false
+                    )
+                }
+
             }
         }
     }

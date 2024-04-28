@@ -14,17 +14,15 @@ class RandomUserRepositoryImpl @Inject constructor(
     private val api: RandomUserApi
 ) : RandomUserRepository {
 
-    override suspend fun getRandomUser(): Flow<Resource<RandomUser, NetworkError>> {
-        return flow {
-            val apiResponse = api.getRandomUser()
-            when (apiResponse) {
-                is Resource.Error -> emit(Resource.Error(apiResponse.error))
-                is Resource.Success -> {
-                    val mapper = RandomUserDtoToModelMapper()
-                    apiResponse.data.results.firstOrNull()?.let(mapper)?.let {
-                        emit(Resource.Success(it))
-                    } ?: emit(Resource.Error(NetworkError.EmptyResponse))
-                }
+    override suspend fun getRandomUser(): Resource<RandomUser, NetworkError> {
+        val apiResponse = api.getRandomUser()
+        return when (apiResponse) {
+            is Resource.Error -> Resource.Error(apiResponse.error)
+            is Resource.Success -> {
+                val mapper = RandomUserDtoToModelMapper()
+                apiResponse.data.results.firstOrNull()?.let(mapper)?.let {
+                    Resource.Success(it)
+                } ?: Resource.Error(NetworkError.EmptyResponse)
             }
         }
     }

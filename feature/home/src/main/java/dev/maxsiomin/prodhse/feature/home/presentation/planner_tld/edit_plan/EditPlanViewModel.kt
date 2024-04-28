@@ -138,24 +138,25 @@ internal class EditPlanViewModel @Inject constructor(
     private fun loadPlaceDetails(id: String) {
         state = state.copy(isLoading = true)
         viewModelScope.launch {
-            placesRepo.getPlaceDetails(id).collect { resource ->
-                when (resource) {
-                    is Resource.Error -> {
-                        state = state.copy(isLoading = false, isError = true)
-                        _eventsFlow.send(
-                            UiEvent.ShowMessage(resource.asErrorUiText())
-                        )
-                    }
+            val placeDetailsResource = placesRepo.getPlaceDetails(id)
 
-                    is Resource.Success -> {
-                        state = state.copy(
-                            placeDetails = resource.data,
-                            isError = false,
-                            isLoading = false
-                        )
-                    }
+            when (placeDetailsResource) {
+                is Resource.Error -> {
+                    state = state.copy(isLoading = false, isError = true)
+                    _eventsFlow.send(
+                        UiEvent.ShowMessage(placeDetailsResource.asErrorUiText())
+                    )
+                }
+
+                is Resource.Success -> {
+                    state = state.copy(
+                        placeDetails = placeDetailsResource.data,
+                        isError = false,
+                        isLoading = false
+                    )
                 }
             }
+
         }
     }
 

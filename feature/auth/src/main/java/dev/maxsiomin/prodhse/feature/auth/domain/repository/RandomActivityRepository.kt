@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface RandomActivityRepository {
 
-    suspend fun getRandomActivity(): Flow<Resource<RandomActivity, NetworkError>>
+    suspend fun getRandomActivity(): Resource<RandomActivity, NetworkError>
 
 }

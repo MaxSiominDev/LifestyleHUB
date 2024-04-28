@@ -71,14 +71,12 @@ internal class ProfileViewModel @Inject constructor(
 
     private fun loadRandomActivity() {
         viewModelScope.launch {
-            randomActivityRepo.getRandomActivity().collect { resource ->
-                when (resource) {
-                    is Resource.Success -> {
-                        state = state.copy(randomActivity = resource.data)
-                    }
-
-                    else -> Unit
+            val randomActivityResource = randomActivityRepo.getRandomActivity()
+            when (randomActivityResource) {
+                is Resource.Success -> {
+                    state = state.copy(randomActivity = randomActivityResource.data)
                 }
+                else -> Unit
             }
         }
     }
@@ -86,16 +84,13 @@ internal class ProfileViewModel @Inject constructor(
     private fun loadHolidays() {
         viewModelScope.launch {
             val year = Calendar.getInstance().get(Calendar.YEAR)
-            nagerRepo.getHolidays(year = "$year", countryCode = COUNTRY_CODE_FOR_NAGER)
-                .collect { resource ->
-                    when (resource) {
-                        is Resource.Success -> {
-                            processHolidays(resource.data)
-                        }
-
-                        else -> Unit
-                    }
+            val holidayResource = nagerRepo.getHolidays(year = "$year", countryCode = COUNTRY_CODE_FOR_NAGER)
+            when (holidayResource) {
+                is Resource.Success -> {
+                    processHolidays(holidayResource.data)
                 }
+                else -> Unit
+            }
         }
     }
 

@@ -183,16 +183,14 @@ internal class HomeViewModel @Inject constructor(
             val lon = location.longitude.toString()
             val lang = localeManager.getLocaleLanguage()
 
-            placesRepo.getPlacesNearby(lat = lat, lon = lon, lang = lang).collect { resource ->
-                placesIsRefreshing = false
+            val placesNearbyResource = placesRepo.getPlacesNearby(lat = lat, lon = lon, lang = lang)
+            placesIsRefreshing = false
+            when (placesNearbyResource) {
+                is Resource.Error -> _eventsFlow.send(UiEvent.ShowMessage(placesNearbyResource.asErrorUiText()))
 
-                when (resource) {
-                    is Resource.Error -> _eventsFlow.send(UiEvent.ShowMessage(resource.asErrorUiText()))
-
-                    is Resource.Success -> {
-                        state = state.copy(places = resource.data)
-                        loadPhotos(resource.data)
-                    }
+                is Resource.Success -> {
+                    state = state.copy(places = placesNearbyResource.data)
+                    loadPhotos(placesNearbyResource.data)
                 }
             }
         }
@@ -204,12 +202,11 @@ internal class HomeViewModel @Inject constructor(
             val placesWithPhoto = places.map {
                 async {
                     var photo: Photo? = null
-                    placesRepo.getPhotos(id = it.fsqId).collect { photosResource ->
-                        when (photosResource) {
-                            is Resource.Error -> Unit
-                            is Resource.Success -> {
-                                photo = photosResource.data.firstOrNull()
-                            }
+                    val photosResource = placesRepo.getPhotos(id = it.fsqId)
+                    when (photosResource) {
+                        is Resource.Error -> Unit
+                        is Resource.Success -> {
+                            photo = photosResource.data.firstOrNull()
                         }
                     }
                     it.copy(photoUrl = photo?.url ?: placeHolderUrl)
@@ -228,20 +225,19 @@ internal class HomeViewModel @Inject constructor(
             val lon = location.longitude.toString()
             val lang = localeManager.getLocaleLanguage()
 
-            weatherRepo.getCurrentWeather(lat = lat, lon = lon, lang = lang).collect { resource ->
-                weatherIsRefreshing = false
-                when (resource) {
-                    is Resource.Error -> {
-                        state = state.copy(weatherStatus = WeatherStatus.Error)
-                        _eventsFlow.send(UiEvent.ShowMessage(resource.asErrorUiText()))
-                    }
+            val weatherResource = weatherRepo.getCurrentWeather(lat = lat, lon = lon, lang = lang)
+            weatherIsRefreshing = false
+            when (weatherResource) {
+                is Resource.Error -> {
+                    state = state.copy(weatherStatus = WeatherStatus.Error)
+                    _eventsFlow.send(UiEvent.ShowMessage(weatherResource.asErrorUiText()))
+                }
 
-                    is Resource.Success -> {
-                        state = state.copy(
-                            weather = resource.data,
-                            weatherStatus = WeatherStatus.Success,
-                        )
-                    }
+                is Resource.Success -> {
+                    state = state.copy(
+                        weather = weatherResource.data,
+                        weatherStatus = WeatherStatus.Success,
+                    )
                 }
             }
         }

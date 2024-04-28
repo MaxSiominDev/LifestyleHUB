@@ -11,6 +11,6 @@ interface WeatherRepository {
         lat: String,
         lon: String,
         lang: String,
-    ): Flow<Resource<Weather, NetworkError>>
+    ): Resource<Weather, NetworkError>
 
 }

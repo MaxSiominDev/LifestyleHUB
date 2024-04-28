@@ -18,15 +18,13 @@ class NagerRepositoryImpl @Inject constructor(
     override suspend fun getHolidays(
         year: String,
         countryCode: String
-    ): Flow<Resource<List<Holiday>, NetworkError>> {
-        return flow {
-            val apiResponse = api.getHolidays(year = year, countryCode = countryCode)
-            when (apiResponse) {
-                is Resource.Error -> emit(Resource.Error(apiResponse.error))
-                is Resource.Success -> apiResponse.data.let(mapper)?.let {
-                    emit(Resource.Success(it))
-                } ?: emit(Resource.Error(NetworkError.EmptyResponse))
-            }
+    ): Resource<List<Holiday>, NetworkError> {
+        val apiResponse = api.getHolidays(year = year, countryCode = countryCode)
+        return when (apiResponse) {
+            is Resource.Error -> Resource.Error(apiResponse.error)
+            is Resource.Success -> apiResponse.data.let(mapper)?.let {
+                Resource.Success(it)
+            } ?: Resource.Error(NetworkError.EmptyResponse)
         }
     }
 

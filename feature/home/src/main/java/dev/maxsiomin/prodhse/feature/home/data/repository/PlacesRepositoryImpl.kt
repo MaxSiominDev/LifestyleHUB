@@ -25,54 +25,48 @@ internal class PlacesRepositoryImpl @Inject constructor(
         lat: String,
         lon: String,
         lang: String
-    ): Flow<Resource<List<Place>, NetworkError>> {
-        return flow {
-            val apiResponse = api.getPlaces(lat = lat, lon = lon, lang = lang)
-            val mapper = PlacesDtoToUiModelMapper()
-            when (apiResponse) {
-                is Resource.Error -> emit(Resource.Error(apiResponse.error))
-                is Resource.Success -> {
-                    apiResponse.data.results?.filterNotNull()?.mapNotNull { mapper.invoke(it) }
-                        ?.let {
-                            emit(Resource.Success(it))
-                        } ?: emit(Resource.Error(NetworkError.EmptyResponse))
-                }
+    ): Resource<List<Place>, NetworkError> {
+        val apiResponse = api.getPlaces(lat = lat, lon = lon, lang = lang)
+        val mapper = PlacesDtoToUiModelMapper()
+        return when (apiResponse) {
+            is Resource.Error -> Resource.Error(apiResponse.error)
+            is Resource.Success -> {
+                apiResponse.data.results?.filterNotNull()?.mapNotNull { mapper.invoke(it) }
+                    ?.let {
+                        Resource.Success(it)
+                    } ?: Resource.Error(NetworkError.EmptyResponse)
             }
         }
     }
 
-    override suspend fun getPhotos(id: String): Flow<Resource<List<Photo>, NetworkError>> {
-        return flow {
-            val apiResponse = api.getPhotos(id = id)
-            val mapper = PlacesPhotosDtoToUiModelMapper()
-            when (apiResponse) {
-                is Resource.Error -> emit(Resource.Error(apiResponse.error))
-                is Resource.Success -> {
-                    val remoteData = mapper(apiResponse.data, id)
-                    emit(Resource.Success(remoteData))
-                }
+    override suspend fun getPhotos(id: String): Resource<List<Photo>, NetworkError> {
+        val apiResponse = api.getPhotos(id = id)
+        val mapper = PlacesPhotosDtoToUiModelMapper()
+        return when (apiResponse) {
+            is Resource.Error -> Resource.Error(apiResponse.error)
+            is Resource.Success -> {
+                val remoteData = mapper(apiResponse.data, id)
+                Resource.Success(remoteData)
             }
         }
     }
 
-    override suspend fun getPlaceDetails(id: String): Flow<Resource<PlaceDetails, NetworkError>> {
-        return flow {
-            val localData = getPlaceDetailsFromSharedPrefs(id)
-            val currentMillis = System.currentTimeMillis()
-            if (localData != null && currentMillis - localData.timeUpdated < CACHE_EXPIRATION_PERIOD) {
-                emit(Resource.Success(localData))
-                return@flow
-            }
+    override suspend fun getPlaceDetails(id: String): Resource<PlaceDetails, NetworkError> {
+        val localData = getPlaceDetailsFromSharedPrefs(id)
+        val currentMillis = System.currentTimeMillis()
+        if (localData != null && currentMillis - localData.timeUpdated < CACHE_EXPIRATION_PERIOD) {
+            return Resource.Success(localData)
+        }
 
-            val apiResponse = api.getPlaceDetails(id = id)
-            val mapper = PlaceDetailsDtoToUoModelMapper()
-            when (apiResponse) {
-                is Resource.Error -> emit(Resource.Error(apiResponse.error))
-                is Resource.Success -> {
-                    apiResponse.data.let(mapper)?.let {
-                        emit(Resource.Success(it))
-                    } ?: emit(Resource.Error(NetworkError.EmptyResponse))
-                }
+        val apiResponse = api.getPlaceDetails(id = id)
+        val mapper = PlaceDetailsDtoToUoModelMapper()
+        return when (apiResponse) {
+            is Resource.Error -> Resource.Error(apiResponse.error)
+            is Resource.Success -> {
+                apiResponse.data.let(mapper)?.let {
+                    savePlaceDetailsToSharedPrefs(it)
+                    Resource.Success(it)
+                } ?: Resource.Error(NetworkError.EmptyResponse)
             }
         }
     }

@@ -138,32 +138,31 @@ class SignupViewModel @Inject constructor(
                 return@launch
             }
 
-            repo.getRandomUser().collect { resource ->
-                when (resource) {
-                    is Resource.Error -> {
-                        onRegistrationError(resource.error.asUiText())
-                    }
+            val randomUserResource = repo.getRandomUser()
+            when (randomUserResource) {
+                is Resource.Error -> {
+                    onRegistrationError(randomUserResource.error.asUiText())
+                }
 
-                    is Resource.Success -> {
-                        val data = resource.data
+                is Resource.Success -> {
+                    val data = randomUserResource.data
 
-                        val registrationStatus = authManager.registerUser(
-                            RegistrationInfo(
-                                username = username,
-                                password = password,
-                                avatarUrl = data.avatarUrl,
-                                fullName = data.fullName,
-                            )
+                    val registrationStatus = authManager.registerUser(
+                        RegistrationInfo(
+                            username = username,
+                            password = password,
+                            avatarUrl = data.avatarUrl,
+                            fullName = data.fullName,
                         )
+                    )
 
-                        when (registrationStatus) {
-                            is RegistrationStatus.Failure -> {
-                                onRegistrationError(UiText.DynamicString(registrationStatus.reason))
-                            }
+                    when (registrationStatus) {
+                        is RegistrationStatus.Failure -> {
+                            onRegistrationError(UiText.DynamicString(registrationStatus.reason))
+                        }
 
-                            is RegistrationStatus.Success -> {
-                                onRegistrationSuccess()
-                            }
+                        is RegistrationStatus.Success -> {
+                            onRegistrationSuccess()
                         }
                     }
                 }

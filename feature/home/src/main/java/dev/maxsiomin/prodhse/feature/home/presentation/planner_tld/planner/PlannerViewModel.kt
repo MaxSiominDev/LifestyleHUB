@@ -66,16 +66,16 @@ internal class PlannerViewModel @Inject constructor(
             plans.map { currentPlan ->
                 async {
                     var feedItem: PlannerFeedItem? = null
-                    val placeModel = placesRepo.getPlaceDetails(currentPlan.placeFsqId)
-                    placeModel.collect { resource ->
-                        when (resource) {
-                            is Resource.Error -> Unit
+                    val placeDetailsResource = placesRepo.getPlaceDetails(currentPlan.placeFsqId)
 
-                            is Resource.Success -> {
-                                feedItem = PlannerFeedItem.Place(resource.data, currentPlan)
-                            }
+                    when (placeDetailsResource) {
+                        is Resource.Error -> Unit
+
+                        is Resource.Success -> {
+                            feedItem = PlannerFeedItem.Place(placeDetailsResource.data, currentPlan)
                         }
                     }
+
                     feedItem?.let {
                         feedItems.add(it)
                     }

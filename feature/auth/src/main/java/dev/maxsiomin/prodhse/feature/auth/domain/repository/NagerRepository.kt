@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface NagerRepository {
 
-    suspend fun getHolidays(year: String, countryCode: String): Flow<Resource<List<Holiday>, NetworkError>>
+    suspend fun getHolidays(year: String, countryCode: String): Resource<List<Holiday>, NetworkError>
 
 }

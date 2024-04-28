@@ -17,16 +17,14 @@ internal class WeatherRepositoryImpl @Inject constructor(private val api: Weathe
         lat: String,
         lon: String,
         lang: String,
-    ): Flow<Resource<Weather, NetworkError>> {
-        return flow {
-            val apiResponse = api.getCurrentWeather(lat = lat, lon = lon, lang = lang)
-            val mapper = WeatherDtoToUiModelMapper()
-            when (apiResponse) {
-                is Resource.Error -> emit(Resource.Error(apiResponse.error))
-                is Resource.Success -> {
-                    val remoteData = mapper.invoke(apiResponse.data)
-                    emit(Resource.Success(remoteData))
-                }
+    ): Resource<Weather, NetworkError> {
+        val apiResponse = api.getCurrentWeather(lat = lat, lon = lon, lang = lang)
+        val mapper = WeatherDtoToUiModelMapper()
+        return when (apiResponse) {
+            is Resource.Error -> Resource.Error(apiResponse.error)
+            is Resource.Success -> {
+                val remoteData = mapper.invoke(apiResponse.data)
+                Resource.Success(remoteData)
             }
         }
     }

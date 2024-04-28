@@ -60,6 +60,7 @@ internal class DetailsViewModel @Inject constructor(
                 val encodedUrl = URLEncoder.encode(event.url, "UTF-8")
                 _eventsFlow.send(UiEvent.NavigateToPhotoScreen(encodedUrl))
             }
+
             is Event.IconAddToPlansClicked -> viewModelScope.launch {
                 _eventsFlow.send(UiEvent.NavigateToAddPlanScreen(fsqId))
             }
@@ -69,12 +70,13 @@ internal class DetailsViewModel @Inject constructor(
 
     private fun loadPlaceDetails(id: String) {
         viewModelScope.launch {
-            repo.getPlaceDetails(id).collect { resource ->
-                when (resource) {
-                    is Resource.Error -> _eventsFlow.send(UiEvent.ShowMessage(resource.asErrorUiText()))
-                    is Resource.Success -> {
-                        state = state.copy(placeDetails = resource.data)
-                    }
+            val placeDetailsNetworkErrorResource = repo.getPlaceDetails(id)
+            when (placeDetailsNetworkErrorResource) {
+                is Resource.Error -> {
+                    _eventsFlow.send(UiEvent.ShowMessage(placeDetailsNetworkErrorResource.asErrorUiText()))
+                }
+                is Resource.Success -> {
+                    state = state.copy(placeDetails = placeDetailsNetworkErrorResource.data)
                 }
             }
         }

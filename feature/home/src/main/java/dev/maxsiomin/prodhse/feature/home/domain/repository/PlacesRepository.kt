@@ -13,14 +13,14 @@ internal interface PlacesRepository {
         lat: String,
         lon: String,
         lang: String
-    ): Flow<Resource<List<Place>, NetworkError>>
+    ): Resource<List<Place>, NetworkError>
 
     suspend fun getPhotos(
         id: String,
-    ): Flow<Resource<List<Photo>, NetworkError>>
+    ): Resource<List<Photo>, NetworkError>
 
     suspend fun getPlaceDetails(
         id: String,
-    ): Flow<Resource<PlaceDetails, NetworkError>>
+    ): Resource<PlaceDetails, NetworkError>
 
 }

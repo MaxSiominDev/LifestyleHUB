@@ -14,17 +14,15 @@ class RandomActivityRepositoryImpl @Inject constructor(
     private val api: RandomActivityApi
 ): RandomActivityRepository {
 
-    override suspend fun getRandomActivity(): Flow<Resource<RandomActivity, NetworkError>> {
-        return flow {
-            val apiResponse = api.getActivity()
-            val mapper = RandomActivityDtoToUiModelMapper()
-            when (apiResponse) {
-                is Resource.Error -> emit(Resource.Error(apiResponse.error))
-                is Resource.Success -> {
-                    apiResponse.data.let(mapper)?.let {
-                        emit(Resource.Success(it))
-                    } ?: emit(Resource.Error(NetworkError.EmptyResponse))
-                }
+    override suspend fun getRandomActivity(): Resource<RandomActivity, NetworkError> {
+        val apiResponse = api.getActivity()
+        val mapper = RandomActivityDtoToUiModelMapper()
+        return when (apiResponse) {
+            is Resource.Error -> Resource.Error(apiResponse.error)
+            is Resource.Success -> {
+                apiResponse.data.let(mapper)?.let {
+                    Resource.Success(it)
+                } ?: Resource.Error(NetworkError.EmptyResponse)
             }
         }
     }
