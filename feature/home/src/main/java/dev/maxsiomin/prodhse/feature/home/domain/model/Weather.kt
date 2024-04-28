@@ -5,7 +5,11 @@ data class Weather(
     val temperatureInfo: TemperatureInfo,
     val weatherCondition: WeatherCondition,
     val date: String,
-)
+) {
+    companion object {
+        val default: Weather? = null
+    }
+}
 
 data class WeatherCondition(
     val name: String,

@@ -5,6 +5,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -12,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import dev.maxsiomin.common.extensions.openAppSettings
 import dev.maxsiomin.common.presentation.SnackbarCallback
@@ -139,11 +142,28 @@ internal fun HomeScreen(
             }
         )
 
-        if (state.places.isEmpty() && !state.isRefreshing) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = stringResource(R.string.no_places_nearby)
-            )
+        when {
+            state.places.isEmpty() && state.placesStatus is HomeViewModel.PlacesStatus.Success -> {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = stringResource(R.string.no_places_nearby)
+                )
+            }
+
+            state.placesStatus is HomeViewModel.PlacesStatus.Loading -> {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp)
+                )
+            }
+
+            state.placesStatus is HomeViewModel.PlacesStatus.Error -> {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = state.placesStatus.message.asString(),
+                )
+            }
         }
 
     }

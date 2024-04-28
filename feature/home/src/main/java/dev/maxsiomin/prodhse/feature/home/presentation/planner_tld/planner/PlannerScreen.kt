@@ -23,10 +23,6 @@ internal fun PlannerScreen(
     navController: NavController
 ) {
 
-    LaunchedEffect(Unit) {
-        onEvent(PlannerViewModel.Event.Refresh)
-    }
-
     CollectFlow(eventsFlow) { event ->
         when (event) {
             is PlannerViewModel.UiEvent.GoToEditPlanScreen -> {

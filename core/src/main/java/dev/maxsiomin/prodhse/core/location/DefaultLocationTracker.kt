@@ -8,18 +8,22 @@ import android.location.Location
 import android.location.LocationManager
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.Priority
+import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
 import dev.maxsiomin.common.domain.resource.LocationError
 import dev.maxsiomin.common.domain.resource.Resource
 import kotlinx.coroutines.CompletableDeferred
 import javax.inject.Inject
 
+@SuppressLint("MissingPermission")
 class DefaultLocationTracker @Inject constructor(
     private val context: Context,
     private val locationClient: FusedLocationProviderClient,
 ) : LocationTracker {
 
-    @SuppressLint("MissingPermission")
+
     override suspend fun getCurrentLocation(): Resource<Location, LocationError> {
         val hasAccessCoarseLocationPermission = ContextCompat.checkSelfPermission(
             context,
@@ -38,17 +42,37 @@ class DefaultLocationTracker @Inject constructor(
             return Resource.Error(LocationError.GpsDisabled)
         }
 
-        val deferred = CompletableDeferred<Resource<Location, LocationError>>()
-
-        locationClient.lastLocation.addOnCompleteListener {
-            if (it.isSuccessful && it.result != null) {
-                deferred.complete(Resource.Success(it.result))
-            } else {
-                deferred.complete(Resource.Error(LocationError.Unknown))
-            }
+        val lastLocation = getLastLocation()
+        if (lastLocation != null) {
+            return Resource.Success(lastLocation)
         }
 
+        val newLocation = loadNewLocation()
+        if (newLocation != null) {
+            return Resource.Success(newLocation)
+        }
+
+        return Resource.Error(LocationError.Unknown)
+    }
+
+    private suspend fun getLastLocation(): Location? {
+        val deferred = CompletableDeferred<Location?>()
+        locationClient.lastLocation.addOnCompleteListener {
+            deferred.complete(it.result)
+        }
         return deferred.await()
     }
+
+    private suspend fun loadNewLocation(): Location? {
+        val deferred = CompletableDeferred<Location?>()
+        locationClient.getCurrentLocation(
+            CurrentLocationRequest.Builder().setPriority(PRIORITY_HIGH_ACCURACY).build(),
+            null,
+        ).addOnCompleteListener {
+            deferred.complete(it.result)
+        }
+        return deferred.await()
+    }
+
 
 }
