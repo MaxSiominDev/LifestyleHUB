@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.auth.domain
+package dev.maxsiomin.prodhse.feature.auth.domain.model
 
 data class Holiday(
     val name: String,

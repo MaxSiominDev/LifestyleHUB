@@ -14,8 +14,8 @@ import dev.maxsiomin.common.presentation.asErrorUiText
 import dev.maxsiomin.common.util.DateConverters
 import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.prodhse.feature.home.R
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
-import dev.maxsiomin.prodhse.feature.home.domain.Plan
+import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
+import dev.maxsiomin.prodhse.feature.home.domain.model.Plan
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
 import dev.maxsiomin.prodhse.navdestinations.Screen

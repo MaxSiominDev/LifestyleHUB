@@ -6,7 +6,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import dev.maxsiomin.prodhse.feature.auth.R
-import dev.maxsiomin.prodhse.feature.auth.domain.RandomActivity
+import dev.maxsiomin.prodhse.feature.auth.domain.model.RandomActivity
 
 @Composable
 fun RandomActivityDialog(activity: RandomActivity, onDismissRequest: () -> Unit) {

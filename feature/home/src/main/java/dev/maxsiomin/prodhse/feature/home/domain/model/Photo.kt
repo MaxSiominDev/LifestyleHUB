@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.home.domain
+package dev.maxsiomin.prodhse.feature.home.domain.model
 
 import kotlinx.serialization.Serializable
 

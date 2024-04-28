@@ -5,7 +5,7 @@ import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.data.local.PlansDao
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlanEntityToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlanUiModelToEntityMapper
-import dev.maxsiomin.prodhse.feature.home.domain.Plan
+import dev.maxsiomin.prodhse.feature.home.domain.model.Plan
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
 import javax.inject.Inject
 

@@ -10,7 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.presentation.asErrorUiText
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
+import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.channels.Channel

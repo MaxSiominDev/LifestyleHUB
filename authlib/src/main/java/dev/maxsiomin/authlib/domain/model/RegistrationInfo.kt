@@ -1,4 +1,4 @@
-package dev.maxsiomin.authlib.domain
+package dev.maxsiomin.authlib.domain.model
 
 data class RegistrationInfo(
     val username: String,

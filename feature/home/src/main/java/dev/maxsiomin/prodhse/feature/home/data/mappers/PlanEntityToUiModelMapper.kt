@@ -2,7 +2,7 @@ package dev.maxsiomin.prodhse.feature.home.data.mappers
 
 import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.prodhse.feature.home.data.local.PlanEntity
-import dev.maxsiomin.prodhse.feature.home.domain.Plan
+import dev.maxsiomin.prodhse.feature.home.domain.model.Plan
 import javax.inject.Inject
 
 internal class PlanEntityToUiModelMapper @Inject constructor(

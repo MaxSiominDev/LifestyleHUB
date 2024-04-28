@@ -1,7 +1,7 @@
 package dev.maxsiomin.prodhse.feature.home.data.mappers
 
 import dev.maxsiomin.prodhse.feature.home.data.dto.places_nearby.Result
-import dev.maxsiomin.prodhse.feature.home.domain.Place
+import dev.maxsiomin.prodhse.feature.home.domain.model.Place
 
 class PlacesDtoToUiModelMapper : (Result) -> Place? {
 

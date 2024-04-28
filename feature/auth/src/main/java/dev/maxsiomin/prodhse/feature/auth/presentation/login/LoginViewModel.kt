@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.AuthManager
-import dev.maxsiomin.authlib.domain.LoginInfo
+import dev.maxsiomin.authlib.domain.model.LoginInfo
 import dev.maxsiomin.authlib.domain.LoginStatus
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.domain.resource.errorOrNull

@@ -14,9 +14,9 @@ import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.core.util.LocaleManager
 import dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse
 import dev.maxsiomin.prodhse.feature.home.data.mappers.WeatherDtoToUiModelMapper
-import dev.maxsiomin.prodhse.feature.home.domain.Photo
-import dev.maxsiomin.prodhse.feature.home.domain.Place
-import dev.maxsiomin.prodhse.feature.home.domain.Weather
+import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
+import dev.maxsiomin.prodhse.feature.home.domain.model.Place
+import dev.maxsiomin.prodhse.feature.home.domain.model.Weather
 import dev.maxsiomin.prodhse.feature.home.domain.repository.LocationRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.WeatherRepository

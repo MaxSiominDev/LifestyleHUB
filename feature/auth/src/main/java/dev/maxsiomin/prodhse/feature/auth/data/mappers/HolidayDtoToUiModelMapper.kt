@@ -3,7 +3,7 @@ package dev.maxsiomin.prodhse.feature.auth.data.mappers
 import android.annotation.SuppressLint
 import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.prodhse.feature.auth.data.dto.nager.NagerResponseItem
-import dev.maxsiomin.prodhse.feature.auth.domain.Holiday
+import dev.maxsiomin.prodhse.feature.auth.domain.model.Holiday
 import java.text.SimpleDateFormat
 import java.util.TimeZone
 import javax.inject.Inject

@@ -14,7 +14,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,8 +29,8 @@ import dev.maxsiomin.common.presentation.components.DatePickerDialog
 import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.home.R
-import dev.maxsiomin.prodhse.feature.home.domain.Photo
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
+import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
+import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.time.LocalDate

@@ -4,7 +4,7 @@ import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.auth.data.mappers.RandomActivityDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.auth.data.remote.bored_api.RandomActivityApi
-import dev.maxsiomin.prodhse.feature.auth.domain.RandomActivity
+import dev.maxsiomin.prodhse.feature.auth.domain.model.RandomActivity
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomActivityRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

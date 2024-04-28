@@ -1,8 +1,8 @@
 package dev.maxsiomin.prodhse.feature.home.data.mappers
 
 import dev.maxsiomin.prodhse.feature.home.data.dto.place_details.PlaceDetailsResponse
-import dev.maxsiomin.prodhse.feature.home.domain.Photo
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
+import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
+import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 
 internal class PlaceDetailsDtoToUoModelMapper : (PlaceDetailsResponse) -> PlaceDetails? {
 

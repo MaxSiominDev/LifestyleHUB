@@ -1,7 +1,7 @@
 package dev.maxsiomin.prodhse.feature.auth.data.mappers
 
 import dev.maxsiomin.prodhse.feature.auth.data.dto.bored.BoredApiResponse
-import dev.maxsiomin.prodhse.feature.auth.domain.RandomActivity
+import dev.maxsiomin.prodhse.feature.auth.domain.model.RandomActivity
 
 class RandomActivityDtoToUiModelMapper : (BoredApiResponse) -> RandomActivity? {
 

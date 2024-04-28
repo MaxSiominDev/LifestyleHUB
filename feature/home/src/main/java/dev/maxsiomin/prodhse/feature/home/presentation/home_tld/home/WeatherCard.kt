@@ -31,9 +31,9 @@ import dev.maxsiomin.common.presentation.components.blueShimmerColors
 import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.common.presentation.components.shimmerEffect
 import dev.maxsiomin.prodhse.feature.home.R
-import dev.maxsiomin.prodhse.feature.home.domain.TemperatureInfo
-import dev.maxsiomin.prodhse.feature.home.domain.WeatherCondition
-import dev.maxsiomin.prodhse.feature.home.domain.Weather
+import dev.maxsiomin.prodhse.feature.home.domain.model.TemperatureInfo
+import dev.maxsiomin.prodhse.feature.home.domain.model.WeatherCondition
+import dev.maxsiomin.prodhse.feature.home.domain.model.Weather
 import dev.maxsiomin.prodhse.feature.home.presentation.theme.dayBackground
 import dev.maxsiomin.prodhse.feature.home.presentation.theme.dayTextColor
 import dev.maxsiomin.prodhse.feature.home.presentation.theme.nightBackground

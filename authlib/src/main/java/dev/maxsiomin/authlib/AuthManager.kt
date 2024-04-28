@@ -4,11 +4,11 @@ import android.content.Context
 import dev.maxsiomin.authlib.di.AppModule
 import dev.maxsiomin.authlib.di.AppModuleImpl
 import dev.maxsiomin.authlib.domain.AuthStatus
-import dev.maxsiomin.authlib.domain.LoginInfo
+import dev.maxsiomin.authlib.domain.model.LoginInfo
 import dev.maxsiomin.authlib.domain.LoginStatus
-import dev.maxsiomin.authlib.domain.RegistrationInfo
+import dev.maxsiomin.authlib.domain.model.RegistrationInfo
 import dev.maxsiomin.authlib.domain.RegistrationStatus
-import dev.maxsiomin.authlib.domain.UserInfo
+import dev.maxsiomin.authlib.domain.model.UserInfo
 import dev.maxsiomin.authlib.domain.repository.UsersRepository
 import dev.maxsiomin.authlib.security.StringHasher
 import kotlinx.coroutines.CoroutineScope

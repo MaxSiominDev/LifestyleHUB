@@ -1,7 +1,7 @@
 package dev.maxsiomin.prodhse.feature.home.data.mappers
 
 import dev.maxsiomin.prodhse.feature.home.data.dto.place_photos.PlacePhotosResponseItem
-import dev.maxsiomin.prodhse.feature.home.domain.Photo
+import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
 
 internal class PlacesPhotosDtoToUiModelMapper : (List<PlacePhotosResponseItem>, String) -> List<Photo> {
 

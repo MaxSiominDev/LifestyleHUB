@@ -35,7 +35,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import dev.maxsiomin.authlib.domain.AuthStatus
-import dev.maxsiomin.authlib.domain.UserInfo
+import dev.maxsiomin.authlib.domain.model.UserInfo
 import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.NearestHolidayDialog

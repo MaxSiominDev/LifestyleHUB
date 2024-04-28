@@ -1,9 +1,9 @@
 package dev.maxsiomin.prodhse.feature.home.data.mappers
 
 import dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse
-import dev.maxsiomin.prodhse.feature.home.domain.TemperatureInfo
-import dev.maxsiomin.prodhse.feature.home.domain.WeatherCondition
-import dev.maxsiomin.prodhse.feature.home.domain.Weather
+import dev.maxsiomin.prodhse.feature.home.domain.model.TemperatureInfo
+import dev.maxsiomin.prodhse.feature.home.domain.model.WeatherCondition
+import dev.maxsiomin.prodhse.feature.home.domain.model.Weather
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date

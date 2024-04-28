@@ -7,9 +7,9 @@ import dev.maxsiomin.prodhse.feature.home.data.mappers.PlaceDetailsDtoToUoModelM
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacesDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacesPhotosDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.remote.places_api.PlacesApi
-import dev.maxsiomin.prodhse.feature.home.domain.Photo
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
-import dev.maxsiomin.prodhse.feature.home.domain.Place
+import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
+import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
+import dev.maxsiomin.prodhse.feature.home.domain.model.Place
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

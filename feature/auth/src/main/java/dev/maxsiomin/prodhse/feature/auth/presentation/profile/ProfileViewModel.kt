@@ -9,8 +9,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.authlib.domain.AuthStatus
 import dev.maxsiomin.common.domain.resource.Resource
-import dev.maxsiomin.prodhse.feature.auth.domain.Holiday
-import dev.maxsiomin.prodhse.feature.auth.domain.RandomActivity
+import dev.maxsiomin.prodhse.feature.auth.domain.model.Holiday
+import dev.maxsiomin.prodhse.feature.auth.domain.model.RandomActivity
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.NagerRepository
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomActivityRepository
 import kotlinx.coroutines.launch
