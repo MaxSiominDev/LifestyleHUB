@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">LifestyleHUB</string>
 
-
-
     <!-- Snackbar actions -->
     <string name="hide">Hide</string>
 

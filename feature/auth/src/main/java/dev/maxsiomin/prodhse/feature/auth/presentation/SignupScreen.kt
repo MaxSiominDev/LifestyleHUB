@@ -137,11 +137,11 @@ fun SignupScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 32.dp),
-                    value = state.username,
+                    value = state.usernameState.text,
                     onValueChange = {
                         onEvent(SignupViewModel.Event.UsernameChanged(it))
                     },
-                    error = state.usernameError?.asString()
+                    error = state.usernameState.error?.asString()
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))

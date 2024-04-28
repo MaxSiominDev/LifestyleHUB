@@ -13,10 +13,12 @@ import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.domain.resource.errorOrNull
 import dev.maxsiomin.common.presentation.asUiText
 import dev.maxsiomin.common.presentation.UiText
+import dev.maxsiomin.common.util.TextFieldState
+import dev.maxsiomin.common.util.updateError
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomUserRepository
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForSignup
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForSignup
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForSignupUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForSignupUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -26,13 +28,12 @@ import javax.inject.Inject
 class SignupViewModel @Inject constructor(
     private val repo: RandomUserRepository,
     private val authManager: AuthManager,
-    private val validateUsernameForSignup: ValidateUsernameForSignup = ValidateUsernameForSignup(),
-    private val validatePasswordForSignup: ValidatePasswordForSignup = ValidatePasswordForSignup(),
+    private val validateUsernameUseCase: ValidateUsernameForSignupUseCase,
+    private val validatePasswordUseCase: ValidatePasswordForSignupUseCase,
 ) : ViewModel() {
 
     data class State(
-        val username: String = "",
-        val usernameError: UiText? = null,
+        val usernameState: TextFieldState = TextFieldState(),
         val password: String = "",
         val passwordError: UiText? = null,
         val showFireworksAnimation: Boolean = false,
@@ -66,8 +67,7 @@ class SignupViewModel @Inject constructor(
                 val showFireworksAnimation = event.newValue.lowercase().trim() == MY_BELOVED_ROKYMIEL
 
                 state = state.copy(
-                    username = event.newValue,
-                    usernameError = null,
+                    usernameState = TextFieldState(event.newValue),
                     showFireworksAnimation = showFireworksAnimation
                 )
             }
@@ -83,37 +83,37 @@ class SignupViewModel @Inject constructor(
     }
 
     private fun onSignup() {
-        val username = state.username.trim()
+        val username = state.usernameState.text.trim()
         val password = state.password.trim()
         val validateUsername =
-            validateUsernameForSignup.execute(username)
+            validateUsernameUseCase.execute(username)
         val validatePassword =
-            validatePasswordForSignup.execute(password)
+            validatePasswordUseCase.execute(password)
 
         val hasError =
             listOf(validateUsername, validatePassword).any { it !is Resource.Success }
 
         val usernameError: UiText? = when (validateUsername.errorOrNull()) {
             null -> null
-            ValidateUsernameForSignup.UsernameForSignupError.InvalidLength -> {
+            ValidateUsernameForSignupUseCase.UsernameForSignupError.InvalidLength -> {
                 UiText.StringResource(
                     R.string.username_length_violated,
-                    ValidateUsernameForSignup.MIN_USERNAME_LENGTH,
-                    ValidateUsernameForSignup.MAX_USERNAME_LENGTH,
+                    ValidateUsernameForSignupUseCase.MIN_USERNAME_LENGTH,
+                    ValidateUsernameForSignupUseCase.MAX_USERNAME_LENGTH,
                 )
             }
         }
 
         val passwordError: UiText? = when (validatePassword.errorOrNull()) {
             null -> null
-            ValidatePasswordForSignup.PasswordForSignupError.InvalidLength -> {
+            ValidatePasswordForSignupUseCase.PasswordForSignupError.InvalidLength -> {
                 UiText.StringResource(
                     R.string.password_length_violated,
-                    ValidatePasswordForSignup.MIN_PASSWORD_LENGTH,
-                    ValidatePasswordForSignup.MAX_PASSWORD_LENGTH,
+                    ValidatePasswordForSignupUseCase.MIN_PASSWORD_LENGTH,
+                    ValidatePasswordForSignupUseCase.MAX_PASSWORD_LENGTH,
                 )
             }
-            ValidatePasswordForSignup.PasswordForSignupError.TooWeak -> {
+            ValidatePasswordForSignupUseCase.PasswordForSignupError.TooWeak -> {
                 UiText.StringResource(
                     R.string.password_must_consist_of_letters_and_digits
                 )
@@ -122,7 +122,7 @@ class SignupViewModel @Inject constructor(
 
         if (hasError) {
             state = state.copy(
-                usernameError = usernameError,
+                usernameState = state.usernameState.updateError(usernameError),
                 passwordError = passwordError,
             )
             return
@@ -131,8 +131,9 @@ class SignupViewModel @Inject constructor(
         viewModelScope.launch {
             val usernameAlreadyExists = authManager.checkIfUsernameExists(username)
             if (usernameAlreadyExists) {
+                val error = UiText.StringResource(R.string.username_already_exists)
                 state = state.copy(
-                    usernameError = UiText.StringResource(R.string.username_already_exists)
+                    usernameState = state.usernameState.updateError(error)
                 )
                 return@launch
             }

@@ -3,14 +3,13 @@ package dev.maxsiomin.prodhse.feature.auth.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.authlib.AuthManager
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val authManager: AuthManager) : ViewModel() {
+class AuthViewModel @Inject constructor() : ViewModel() {
 
     sealed class UiEvent {
         data object NavigateToLoginScreen : UiEvent()

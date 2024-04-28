@@ -4,7 +4,7 @@ import dev.maxsiomin.common.domain.resource.Error
 import dev.maxsiomin.common.domain.resource.Resource
 import javax.inject.Inject
 
-class ValidateUsernameForSignup @Inject constructor() {
+class ValidateUsernameForSignupUseCase @Inject constructor() {
 
     fun execute(username: String): Resource<Unit, UsernameForSignupError> {
         if (username.length !in MIN_USERNAME_LENGTH..MAX_USERNAME_LENGTH) {

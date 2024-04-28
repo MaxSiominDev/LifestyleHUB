@@ -2,6 +2,7 @@ package dev.maxsiomin.prodhse.feature.auth.presentation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.ForgotPasswordDialog
@@ -55,7 +57,7 @@ fun LoginScreen(
     navController: NavController
 ) {
 
-    dev.maxsiomin.common.util.CollectFlow(flow = eventsFlow) { event ->
+    CollectFlow(flow = eventsFlow) { event ->
         when (event) {
 
             is LoginViewModel.UiEvent.NavigateToSignupScreen -> {
@@ -163,19 +165,19 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                ClickableText(
+                Text(
                     modifier = Modifier
                         .align(Alignment.End)
-                        .padding(end = 32.dp),
+                        .padding(end = 32.dp)
+                        .clickable {
+                            onEvent(LoginViewModel.Event.ForgotPasswordClicked)
+                        },
                     text = AnnotatedString(stringResource(id = R.string.forgot_password)),
                     style = TextStyle(
                         color = cyanThemeColor,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
                     ),
-                    onClick = {
-                        onEvent(LoginViewModel.Event.ForgotPasswordClicked)
-                    }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

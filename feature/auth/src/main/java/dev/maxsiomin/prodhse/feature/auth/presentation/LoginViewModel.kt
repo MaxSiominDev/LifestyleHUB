@@ -13,8 +13,8 @@ import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.domain.resource.errorOrNull
 import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.prodhse.feature.auth.R
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForLogin
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForLogin
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForLoginUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForLoginUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -23,8 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authManager: AuthManager,
-    private val validateUsernameForLogin: ValidateUsernameForLogin,
-    private val validatePasswordForLogin: ValidatePasswordForLogin,
+    private val validateUsernameUseCase: ValidateUsernameForLoginUseCase,
+    private val validatePasswordUseCase: ValidatePasswordForLoginUseCase,
 ) : ViewModel() {
 
     data class State(
@@ -79,23 +79,23 @@ class LoginViewModel @Inject constructor(
         val username = state.username.trim()
         val password = state.password.trim()
         val validateUsername =
-            validateUsernameForLogin.execute(username)
+            validateUsernameUseCase.execute(username)
         val validatePassword =
-            validatePasswordForLogin.execute(password)
+            validatePasswordUseCase.execute(password)
 
         val hasError =
             listOf(validateUsername, validatePassword).any { it !is Resource.Success }
 
         val usernameError: UiText? = when (validateUsername.errorOrNull()) {
             null -> null
-            ValidateUsernameForLogin.UsernameForLoginError.IsBlank -> {
+            ValidateUsernameForLoginUseCase.UsernameForLoginError.IsBlank -> {
                 UiText.StringResource(R.string.blank_username)
             }
         }
 
         val passwordError: UiText? = when (validatePassword.errorOrNull()) {
             null -> null
-            ValidatePasswordForLogin.PasswordForLoginError.IsBlank -> {
+            ValidatePasswordForLoginUseCase.PasswordForLoginError.IsBlank -> {
                 UiText.StringResource(R.string.blank_password)
             }
         }

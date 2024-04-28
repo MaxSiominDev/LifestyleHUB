@@ -10,14 +10,17 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import dev.maxsiomin.prodhse.navdestinations.TopLevelDestination
+import dev.maxsiomin.prodhse.navdestinations.topLevelDestinations
 
 @Composable
 fun rememberProdhseAppState(
     navController: NavHostController = rememberNavController(),
+    topLevelDestinations: List<TopLevelDestination> = dev.maxsiomin.prodhse.navdestinations.topLevelDestinations,
 ): ProdhseAppState {
     return remember(navController) {
         ProdhseAppState(
             navController = navController,
+            topLevelDestinations = topLevelDestinations,
         )
     }
 }
@@ -25,6 +28,7 @@ fun rememberProdhseAppState(
 @Stable
 class ProdhseAppState(
     val navController: NavHostController,
+    val topLevelDestinations: List<TopLevelDestination>,
 ) {
 
     fun navigateToTopLevelDestination(

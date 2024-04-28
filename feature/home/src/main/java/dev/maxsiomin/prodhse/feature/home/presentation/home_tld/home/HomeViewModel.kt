@@ -39,13 +39,19 @@ internal class HomeViewModel @Inject constructor(
     private var weatherIsRefreshing = false
         set(value) {
             field = value
-            state = state.copy(isRefreshing = field || placesIsRefreshing)
+            state = state.copy(isRefreshing = value || placesIsRefreshing || locationIsRefreshing)
         }
 
     private var placesIsRefreshing = false
         set(value) {
             field = value
-            state = state.copy(isRefreshing = field || weatherIsRefreshing)
+            state = state.copy(isRefreshing = weatherIsRefreshing || value || locationIsRefreshing)
+        }
+
+    private var locationIsRefreshing = false
+        set(value) {
+            field = value
+            state = state.copy(isRefreshing = weatherIsRefreshing || placesIsRefreshing || value)
         }
 
 
@@ -138,25 +144,34 @@ internal class HomeViewModel @Inject constructor(
             viewModelScope.launch {
                 _eventsFlow.send(UiEvent.RequestLocationPermission)
             }
+            state = state.copy(weatherStatus = WeatherStatus.Error)
             return
         }
+
+        locationIsRefreshing = true
 
         viewModelScope.launch {
             val location = locationRepo.getCurrentLocation()
             when (location) {
                 is Resource.Error -> {
+                    locationIsRefreshing = false
+                    state = state.copy(weatherStatus = WeatherStatus.Error)
                     _eventsFlow.send(UiEvent.ShowMessage(location.asErrorUiText()))
-                    placesIsRefreshing = false
                 }
 
                 is Resource.Success -> {
-                    refreshPlaces(location.data)
-                    refreshWeather(location.data)
+                    val locationData = requireNotNull(location.data) {
+                        "Location data is null even though Resource.Success is called"
+                    }
+                    refreshPlaces(locationData)
+                    refreshWeather(locationData)
+                    // Important to call this after `refreshPlaces` and `refreshWeather` are called
+                    // to avoid flickering progress bar
+                    locationIsRefreshing = false
                 }
             }
         }
     }
-
 
     private fun refreshPlaces(location: Location) {
 

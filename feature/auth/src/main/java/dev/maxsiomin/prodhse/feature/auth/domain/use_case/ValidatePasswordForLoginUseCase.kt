@@ -4,7 +4,7 @@ import dev.maxsiomin.common.domain.resource.Error
 import dev.maxsiomin.common.domain.resource.Resource
 import javax.inject.Inject
 
-class ValidatePasswordForLogin @Inject constructor() {
+class ValidatePasswordForLoginUseCase @Inject constructor() {
 
     fun execute(password: String): Resource<Unit, PasswordForLoginError> {
         if (password.isBlank()) {
