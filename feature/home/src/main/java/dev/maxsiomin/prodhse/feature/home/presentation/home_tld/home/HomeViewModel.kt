@@ -23,6 +23,7 @@ import dev.maxsiomin.prodhse.feature.home.domain.repository.WeatherRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -98,9 +99,6 @@ internal class HomeViewModel @Inject constructor(
         val showLocationPermissionDialog: Boolean = false,
     )
 
-    //var state by mutableStateOf(State())
-    //private set
-
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
@@ -124,6 +122,11 @@ internal class HomeViewModel @Inject constructor(
         data class AddToPlans(val fsqId: String) : Event()
         data object ExpandStateChanged : Event()
     }
+
+    init {
+        refresh()
+    }
+
 
     fun onEvent(event: Event) {
         when (event) {
@@ -160,30 +163,27 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-
-    init {
-        refresh()
-    }
-
     private fun refresh() {
-
         locationIsRefreshing = true
 
-        if (permissionChecker.hasPermission(PermissionChecker.COARSE_LOCATION_PERMISSION).not()) {
-            locationIsRefreshing = false
-            viewModelScope.launch {
-                _eventsFlow.send(UiEvent.RequestLocationPermission)
-            }
-            _state.update {
-                it.copy(
-                    weatherStatus = WeatherStatus.Error,
-                    placesStatus = PlacesStatus.Error(UiText.DynamicString("TODO"))
-                )
-            }
-            return
-        }
-
         viewModelScope.launch {
+            // I need this delay so that pull refresh lazy column had enough time to react to state change
+            delay(1)
+
+            if (permissionChecker.hasPermission(PermissionChecker.COARSE_LOCATION_PERMISSION).not()) {
+                locationIsRefreshing = false
+                viewModelScope.launch {
+                    _eventsFlow.send(UiEvent.RequestLocationPermission)
+                }
+                _state.update {
+                    it.copy(
+                        weatherStatus = WeatherStatus.Error,
+                        placesStatus = PlacesStatus.Error(UiText.DynamicString("TODO"))
+                    )
+                }
+                return@launch
+            }
+
             val locationResource = locationRepo.getCurrentLocation()
             when (locationResource) {
                 is Resource.Error -> {
