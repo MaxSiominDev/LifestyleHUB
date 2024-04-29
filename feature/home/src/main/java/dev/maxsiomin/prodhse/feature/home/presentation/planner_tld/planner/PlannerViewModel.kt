@@ -3,16 +3,16 @@ package dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.planner
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.common.domain.resource.Resource
+import dev.maxsiomin.common.presentation.StatefulViewModel
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,23 +20,19 @@ import javax.inject.Inject
 internal class PlannerViewModel @Inject constructor(
     private val plansRepo: PlansRepository,
     private val placesRepo: PlacesRepository,
-) : ViewModel() {
+) : StatefulViewModel<PlannerViewModel.State, PlannerViewModel.Effect, PlannerViewModel.Event>() {
 
     data class State(
         val items: List<PlannerFeedItem> = emptyList(),
         val isRefreshing: Boolean = false,
     )
 
-    var state by mutableStateOf(State())
-        private set
+    override val _state = MutableStateFlow(State())
 
 
-    sealed class UiEvent {
-        data class GoToEditPlanScreen(val planId: Long) : UiEvent()
+    sealed class Effect {
+        data class GoToEditPlanScreen(val planId: Long) : Effect()
     }
-
-    private val _eventFlow = Channel<UiEvent>()
-    val eventFlow = _eventFlow.receiveAsFlow()
 
 
     sealed class Event {
@@ -44,22 +40,21 @@ internal class PlannerViewModel @Inject constructor(
         data object Refresh : Event()
     }
 
-    init {
-        loadPlans()
-    }
-
-    fun onEvent(event: Event) {
+    override fun onEvent(event: Event) {
         when (event) {
-            is Event.PlanClicked -> viewModelScope.launch {
-                _eventFlow.send(UiEvent.GoToEditPlanScreen(event.planId))
-            }
-
+            is Event.PlanClicked -> onEffect(Effect.GoToEditPlanScreen(event.planId))
             Event.Refresh -> loadPlans()
         }
     }
 
+    init {
+        loadPlans()
+    }
+
     private fun loadPlans() {
-        state = state.copy(isRefreshing = true)
+        _state.update {
+            it.copy(isRefreshing = true)
+        }
         viewModelScope.launch {
             val feedItems = mutableListOf<PlannerFeedItem>()
             val plans = plansRepo.getPlans()
@@ -98,7 +93,9 @@ internal class PlannerViewModel @Inject constructor(
                 }
             )
 
-            state = state.copy(items = sortedItems, isRefreshing = false)
+            _state.update {
+                it.copy(items = sortedItems, isRefreshing = false)
+            }
         }
     }
 

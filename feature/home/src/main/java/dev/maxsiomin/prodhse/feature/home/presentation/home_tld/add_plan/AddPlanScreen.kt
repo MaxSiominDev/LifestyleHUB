@@ -40,15 +40,15 @@ internal fun AddPlanScreen(
     navController: NavController,
     snackbarCallback: SnackbarCallback,
     state: AddPlanViewModel.State,
-    eventFlow: Flow<AddPlanViewModel.UiEvent>,
+    effectFlow: Flow<AddPlanViewModel.Effect>,
     onEvent: (AddPlanViewModel.Event) -> Unit
 ) {
 
-    CollectFlow(eventFlow) { event ->
-        when (event) {
-            is AddPlanViewModel.UiEvent.NavigateBack -> navController.popBackStack()
-            is AddPlanViewModel.UiEvent.ShowMessage -> snackbarCallback(
-                SnackbarInfo(message = event.message)
+    CollectFlow(effectFlow) { effect ->
+        when (effect) {
+            is AddPlanViewModel.Effect.NavigateBack -> navController.popBackStack()
+            is AddPlanViewModel.Effect.ShowMessage -> snackbarCallback(
+                SnackbarInfo(message = effect.message)
             )
         }
     }
@@ -166,7 +166,7 @@ private fun AddPlanScreenPreview() {
             ),
             onEvent = {},
             navController = rememberNavController(),
-            eventFlow = flow { },
+            effectFlow = flow { },
             snackbarCallback = {}
         )
     }

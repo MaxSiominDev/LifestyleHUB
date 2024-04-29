@@ -49,16 +49,16 @@ import kotlinx.coroutines.flow.flow
 @Composable
 fun LoginScreen(
     state: LoginViewModel.State,
-    eventsFlow: Flow<LoginViewModel.UiEvent>,
+    effectFlow: Flow<LoginViewModel.Effect>,
     onEvent: (LoginViewModel.Event) -> Unit,
     showSnackbar: SnackbarCallback,
     navController: NavController
 ) {
 
-    CollectFlow(flow = eventsFlow) { event ->
-        when (event) {
+    CollectFlow(effectFlow) { effect ->
+        when (effect) {
 
-            is LoginViewModel.UiEvent.NavigateToSignupScreen -> {
+            is LoginViewModel.Effect.NavigateToSignupScreen -> {
                 navController.navigate(Screen.SignupScreen.route) {
                     popUpTo(Screen.AuthScreen.route) {
                         saveState = true
@@ -68,13 +68,13 @@ fun LoginScreen(
                 }
             }
 
-            is LoginViewModel.UiEvent.NavigateToProfileScreen -> {
+            is LoginViewModel.Effect.NavigateToProfileScreen -> {
                 navController.popBackStack(route = Screen.ProfileScreen.route, inclusive = false)
             }
 
-            is LoginViewModel.UiEvent.ShowMessage -> {
+            is LoginViewModel.Effect.ShowMessage -> {
                 showSnackbar(
-                    dev.maxsiomin.common.presentation.SnackbarInfo(event.message)
+                    dev.maxsiomin.common.presentation.SnackbarInfo(effect.message)
                 )
             }
         }

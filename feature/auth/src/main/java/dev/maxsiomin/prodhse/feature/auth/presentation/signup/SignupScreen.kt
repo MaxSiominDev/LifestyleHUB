@@ -48,18 +48,16 @@ import kotlinx.coroutines.flow.flow
 @Composable
 fun SignupScreen(
     state: SignupViewModel.State,
-    eventsFlow: Flow<SignupViewModel.UiEvent>,
+    effectFlow: Flow<SignupViewModel.Effect>,
     onEvent: (SignupViewModel.Event) -> Unit,
     showSnackbar: SnackbarCallback,
     navController: NavController
 ) {
 
-    val context = LocalContext.current
+    CollectFlow(effectFlow) { effect ->
+        when (effect) {
 
-    CollectFlow(flow = eventsFlow) { event ->
-        when (event) {
-
-            is SignupViewModel.UiEvent.NavigateToLoginScreen -> {
+            is SignupViewModel.Effect.NavigateToLoginScreen -> {
                 navController.navigate(Screen.LoginScreen.route) {
                     popUpTo(Screen.AuthScreen.route) {
                         saveState = true
@@ -69,14 +67,14 @@ fun SignupScreen(
                 }
             }
 
-            is SignupViewModel.UiEvent.NavigateToSuccessfulRegistrationScreen -> {
+            is SignupViewModel.Effect.NavigateToSuccessfulRegistrationScreen -> {
                 navController.navigate(Screen.SuccessfulRegistrationScreen.route) {
                     popUpTo(Screen.AuthScreen.route)
                 }
             }
 
-            is SignupViewModel.UiEvent.ShowMessage -> showSnackbar(
-                dev.maxsiomin.common.presentation.SnackbarInfo(event.message)
+            is SignupViewModel.Effect.ShowMessage -> showSnackbar(
+                dev.maxsiomin.common.presentation.SnackbarInfo(effect.message)
             )
 
         }

@@ -1,23 +1,23 @@
 package dev.maxsiomin.prodhse.feature.auth.presentation.auth
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
+import dev.maxsiomin.common.presentation.StatefulViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor() : ViewModel() {
+class AuthViewModel @Inject constructor() :
+    StatefulViewModel<Nothing, AuthViewModel.Effect, AuthViewModel.Event>() {
 
-    sealed class UiEvent {
-        data object NavigateToLoginScreen : UiEvent()
-        data object NavigateToSignupScreen : UiEvent()
+    override val _state: MutableStateFlow<Nothing>
+        get() = throw IllegalArgumentException("State is just a placeholder here")
+
+    sealed class Effect {
+        data object NavigateToLoginScreen : Effect()
+        data object NavigateToSignupScreen : Effect()
     }
-
-    private val _eventsFlow = Channel<UiEvent>()
-    val eventsFlow = _eventsFlow.receiveAsFlow()
 
 
     sealed class Event {
@@ -25,13 +25,14 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         data object SignupClicked : Event()
     }
 
-    fun onEvent(event: Event) {
+    override fun onEvent(event: Event) {
         when (event) {
             Event.LoginClicked -> viewModelScope.launch {
-                _eventsFlow.send(UiEvent.NavigateToLoginScreen)
+                onEffect(Effect.NavigateToLoginScreen)
             }
+
             Event.SignupClicked -> viewModelScope.launch {
-                _eventsFlow.send(UiEvent.NavigateToSignupScreen)
+                onEffect(Effect.NavigateToSignupScreen)
             }
         }
     }

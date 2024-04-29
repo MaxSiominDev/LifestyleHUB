@@ -1,9 +1,5 @@
 package dev.maxsiomin.prodhse.feature.auth.presentation.login
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.AuthManager
@@ -11,12 +7,13 @@ import dev.maxsiomin.authlib.domain.model.LoginInfo
 import dev.maxsiomin.authlib.domain.LoginStatus
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.domain.resource.errorOrNull
+import dev.maxsiomin.common.presentation.StatefulViewModel
 import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForLoginUseCase
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForLoginUseCase
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,7 +22,7 @@ class LoginViewModel @Inject constructor(
     private val authManager: AuthManager,
     private val validateUsernameUseCase: ValidateUsernameForLoginUseCase,
     private val validatePasswordUseCase: ValidatePasswordForLoginUseCase,
-) : ViewModel() {
+) : StatefulViewModel<LoginViewModel.State, LoginViewModel.Effect, LoginViewModel.Event>() {
 
     data class State(
         val username: String = "",
@@ -35,17 +32,13 @@ class LoginViewModel @Inject constructor(
         val showForgotPasswordDialog: Boolean = false,
     )
 
-    var state by mutableStateOf(State())
-        private set
+    override val _state = MutableStateFlow(State())
 
-    sealed class UiEvent {
-        data object NavigateToSignupScreen : UiEvent()
-        data object NavigateToProfileScreen : UiEvent()
-        data class ShowMessage(val message: UiText) : UiEvent()
+    sealed class Effect {
+        data object NavigateToSignupScreen : Effect()
+        data object NavigateToProfileScreen : Effect()
+        data class ShowMessage(val message: UiText) : Effect()
     }
-
-    private val _eventsFlow = Channel<UiEvent>()
-    val eventsFlow = _eventsFlow.receiveAsFlow()
 
     sealed class Event {
         data class UsernameChanged(val newValue: String) : Event()
@@ -56,28 +49,33 @@ class LoginViewModel @Inject constructor(
         data object DismissForgotPasswordDialog : Event()
     }
 
-    fun onEvent(event: Event) {
+    override fun onEvent(event: Event) {
         when (event) {
-            is Event.UsernameChanged -> state =
-                state.copy(username = event.newValue, usernameError = null)
-
-            is Event.PasswordChanged -> state =
-                state.copy(password = event.newValue, passwordError = null)
-
-            Event.LoginClicked -> onLogin()
-            Event.SignupClicked -> viewModelScope.launch {
-                _eventsFlow.send(UiEvent.NavigateToSignupScreen)
+            is Event.UsernameChanged -> _state.update {
+                it.copy(username = event.newValue, usernameError = null)
             }
 
-            Event.ForgotPasswordClicked -> state = state.copy(showForgotPasswordDialog = true)
-            Event.DismissForgotPasswordDialog -> state =
-                state.copy(showForgotPasswordDialog = false)
+            is Event.PasswordChanged -> _state.update {
+                it.copy(password = event.newValue, passwordError = null)
+            }
+
+            Event.LoginClicked -> onLogin()
+
+            Event.SignupClicked -> onEffect(Effect.NavigateToSignupScreen)
+
+            Event.ForgotPasswordClicked -> _state.update {
+                it.copy(showForgotPasswordDialog = true)
+            }
+
+            Event.DismissForgotPasswordDialog -> _state.update {
+                it.copy(showForgotPasswordDialog = false)
+            }
         }
     }
 
     private fun onLogin() {
-        val username = state.username.trim()
-        val password = state.password.trim()
+        val username = state.value.username.trim()
+        val password = state.value.password.trim()
         val validateUsername =
             validateUsernameUseCase.execute(username)
         val validatePassword =
@@ -101,10 +99,12 @@ class LoginViewModel @Inject constructor(
         }
 
         if (hasError) {
-            state = state.copy(
-                usernameError = usernameError,
-                passwordError = passwordError,
-            )
+            _state.update {
+                it.copy(
+                    usernameError = usernameError,
+                    passwordError = passwordError,
+                )
+            }
             return
         }
 
@@ -114,12 +114,12 @@ class LoginViewModel @Inject constructor(
             when (loginStatus) {
 
                 LoginStatus.Success -> {
-                    _eventsFlow.send(UiEvent.NavigateToProfileScreen)
+                    onEffect(Effect.NavigateToProfileScreen)
                 }
 
                 is LoginStatus.Failure -> {
-                    _eventsFlow.send(
-                        UiEvent.ShowMessage(
+                    onEffect(
+                        Effect.ShowMessage(
                             UiText.DynamicString(loginStatus.reason)
                         )
                     )

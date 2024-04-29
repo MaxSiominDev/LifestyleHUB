@@ -1,19 +1,14 @@
 package dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home
 
 import android.location.Location
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.common.domain.resource.Resource
+import dev.maxsiomin.common.presentation.StatefulViewModel
 import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.presentation.asErrorUiText
 import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.core.util.LocaleManager
-import dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse
-import dev.maxsiomin.prodhse.feature.home.data.mappers.WeatherDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
 import dev.maxsiomin.prodhse.feature.home.domain.model.Place
 import dev.maxsiomin.prodhse.feature.home.domain.model.Weather
@@ -22,11 +17,8 @@ import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.WeatherRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,7 +30,7 @@ internal class HomeViewModel @Inject constructor(
     private val locationRepo: LocationRepository,
     private val localeManager: LocaleManager,
     private val permissionChecker: PermissionChecker,
-) : ViewModel() {
+) : StatefulViewModel<HomeViewModel.State, HomeViewModel.Effect, HomeViewModel.Event>() {
 
     private var locationIsRefreshing = false
         set(value) {
@@ -99,21 +91,17 @@ internal class HomeViewModel @Inject constructor(
         val showLocationPermissionDialog: Boolean = false,
     )
 
-    private val _state = MutableStateFlow(
+    override val _state = MutableStateFlow(
         State(weather = weatherRepo.getDefaultWeather())
     )
-    val state = _state.asStateFlow()
 
 
-    sealed class UiEvent {
-        data class ShowMessage(val message: UiText) : UiEvent()
-        data object RequestLocationPermission : UiEvent()
-        data class GoToDetailsScreen(val fsqId: String) : UiEvent()
-        data class GoToAddPlanScreen(val fsqId: String) : UiEvent()
+    sealed class Effect {
+        data class ShowMessage(val message: UiText) : Effect()
+        data object RequestLocationPermission : Effect()
+        data class GoToDetailsScreen(val fsqId: String) : Effect()
+        data class GoToAddPlanScreen(val fsqId: String) : Effect()
     }
-
-    private val _eventsFlow = Channel<UiEvent>()
-    val eventsFlow = _eventsFlow.receiveAsFlow()
 
 
     sealed class Event {
@@ -130,7 +118,7 @@ internal class HomeViewModel @Inject constructor(
     }
 
 
-    fun onEvent(event: Event) {
+    override fun onEvent(event: Event) {
         when (event) {
 
             Event.Refresh -> refresh()
@@ -150,11 +138,11 @@ internal class HomeViewModel @Inject constructor(
             }
 
             is Event.OnVenueClicked -> viewModelScope.launch {
-                _eventsFlow.send(UiEvent.GoToDetailsScreen(fsqId = event.fsqId))
+                onEffect(Effect.GoToDetailsScreen(fsqId = event.fsqId))
             }
 
             is Event.AddToPlans -> viewModelScope.launch {
-                _eventsFlow.send(UiEvent.GoToAddPlanScreen(fsqId = event.fsqId))
+                onEffect(Effect.GoToAddPlanScreen(fsqId = event.fsqId))
             }
 
             Event.ExpandStateChanged -> {
@@ -177,7 +165,7 @@ internal class HomeViewModel @Inject constructor(
             ) {
                 locationIsRefreshing = false
                 viewModelScope.launch {
-                    _eventsFlow.send(UiEvent.RequestLocationPermission)
+                    onEffect(Effect.RequestLocationPermission)
                 }
                 _state.update {
                     it.copy(
@@ -198,7 +186,7 @@ internal class HomeViewModel @Inject constructor(
                             placesStatus = PlacesStatus.Error(locationResource.asErrorUiText())
                         )
                     }
-                    _eventsFlow.send(UiEvent.ShowMessage(locationResource.asErrorUiText()))
+                    onEffect(Effect.ShowMessage(locationResource.asErrorUiText()))
                 }
 
                 is Resource.Success -> {
@@ -234,7 +222,7 @@ internal class HomeViewModel @Inject constructor(
                     _state.update {
                         it.copy(placesStatus = PlacesStatus.Error(placesNearbyResource.asErrorUiText()))
                     }
-                    _eventsFlow.send(UiEvent.ShowMessage(placesNearbyResource.asErrorUiText()))
+                    onEffect(Effect.ShowMessage(placesNearbyResource.asErrorUiText()))
                 }
 
                 is Resource.Success -> {
@@ -290,7 +278,7 @@ internal class HomeViewModel @Inject constructor(
                     _state.update {
                         it.copy(weatherStatus = WeatherStatus.Error)
                     }
-                    _eventsFlow.send(UiEvent.ShowMessage(weatherResource.asErrorUiText()))
+                    onEffect(Effect.ShowMessage(weatherResource.asErrorUiText()))
                 }
 
                 is Resource.Success -> {

@@ -33,13 +33,13 @@ import kotlinx.coroutines.flow.flow
 @Composable
 internal fun SuccessfulRegistrationScreen(
     navController: NavController,
-    eventsFlow: Flow<SuccessfulRegistrationViewModel.UiEvent>,
+    effectFlow: Flow<SuccessfulRegistrationViewModel.Effect>,
     onEvent: (SuccessfulRegistrationViewModel.Event) -> Unit
 ) {
 
-    CollectFlow(eventsFlow) { event ->
-        when (event) {
-            SuccessfulRegistrationViewModel.UiEvent.NavigateToLoginScreen -> {
+    CollectFlow(effectFlow) { effect ->
+        when (effect) {
+            SuccessfulRegistrationViewModel.Effect.NavigateToLoginScreen -> {
                 navController.navigate(Screen.LoginScreen.route) {
                     popUpTo(Screen.AuthScreen.route) {
                         inclusive = false

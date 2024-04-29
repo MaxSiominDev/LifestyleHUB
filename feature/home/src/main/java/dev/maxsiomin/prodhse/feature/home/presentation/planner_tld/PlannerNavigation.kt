@@ -2,7 +2,9 @@ package dev.maxsiomin.prodhse.feature.home.presentation.planner_tld
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -37,9 +39,10 @@ fun PlannerNavHost(navController: NavHostController, showSnackbar: SnackbarCallb
 
         composable(route = Screen.PlannerScreen.route) {
             val viewModel: PlannerViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
             PlannerScreen(
-                state = viewModel.state,
-                eventsFlow = viewModel.eventFlow,
+                state = state,
+                effectFlow = viewModel.effectFlow,
                 onEvent = viewModel::onEvent,
                 navController = navController,
             )
@@ -50,9 +53,10 @@ fun PlannerNavHost(navController: NavHostController, showSnackbar: SnackbarCallb
             arguments = Screen.EditPlanScreen.arguments,
         ) {
             val viewModel: EditPlanViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
             EditPlanScreen(
-                state = viewModel.state,
-                eventsFlow = viewModel.eventsFlow,
+                state = state,
+                effectFlow = viewModel.effectFlow,
                 onEvent = viewModel::onEvent,
                 showSnackbar = showSnackbar,
                 navController = navController,

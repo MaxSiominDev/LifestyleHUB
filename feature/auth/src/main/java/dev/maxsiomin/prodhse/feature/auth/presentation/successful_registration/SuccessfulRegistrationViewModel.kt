@@ -1,33 +1,31 @@
 package dev.maxsiomin.prodhse.feature.auth.presentation.successful_registration
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.maxsiomin.common.presentation.StatefulViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SuccessfulRegistrationViewModel @Inject constructor(): ViewModel() {
+class SuccessfulRegistrationViewModel @Inject constructor() :
+    StatefulViewModel<Nothing, SuccessfulRegistrationViewModel.Effect, SuccessfulRegistrationViewModel.Event>() {
 
-    sealed class UiEvent {
-        data object NavigateToLoginScreen : UiEvent()
+    override val _state: MutableStateFlow<Nothing>
+        get() = throw IllegalArgumentException("State is just a placeholder here")
+
+    sealed class Effect {
+        data object NavigateToLoginScreen : Effect()
     }
-
-    private val _eventsFlow = Channel<UiEvent>()
-    val eventsFlow = _eventsFlow.receiveAsFlow()
 
 
     sealed class Event {
         data object LoginClicked : Event()
     }
 
-    fun onEvent(event: Event) {
+    override fun onEvent(event: Event) {
         when (event) {
-            Event.LoginClicked -> viewModelScope.launch {
-                _eventsFlow.send(UiEvent.NavigateToLoginScreen)
-            }
+            Event.LoginClicked -> onEffect(Effect.NavigateToLoginScreen)
         }
     }
 

@@ -41,7 +41,7 @@ import kotlinx.coroutines.flow.flow
 
 @Composable
 internal fun AuthScreen(
-    eventsFlow: Flow<AuthViewModel.UiEvent>,
+    effectFlow: Flow<AuthViewModel.Effect>,
     onEvent: (AuthViewModel.Event) -> Unit,
     navController: NavController
 ) {
@@ -50,13 +50,13 @@ internal fun AuthScreen(
         navController.popBackStack(Screen.ProfileScreen.route, inclusive = true)
     }
 
-    CollectFlow(flow = eventsFlow) { event ->
-        when (event) {
-            is AuthViewModel.UiEvent.NavigateToLoginScreen -> {
+    CollectFlow(effectFlow) { effect ->
+        when (effect) {
+            is AuthViewModel.Effect.NavigateToLoginScreen -> {
                 navController.navigate(Screen.LoginScreen.route)
             }
 
-            is AuthViewModel.UiEvent.NavigateToSignupScreen -> {
+            is AuthViewModel.Effect.NavigateToSignupScreen -> {
                 navController.navigate(Screen.SignupScreen.route)
             }
         }

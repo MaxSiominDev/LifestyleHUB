@@ -32,7 +32,7 @@ import kotlinx.coroutines.flow.Flow
 internal fun HomeScreen(
     state: HomeViewModel.State,
     onEvent: (HomeViewModel.Event) -> Unit,
-    eventsFlow: Flow<HomeViewModel.UiEvent>,
+    effectFlow: Flow<HomeViewModel.Effect>,
     navController: NavController,
     showSnackbar: SnackbarCallback,
 ) {
@@ -59,22 +59,22 @@ internal fun HomeScreen(
             }
         )
 
-    CollectFlow(eventsFlow) { event ->
-        when (event) {
-            is HomeViewModel.UiEvent.ShowMessage -> {
-                showSnackbar(SnackbarInfo(event.message))
+    CollectFlow(effectFlow) { effect ->
+        when (effect) {
+            is HomeViewModel.Effect.ShowMessage -> {
+                showSnackbar(SnackbarInfo(effect.message))
             }
 
-            HomeViewModel.UiEvent.RequestLocationPermission -> {
+            HomeViewModel.Effect.RequestLocationPermission -> {
                 locationPermissionResultLauncher.launch(permissions)
             }
 
-            is HomeViewModel.UiEvent.GoToDetailsScreen -> {
-                navController.navigate(Screen.DetailsScreen.withArgs(event.fsqId))
+            is HomeViewModel.Effect.GoToDetailsScreen -> {
+                navController.navigate(Screen.DetailsScreen.withArgs(effect.fsqId))
             }
 
-            is HomeViewModel.UiEvent.GoToAddPlanScreen -> {
-                navController.navigate(Screen.AddPlanScreen.withArgs(event.fsqId))
+            is HomeViewModel.Effect.GoToAddPlanScreen -> {
+                navController.navigate(Screen.AddPlanScreen.withArgs(effect.fsqId))
             }
         }
     }

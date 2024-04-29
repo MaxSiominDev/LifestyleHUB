@@ -2,7 +2,6 @@ package dev.maxsiomin.prodhse.feature.home.presentation.home_tld
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,7 +49,7 @@ fun HomeNavHost(navController: NavHostController, showSnackbar: SnackbarCallback
                 onEvent = viewModel::onEvent,
                 navController = navController,
                 showSnackbar = showSnackbar,
-                eventsFlow = viewModel.eventsFlow,
+                effectFlow = viewModel.effectFlow,
             )
         }
 
@@ -59,10 +58,11 @@ fun HomeNavHost(navController: NavHostController, showSnackbar: SnackbarCallback
             arguments = Screen.DetailsScreen.arguments,
         ) {
             val viewModel: DetailsViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
             DetailsScreen(
-                state = viewModel.state,
+                state = state,
                 onEvent = viewModel::onEvent,
-                eventsFlow = viewModel.eventsFlow,
+                effectFlow = viewModel.effectFlow,
                 navController = navController,
                 showSnackbar = showSnackbar,
             )
@@ -73,7 +73,8 @@ fun HomeNavHost(navController: NavHostController, showSnackbar: SnackbarCallback
             arguments = Screen.BrowsePhotoScreen.arguments,
         ) {
             val viewModel: BrowsePhotoViewModel = hiltViewModel()
-            BrowsePhotoScreen(viewModel.state)
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            BrowsePhotoScreen(state = state)
         }
 
         composable(
@@ -81,12 +82,13 @@ fun HomeNavHost(navController: NavHostController, showSnackbar: SnackbarCallback
             arguments = Screen.AddPlanScreen.arguments,
         ) {
             val viewModel: AddPlanViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
             AddPlanScreen(
-                state = viewModel.state,
+                state = state,
                 onEvent = viewModel::onEvent,
                 navController = navController,
                 snackbarCallback = showSnackbar,
-                eventFlow = viewModel.eventsFlow,
+                effectFlow = viewModel.effectFlow,
             )
         }
 

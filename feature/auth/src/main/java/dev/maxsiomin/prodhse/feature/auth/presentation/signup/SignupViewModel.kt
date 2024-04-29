@@ -3,7 +3,6 @@ package dev.maxsiomin.prodhse.feature.auth.presentation.signup
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.AuthManager
@@ -11,6 +10,7 @@ import dev.maxsiomin.authlib.domain.model.RegistrationInfo
 import dev.maxsiomin.authlib.domain.RegistrationStatus
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.domain.resource.errorOrNull
+import dev.maxsiomin.common.presentation.StatefulViewModel
 import dev.maxsiomin.common.presentation.asUiText
 import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.util.TextFieldState
@@ -20,7 +20,9 @@ import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomUserRepository
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForSignupUseCase
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForSignupUseCase
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,7 +32,7 @@ class SignupViewModel @Inject constructor(
     private val authManager: AuthManager,
     private val validateUsernameUseCase: ValidateUsernameForSignupUseCase,
     private val validatePasswordUseCase: ValidatePasswordForSignupUseCase,
-) : ViewModel() {
+) : StatefulViewModel<SignupViewModel.State, SignupViewModel.Effect, SignupViewModel.Event>() {
 
     data class State(
         val usernameState: TextFieldState = TextFieldState.new(),
@@ -39,17 +41,14 @@ class SignupViewModel @Inject constructor(
         val showFireworksAnimation: Boolean = false,
     )
 
-    var state by mutableStateOf(State())
-        private set
+    override val _state = MutableStateFlow(State())
 
-    sealed class UiEvent {
-        data object NavigateToLoginScreen : UiEvent()
-        data object NavigateToSuccessfulRegistrationScreen : UiEvent()
-        data class ShowMessage(val message: UiText) : UiEvent()
+    sealed class Effect {
+        data object NavigateToLoginScreen : Effect()
+        data object NavigateToSuccessfulRegistrationScreen : Effect()
+        data class ShowMessage(val message: UiText) : Effect()
     }
 
-    private val _eventsFlow = Channel<UiEvent>()
-    val eventsFlow = _eventsFlow.receiveAsFlow()
 
     sealed class Event {
         data class UsernameChanged(val newValue: String) : Event()
@@ -58,31 +57,35 @@ class SignupViewModel @Inject constructor(
         data object SignupClicked : Event()
     }
 
-    fun onEvent(event: Event) {
+    override fun onEvent(event: Event) {
         when (event) {
             is Event.UsernameChanged -> {
 
                 // Easter egg for the person I love the most
                 // Just show fireworks animation if username is "rokymiel"
-                val showFireworksAnimation = event.newValue.lowercase().trim() == MY_BELOVED_ROKYMIEL
+                val showFireworksAnimation =
+                    event.newValue.lowercase().trim() == MY_BELOVED_ROKYMIEL
 
-                state = state.copy(
-                    usernameState = TextFieldState.new(text = event.newValue),
-                    showFireworksAnimation = showFireworksAnimation
-                )
+                _state.update {
+                    it.copy(
+                        usernameState = TextFieldState.new(text = event.newValue),
+                        showFireworksAnimation = showFireworksAnimation
+                    )
+                }
             }
 
-            is Event.PasswordChanged -> state = state.copy(password = event.newValue, passwordError = null)
-
-            Event.LoginClicked -> viewModelScope.launch {
-                _eventsFlow.send(UiEvent.NavigateToLoginScreen)
+            is Event.PasswordChanged -> _state.update {
+                it.copy(password = event.newValue, passwordError = null)
             }
+
+            Event.LoginClicked -> onEffect(Effect.NavigateToLoginScreen)
 
             Event.SignupClicked -> onSignup()
         }
     }
 
     private fun onSignup() {
+        val state = _state.value
         val username = state.usernameState.text.trim()
         val password = state.password.trim()
         val validateUsername =
@@ -113,6 +116,7 @@ class SignupViewModel @Inject constructor(
                     ValidatePasswordForSignupUseCase.MAX_PASSWORD_LENGTH,
                 )
             }
+
             ValidatePasswordForSignupUseCase.PasswordForSignupError.TooWeak -> {
                 UiText.StringResource(
                     R.string.password_must_consist_of_letters_and_digits
@@ -121,10 +125,12 @@ class SignupViewModel @Inject constructor(
         }
 
         if (hasError) {
-            state = state.copy(
-                usernameState = state.usernameState.updateError(usernameError),
-                passwordError = passwordError,
-            )
+            _state.update {
+                it.copy(
+                    usernameState = state.usernameState.updateError(usernameError),
+                    passwordError = passwordError,
+                )
+            }
             return
         }
 
@@ -132,9 +138,11 @@ class SignupViewModel @Inject constructor(
             val usernameAlreadyExists = authManager.checkIfUsernameExists(username)
             if (usernameAlreadyExists) {
                 val error = UiText.StringResource(R.string.username_already_exists)
-                state = state.copy(
-                    usernameState = state.usernameState.updateError(error)
-                )
+                _state.update {
+                    it.copy(
+                        usernameState = state.usernameState.updateError(error)
+                    )
+                }
                 return@launch
             }
 
@@ -170,16 +178,12 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    private suspend fun onRegistrationError(message: UiText) {
-        _eventsFlow.send(
-            UiEvent.ShowMessage(message)
-        )
+    private fun onRegistrationError(message: UiText) {
+        onEffect(Effect.ShowMessage(message))
     }
 
-    private suspend fun onRegistrationSuccess() {
-        _eventsFlow.send(
-            UiEvent.NavigateToSuccessfulRegistrationScreen
-        )
+    private fun onRegistrationSuccess() {
+        onEffect(Effect.NavigateToSuccessfulRegistrationScreen)
     }
 
     companion object {

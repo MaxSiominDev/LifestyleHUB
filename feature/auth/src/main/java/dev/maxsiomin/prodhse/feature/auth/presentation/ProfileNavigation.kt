@@ -2,7 +2,9 @@ package dev.maxsiomin.prodhse.feature.auth.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -43,17 +45,18 @@ fun ProfileNavHost(navController: NavHostController, showSnackbar: SnackbarCallb
 
         composable(route = Screen.ProfileScreen.route) {
             val viewModel: ProfileViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
             ProfileScreen(
-                state = viewModel.state,
+                state = state,
                 onEvent = viewModel::onEvent,
-                navController = navController
+                navController = navController,
             )
         }
 
         composable(route = Screen.AuthScreen.route) {
             val viewModel: AuthViewModel = hiltViewModel()
             AuthScreen(
-                eventsFlow = viewModel.eventsFlow,
+                effectFlow = viewModel.effectFlow,
                 onEvent = viewModel::onEvent,
                 navController = navController,
             )
@@ -61,9 +64,10 @@ fun ProfileNavHost(navController: NavHostController, showSnackbar: SnackbarCallb
 
         composable(route = Screen.LoginScreen.route) {
             val viewModel: LoginViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
             LoginScreen(
-                state = viewModel.state,
-                eventsFlow = viewModel.eventsFlow,
+                state = state,
+                effectFlow = viewModel.effectFlow,
                 onEvent = viewModel::onEvent,
                 showSnackbar = showSnackbar,
                 navController = navController,
@@ -72,9 +76,10 @@ fun ProfileNavHost(navController: NavHostController, showSnackbar: SnackbarCallb
 
         composable(route = Screen.SignupScreen.route) {
             val viewModel: SignupViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
             SignupScreen(
-                state = viewModel.state,
-                eventsFlow = viewModel.eventsFlow,
+                state = state,
+                effectFlow = viewModel.effectFlow,
                 onEvent = viewModel::onEvent,
                 navController = navController,
                 showSnackbar = showSnackbar,
@@ -85,7 +90,7 @@ fun ProfileNavHost(navController: NavHostController, showSnackbar: SnackbarCallb
             val viewModel: SuccessfulRegistrationViewModel = hiltViewModel()
             SuccessfulRegistrationScreen(
                 navController = navController,
-                eventsFlow = viewModel.eventsFlow,
+                effectFlow = viewModel.effectFlow,
                 onEvent = viewModel::onEvent
             )
         }

@@ -1,15 +1,12 @@
 package dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.edit_plan
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.common.domain.resource.DatabaseError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.extensions.requireArg
+import dev.maxsiomin.common.presentation.StatefulViewModel
 import dev.maxsiomin.common.presentation.asErrorUiText
 import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.common.presentation.UiText
@@ -19,8 +16,8 @@ import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
 import dev.maxsiomin.prodhse.navdestinations.Screen
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -31,7 +28,7 @@ internal class EditPlanViewModel @Inject constructor(
     private val plansRepo: PlansRepository,
     private val placesRepo: PlacesRepository,
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : StatefulViewModel<EditPlanViewModel.State, EditPlanViewModel.Effect, EditPlanViewModel.Event>() {
 
     private val planId: Long =
         savedStateHandle.requireArg<String>(Screen.EditPlanScreenArgs.PLAN_ID).toLong()
@@ -50,22 +47,19 @@ internal class EditPlanViewModel @Inject constructor(
         val isNotSaved: Boolean = false,
     )
 
-    var state by mutableStateOf(
+    override val _state = MutableStateFlow(
         State(
             dateString = dateFormatter.formatDate(System.currentTimeMillis()),
             dateLocalDate = LocalDate.now(),
             originalLocalDate = LocalDate.now(),
         )
     )
-        private set
 
-    sealed class UiEvent {
-        data object NavigateBack : UiEvent()
-        data class ShowMessage(val message: UiText) : UiEvent()
+    sealed class Effect {
+        data object NavigateBack : Effect()
+        data class ShowMessage(val message: UiText) : Effect()
     }
 
-    private val _eventsFlow = Channel<UiEvent>()
-    val eventsFlow = _eventsFlow.receiveAsFlow()
 
     sealed class Event {
         data class NewDateSelected(val newDate: LocalDate) : Event()
@@ -79,7 +73,7 @@ internal class EditPlanViewModel @Inject constructor(
         loadPlan(id = planId)
     }
 
-    fun onEvent(event: Event) {
+    override fun onEvent(event: Event) {
         when (event) {
             is Event.NewDateSelected -> {
                 onNewDate(newDate = event.newDate)
@@ -87,12 +81,16 @@ internal class EditPlanViewModel @Inject constructor(
             }
 
             is Event.NoteTitleChanged -> {
-                state = state.copy(noteTitle = event.newValue)
+                _state.update {
+                    it.copy(noteTitle = event.newValue)
+                }
                 checkIfNotSaved()
             }
 
             is Event.NoteTextChanged -> {
-                state = state.copy(noteText = event.newValue)
+                _state.update {
+                    it.copy(noteText = event.newValue)
+                }
                 checkIfNotSaved()
             }
 
@@ -103,11 +101,14 @@ internal class EditPlanViewModel @Inject constructor(
     }
 
     private fun checkIfNotSaved() {
+        val state = state.value
         val titleIsSaved = state.originalNoteTitle == state.noteTitle
         val textIsSaved = state.originalNoteText == state.noteText
         val dateIsSaved = state.originalLocalDate == state.dateLocalDate
         val isSaved = titleIsSaved && textIsSaved && dateIsSaved
-        state = state.copy(isNotSaved = isSaved.not())
+        _state.update {
+            it.copy(isNotSaved = isSaved.not())
+        }
     }
 
     private fun loadPlan(id: Long) {
@@ -117,43 +118,48 @@ internal class EditPlanViewModel @Inject constructor(
                     val message: UiText = when (planResource.error) {
                         DatabaseError.NotFound -> UiText.StringResource(R.string.plan_not_found)
                     }
-                    _eventsFlow.send(UiEvent.ShowMessage(message))
+                    onEffect(Effect.ShowMessage(message))
                     return@launch
                 }
 
                 is Resource.Success -> planResource.data
             }
-            state = state.copy(
-                originalNoteTitle = plan.noteTitle,
-                noteTitle = plan.noteTitle,
-                originalNoteText = plan.noteText,
-                noteText = plan.noteText,
-                dateString = plan.dateString,
-                dateLocalDate = DateConverters.epochMillisToLocalDate(plan.date)
-            )
+            _state.update {
+                it.copy(
+                    originalNoteTitle = plan.noteTitle,
+                    noteTitle = plan.noteTitle,
+                    originalNoteText = plan.noteText,
+                    noteText = plan.noteText,
+                    dateString = plan.dateString,
+                    dateLocalDate = DateConverters.epochMillisToLocalDate(plan.date)
+                )
+            }
             loadPlaceDetails(plan.placeFsqId)
         }
     }
 
     private fun loadPlaceDetails(id: String) {
-        state = state.copy(isLoading = true)
+        _state.update {
+            it.copy(isLoading = true)
+        }
         viewModelScope.launch {
             val placeDetailsResource = placesRepo.getPlaceDetails(id)
-
             when (placeDetailsResource) {
                 is Resource.Error -> {
-                    state = state.copy(isLoading = false, isError = true)
-                    _eventsFlow.send(
-                        UiEvent.ShowMessage(placeDetailsResource.asErrorUiText())
-                    )
+                    _state.update {
+                        it.copy(isLoading = false, isError = true)
+                    }
+                    onEffect(Effect.ShowMessage(placeDetailsResource.asErrorUiText()))
                 }
 
                 is Resource.Success -> {
-                    state = state.copy(
-                        placeDetails = placeDetailsResource.data,
-                        isError = false,
-                        isLoading = false
-                    )
+                    _state.update {
+                        it.copy(
+                            placeDetails = placeDetailsResource.data,
+                            isError = false,
+                            isLoading = false
+                        )
+                    }
                 }
             }
 
@@ -162,23 +168,24 @@ internal class EditPlanViewModel @Inject constructor(
 
     private fun onNewDate(newDate: LocalDate) {
         val epochMillis = DateConverters.localDateToEpochMillis(newDate)
-
-        state = state.copy(
-            dateString = dateFormatter.formatDate(epochMillis),
-            dateLocalDate = newDate,
-        )
+        _state.update {
+            it.copy(
+                dateString = dateFormatter.formatDate(epochMillis),
+                dateLocalDate = newDate,
+            )
+        }
     }
 
     private fun onSaveClicked() {
         viewModelScope.launch {
-            val planId = planId ?: return@launch
+            val state = state.value
 
             val plan = when (val planResource = plansRepo.getPlanById(planId)) {
                 is Resource.Error -> {
                     val message: UiText = when (planResource.error) {
                         DatabaseError.NotFound -> UiText.StringResource(R.string.plan_not_found)
                     }
-                    _eventsFlow.send(UiEvent.ShowMessage(message))
+                    onEffect(Effect.ShowMessage(message))
                     return@launch
                 }
 
@@ -195,8 +202,8 @@ internal class EditPlanViewModel @Inject constructor(
             )
             plansRepo.editPlan(newPlan)
 
-            _eventsFlow.send(UiEvent.ShowMessage(UiText.StringResource(R.string.plan_updated)))
-            _eventsFlow.send(UiEvent.NavigateBack)
+            onEffect(Effect.ShowMessage(UiText.StringResource(R.string.plan_updated)))
+            onEffect(Effect.NavigateBack)
         }
     }
 

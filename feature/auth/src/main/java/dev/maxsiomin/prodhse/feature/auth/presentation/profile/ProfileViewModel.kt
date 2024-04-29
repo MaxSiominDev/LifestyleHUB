@@ -1,18 +1,17 @@
 package dev.maxsiomin.prodhse.feature.auth.presentation.profile
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.authlib.domain.AuthStatus
 import dev.maxsiomin.common.domain.resource.Resource
+import dev.maxsiomin.common.presentation.StatefulViewModel
 import dev.maxsiomin.prodhse.feature.auth.domain.model.Holiday
 import dev.maxsiomin.prodhse.feature.auth.domain.model.RandomActivity
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.NagerRepository
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomActivityRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -22,7 +21,7 @@ internal class ProfileViewModel @Inject constructor(
     private val authManager: AuthManager,
     private val randomActivityRepo: RandomActivityRepository,
     private val nagerRepo: NagerRepository,
-) : ViewModel() {
+) : StatefulViewModel<ProfileViewModel.State, Nothing, ProfileViewModel.Event>() {
 
     data class State(
         val authStatus: AuthStatus = AuthStatus.Loading,
@@ -32,8 +31,8 @@ internal class ProfileViewModel @Inject constructor(
         val showNearestHolidayDialog: Boolean = false,
     )
 
-    var state by mutableStateOf(State())
-        private set
+    override val _state = MutableStateFlow(State())
+
 
     sealed class Event {
         data object LogoutClicked : Event()
@@ -43,26 +42,38 @@ internal class ProfileViewModel @Inject constructor(
         data object DismissHolidayDialog : Event()
     }
 
-    fun onEvent(event: Event) {
+    override fun onEvent(event: Event) {
         when (event) {
             Event.LogoutClicked -> viewModelScope.launch {
                 authManager.logout()
             }
 
-            Event.BoredClicked -> state = state.copy(showRandomActivityDialog = true)
-            Event.DismissRandomActivityDialog -> state = state.copy(showRandomActivityDialog = false)
+            Event.BoredClicked -> _state.update {
+                it.copy(showRandomActivityDialog = true)
+            }
+            Event.DismissRandomActivityDialog -> _state.update {
+                it.copy(showRandomActivityDialog = false)
+            }
 
-            Event.HolidayClicked -> state = state.copy(showNearestHolidayDialog = true)
-            Event.DismissHolidayDialog -> state = state.copy(showNearestHolidayDialog = false)
+            Event.HolidayClicked -> _state.update {
+                it.copy(showNearestHolidayDialog = true)
+            }
+            Event.DismissHolidayDialog -> _state.update {
+                it.copy(showNearestHolidayDialog = false)
+            }
         }
     }
 
     init {
         val status = authManager.authStatus.value
-        state = state.copy(authStatus = status)
+        _state.update {
+            it.copy(authStatus = status)
+        }
         viewModelScope.launch {
             authManager.authStatus.collect {
-                state = state.copy(authStatus = it)
+                _state.update {  oldState ->
+                    oldState.copy(authStatus = it)
+                }
             }
         }
         loadRandomActivity()
@@ -74,7 +85,9 @@ internal class ProfileViewModel @Inject constructor(
             val randomActivityResource = randomActivityRepo.getRandomActivity()
             when (randomActivityResource) {
                 is Resource.Success -> {
-                    state = state.copy(randomActivity = randomActivityResource.data)
+                    _state.update {
+                        it.copy(randomActivity = randomActivityResource.data)
+                    }
                 }
                 else -> Unit
             }
@@ -99,12 +112,13 @@ internal class ProfileViewModel @Inject constructor(
         val nearest = sorted.firstOrNull {
             it.date > System.currentTimeMillis()
         }
-        state = state.copy(nearestHoliday = nearest)
+        _state.update {
+            it.copy(nearestHoliday = nearest)
+        }
     }
 
     companion object {
-        // Always ru since target audience are russians
-        private const val COUNTRY_CODE_FOR_NAGER = "ru"
+        private const val COUNTRY_CODE_FOR_NAGER = "us"
     }
 
 }
