@@ -77,7 +77,7 @@ internal class HomeViewModel @Inject constructor(
     }
 
     sealed class PlacesStatus {
-        // TODO
+        // Show circular progress indicator at bottom end
         data object Loading : PlacesStatus()
 
         // Show actual places data
@@ -91,7 +91,7 @@ internal class HomeViewModel @Inject constructor(
         val places: List<Place> = listOf(),
         val placesStatus: PlacesStatus = PlacesStatus.Loading,
 
-        val weather: Weather = WeatherDtoToUiModelMapper().invoke(CurrentWeatherResponse()),
+        val weather: Weather,
         val weatherStatus: WeatherStatus = WeatherStatus.Loading,
         val weatherIsExpanded: Boolean = true,
 
@@ -99,7 +99,9 @@ internal class HomeViewModel @Inject constructor(
         val showLocationPermissionDialog: Boolean = false,
     )
 
-    private val _state = MutableStateFlow(State())
+    private val _state = MutableStateFlow(
+        State(weather = weatherRepo.getDefaultWeather())
+    )
     val state = _state.asStateFlow()
 
 
@@ -170,7 +172,9 @@ internal class HomeViewModel @Inject constructor(
             // I need this delay so that pull refresh lazy column had enough time to react to state change
             delay(1)
 
-            if (permissionChecker.hasPermission(PermissionChecker.COARSE_LOCATION_PERMISSION).not()) {
+            if (permissionChecker.hasPermission(PermissionChecker.COARSE_LOCATION_PERMISSION)
+                    .not()
+            ) {
                 locationIsRefreshing = false
                 viewModelScope.launch {
                     _eventsFlow.send(UiEvent.RequestLocationPermission)

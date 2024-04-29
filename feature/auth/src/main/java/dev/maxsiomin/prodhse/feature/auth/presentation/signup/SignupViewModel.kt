@@ -33,7 +33,7 @@ class SignupViewModel @Inject constructor(
 ) : ViewModel() {
 
     data class State(
-        val usernameState: TextFieldState = TextFieldState(),
+        val usernameState: TextFieldState = TextFieldState.new(),
         val password: String = "",
         val passwordError: UiText? = null,
         val showFireworksAnimation: Boolean = false,
@@ -67,7 +67,7 @@ class SignupViewModel @Inject constructor(
                 val showFireworksAnimation = event.newValue.lowercase().trim() == MY_BELOVED_ROKYMIEL
 
                 state = state.copy(
-                    usernameState = TextFieldState(event.newValue),
+                    usernameState = TextFieldState.new(text = event.newValue),
                     showFireworksAnimation = showFireworksAnimation
                 )
             }

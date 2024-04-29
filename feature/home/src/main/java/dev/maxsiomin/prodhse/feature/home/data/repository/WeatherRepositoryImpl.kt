@@ -2,6 +2,7 @@ package dev.maxsiomin.prodhse.feature.home.data.repository
 
 import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
+import dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse
 import dev.maxsiomin.prodhse.feature.home.data.mappers.WeatherDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.remote.weather_api.WeatherApi
 import dev.maxsiomin.prodhse.feature.home.domain.model.Weather
@@ -27,6 +28,10 @@ internal class WeatherRepositoryImpl @Inject constructor(private val api: Weathe
                 Resource.Success(remoteData)
             }
         }
+    }
+
+    override fun getDefaultWeather(): Weather {
+        return WeatherDtoToUiModelMapper().invoke(CurrentWeatherResponse())
     }
 
 }

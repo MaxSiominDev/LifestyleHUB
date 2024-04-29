@@ -3,6 +3,7 @@ package dev.maxsiomin.prodhse.feature.home.presentation.home_tld
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
@@ -43,8 +44,9 @@ fun HomeNavHost(navController: NavHostController, showSnackbar: SnackbarCallback
 
         composable(route = Screen.HomeScreen.route) {
             val viewModel: HomeViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
             HomeScreen(
-                state = viewModel.state.collectAsStateWithLifecycle().value,
+                state = state,
                 onEvent = viewModel::onEvent,
                 navController = navController,
                 showSnackbar = showSnackbar,

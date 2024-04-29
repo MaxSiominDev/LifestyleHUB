@@ -13,4 +13,6 @@ interface WeatherRepository {
         lang: String,
     ): Resource<Weather, NetworkError>
 
+    fun getDefaultWeather(): Weather
+
 }

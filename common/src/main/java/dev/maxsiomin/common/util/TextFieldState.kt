@@ -2,15 +2,29 @@ package dev.maxsiomin.common.util
 
 import dev.maxsiomin.common.presentation.UiText
 
-data class TextFieldState(
-    val text: String = "",
-    val error: UiText? = null,
-)
+class TextFieldState private constructor(
+    val text: String,
+    val error: UiText?,
+) {
+    companion object {
+        fun new(text: String = "", error: UiText? = null): TextFieldState {
+            return TextFieldState(text, error)
+        }
+    }
+}
 
 fun TextFieldState.updateError(error: UiText?): TextFieldState {
-    return this.copy(text = this.text, error = error)
+    return TextFieldState.new(text = this.text, error = error)
 }
 
 fun TextFieldState.resetError(): TextFieldState {
-    return this.copy(text = this.text, error = null)
+    return TextFieldState.new(text = this.text, error = null)
+}
+
+fun TextFieldState.updateText(text: String): TextFieldState {
+    return TextFieldState.new(text = text, error = this.error)
+}
+
+fun TextFieldState.resetText(): TextFieldState {
+    return TextFieldState.new(text = "", error = this.error)
 }
