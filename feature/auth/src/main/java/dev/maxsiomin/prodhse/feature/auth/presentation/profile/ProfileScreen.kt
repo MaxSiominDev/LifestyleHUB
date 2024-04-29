@@ -2,6 +2,7 @@ package dev.maxsiomin.prodhse.feature.auth.presentation.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -51,11 +53,14 @@ internal fun ProfileScreen(
         return
     }
 
-    // TODO
-    when (state.authStatus) {
-        AuthStatus.NotAuthenticated -> Unit
-        AuthStatus.Loading -> return
-        is AuthStatus.Authenticated -> Unit
+    if (state.authStatus is AuthStatus.Loading) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
+            )
+        }
     }
 
     val userInfo = (state.authStatus as? AuthStatus.Authenticated)?.userInfo ?: return

@@ -6,6 +6,7 @@ import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.authlib.domain.AuthStatus
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.presentation.StatefulViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
