@@ -1,8 +1,5 @@
 package dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.planner
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.common.domain.resource.Resource
@@ -11,6 +8,7 @@ import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,7 +21,7 @@ internal class PlannerViewModel @Inject constructor(
 ) : StatefulViewModel<PlannerViewModel.State, PlannerViewModel.Effect, PlannerViewModel.Event>() {
 
     data class State(
-        val items: List<PlannerFeedItem> = emptyList(),
+        val items: List<PlannerItem> = emptyList(),
         val isRefreshing: Boolean = false,
     )
 
@@ -56,40 +54,34 @@ internal class PlannerViewModel @Inject constructor(
             it.copy(isRefreshing = true)
         }
         viewModelScope.launch {
-            val feedItems = mutableListOf<PlannerFeedItem>()
+            val plannerItems = mutableListOf<PlannerItem>()
             val plans = plansRepo.getPlans()
             plans.map { currentPlan ->
                 async {
-                    var feedItem: PlannerFeedItem? = null
+                    var plannerItem: PlannerItem? = null
                     val placeDetailsResource = placesRepo.getPlaceDetails(currentPlan.placeFsqId)
 
                     when (placeDetailsResource) {
                         is Resource.Error -> Unit
 
                         is Resource.Success -> {
-                            feedItem = PlannerFeedItem.Place(placeDetailsResource.data, currentPlan)
+                            plannerItem = PlannerItem(placeDetailsResource.data, currentPlan)
                         }
                     }
 
-                    feedItem?.let {
-                        feedItems.add(it)
+                    plannerItem?.let {
+                        plannerItems.add(it)
                     }
                 }
             }.awaitAll()
 
-            val sortedItems = feedItems.sortedWith(
-                compareByDescending<PlannerFeedItem> {
-                    when (it) {
-                        is PlannerFeedItem.Place -> it.plan.date
-                    }
+            val sortedItems = plannerItems.sortedWith(
+                compareByDescending<PlannerItem> {
+                    it.plan.date
                 }.thenBy {
-                    when (it) {
-                        is PlannerFeedItem.Place -> it.place.name
-                    }
+                    it.place.name
                 }.thenBy {
-                    when (it) {
-                        is PlannerFeedItem.Place -> it.plan.noteTitle
-                    }
+                    it.plan.noteTitle
                 }
             )
 

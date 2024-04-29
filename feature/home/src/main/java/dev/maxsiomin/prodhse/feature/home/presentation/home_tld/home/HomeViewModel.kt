@@ -9,6 +9,7 @@ import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.presentation.asErrorUiText
 import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.core.util.LocaleManager
+import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
 import dev.maxsiomin.prodhse.feature.home.domain.model.Place
 import dev.maxsiomin.prodhse.feature.home.domain.model.Weather
@@ -101,16 +102,23 @@ internal class HomeViewModel @Inject constructor(
         data object RequestLocationPermission : Effect()
         data class GoToDetailsScreen(val fsqId: String) : Effect()
         data class GoToAddPlanScreen(val fsqId: String) : Effect()
+        data object GoToAppSettings : Effect()
     }
 
 
     sealed class Event {
         data object Refresh : Event()
         data class LocationPermissionResult(val coarseIsGranted: Boolean) : Event()
-        data object DismissLocationDialog : Event()
+
         data class OnVenueClicked(val fsqId: String) : Event()
         data class AddToPlans(val fsqId: String) : Event()
         data object ExpandStateChanged : Event()
+
+        sealed class LocationDialog : Event() {
+            data object Confirmed : LocationDialog()
+            data object GoToAppSettings : LocationDialog()
+            data object Dismissed : LocationDialog()
+        }
     }
 
     init {
@@ -133,22 +141,30 @@ internal class HomeViewModel @Inject constructor(
                 refresh()
             }
 
-            Event.DismissLocationDialog -> _state.update {
+            Event.LocationDialog.Dismissed -> _state.update {
                 it.copy(showLocationPermissionDialog = false)
             }
 
-            is Event.OnVenueClicked -> viewModelScope.launch {
-                onEffect(Effect.GoToDetailsScreen(fsqId = event.fsqId))
-            }
-
-            is Event.AddToPlans -> viewModelScope.launch {
-                onEffect(Effect.GoToAddPlanScreen(fsqId = event.fsqId))
-            }
-
-            Event.ExpandStateChanged -> {
+            Event.LocationDialog.GoToAppSettings -> {
                 _state.update {
-                    it.copy(weatherIsExpanded = it.weatherIsExpanded.not())
+                    it.copy(showLocationPermissionDialog = false)
                 }
+                onEffect(Effect.GoToAppSettings)
+            }
+
+            Event.LocationDialog.Confirmed -> {
+                _state.update {
+                    it.copy(showLocationPermissionDialog = false)
+                }
+                onEffect(Effect.RequestLocationPermission)
+            }
+
+            is Event.OnVenueClicked -> onEffect(Effect.GoToDetailsScreen(fsqId = event.fsqId))
+
+            is Event.AddToPlans -> onEffect(Effect.GoToAddPlanScreen(fsqId = event.fsqId))
+
+            Event.ExpandStateChanged -> _state.update {
+                it.copy(weatherIsExpanded = it.weatherIsExpanded.not())
             }
         }
     }
@@ -170,7 +186,7 @@ internal class HomeViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         weatherStatus = WeatherStatus.Error,
-                        placesStatus = PlacesStatus.Error(UiText.DynamicString("TODO"))
+                        placesStatus = PlacesStatus.Error(UiText.StringResource(R.string.missing_permission))
                     )
                 }
                 return@launch

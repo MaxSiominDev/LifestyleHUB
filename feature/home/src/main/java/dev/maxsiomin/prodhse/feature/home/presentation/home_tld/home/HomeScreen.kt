@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -61,9 +62,7 @@ internal fun HomeScreen(
 
     CollectFlow(effectFlow) { effect ->
         when (effect) {
-            is HomeViewModel.Effect.ShowMessage -> {
-                showSnackbar(SnackbarInfo(effect.message))
-            }
+            is HomeViewModel.Effect.ShowMessage -> showSnackbar(SnackbarInfo(effect.message))
 
             HomeViewModel.Effect.RequestLocationPermission -> {
                 locationPermissionResultLauncher.launch(permissions)
@@ -76,34 +75,28 @@ internal fun HomeScreen(
             is HomeViewModel.Effect.GoToAddPlanScreen -> {
                 navController.navigate(Screen.AddPlanScreen.withArgs(effect.fsqId))
             }
+
+            HomeViewModel.Effect.GoToAppSettings -> activity.openAppSettings()
         }
     }
 
     if (state.showLocationPermissionDialog) {
         PermissionDialog(
             permissionTextProvider = LocationPermissionTextProvider,
-            isPermanentlyDeclined = !activity.shouldShowRequestPermissionRationale(PermissionChecker.COARSE_LOCATION_PERMISSION),
+            isPermanentlyDeclined = !activity.shouldShowRequestPermissionRationale(
+                PermissionChecker.COARSE_LOCATION_PERMISSION
+            ),
             onDismiss = {
-                onEvent(HomeViewModel.Event.DismissLocationDialog)
+                onEvent(HomeViewModel.Event.LocationDialog.Dismissed)
             },
             onOkClick = {
-                onEvent(HomeViewModel.Event.DismissLocationDialog)
-                locationPermissionResultLauncher.launch(permissions)
+                onEvent(HomeViewModel.Event.LocationDialog.Confirmed)
             },
             onGoToAppSettingsClick = {
-                onEvent(HomeViewModel.Event.DismissLocationDialog)
-                activity.openAppSettings()
+                onEvent(HomeViewModel.Event.LocationDialog.GoToAppSettings)
             },
         )
     }
-
-    val items: List<HomeFeedItem> = remember(state.places) {
-        buildList {
-            add(HomeFeedItem.Weather)
-            addAll(state.places.map { HomeFeedItem.Place(it) })
-        }
-    }
-
 
     Box(
         Modifier
@@ -112,35 +105,28 @@ internal fun HomeScreen(
     ) {
 
         PullToRefreshLazyColumn(
-            items = items,
-            content = { feedItem ->
-                when (feedItem) {
-
-                    is HomeFeedItem.Weather -> {
-                        WeatherItem(
-                            state = state, onEvent = onEvent,
-                        )
-                    }
-
-                    is HomeFeedItem.Place -> {
-                        PlaceCard(
-                            place = feedItem.place,
-                            goToDetails = {
-                                onEvent(HomeViewModel.Event.OnVenueClicked(feedItem.place.fsqId))
-                            },
-                            addToPlans = {
-                                onEvent(HomeViewModel.Event.AddToPlans(feedItem.place.fsqId))
-                            }
-                        )
-                    }
-
-                }
-            },
             isRefreshing = state.isRefreshing,
             onRefresh = {
                 onEvent(HomeViewModel.Event.Refresh)
+            },
+        ) {
+            item {
+                WeatherItem(
+                    state = state, onEvent = onEvent,
+                )
             }
-        )
+            items(state.places) { place ->
+                PlaceCard(
+                    place = place,
+                    goToDetails = {
+                        onEvent(HomeViewModel.Event.OnVenueClicked(place.fsqId))
+                    },
+                    addToPlans = {
+                        onEvent(HomeViewModel.Event.AddToPlans(place.fsqId))
+                    }
+                )
+            }
+        }
 
         when {
             state.places.isEmpty() && state.placesStatus is HomeViewModel.PlacesStatus.Success -> {
