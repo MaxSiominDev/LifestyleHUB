@@ -31,6 +31,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.common.presentation.SnackbarInfo
+import dev.maxsiomin.common.presentation.components.TopRoundedCornerShape
 import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.core.presentation.FireworksAnimation
 import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
@@ -74,7 +76,7 @@ fun SignupScreen(
             }
 
             is SignupViewModel.Effect.ShowMessage -> showSnackbar(
-                dev.maxsiomin.common.presentation.SnackbarInfo(effect.message)
+                SnackbarInfo(effect.message)
             )
 
         }
@@ -121,7 +123,7 @@ fun SignupScreen(
                 .align(Alignment.BottomCenter)
                 .padding(0.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),
-            shape = dev.maxsiomin.common.presentation.components.TopRoundedCornerShape(20.dp),
+            shape = TopRoundedCornerShape(20.dp),
         ) {
             Column(
                 Modifier.fillMaxWidth(),
@@ -148,11 +150,11 @@ fun SignupScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 32.dp),
-                    value = state.password,
+                    value = state.passwordState.text,
                     onValueChange = {
                         onEvent(SignupViewModel.Event.PasswordChanged(it))
                     },
-                    error = state.passwordError?.asString()
+                    error = state.passwordState.error?.asString()
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))

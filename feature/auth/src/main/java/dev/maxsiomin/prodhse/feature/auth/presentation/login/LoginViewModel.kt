@@ -9,6 +9,8 @@ import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.domain.resource.errorOrNull
 import dev.maxsiomin.common.presentation.StatefulViewModel
 import dev.maxsiomin.common.presentation.UiText
+import dev.maxsiomin.common.util.TextFieldState
+import dev.maxsiomin.common.util.updateError
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForLoginUseCase
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForLoginUseCase
@@ -25,10 +27,8 @@ class LoginViewModel @Inject constructor(
 ) : StatefulViewModel<LoginViewModel.State, LoginViewModel.Effect, LoginViewModel.Event>() {
 
     data class State(
-        val username: String = "",
-        val usernameError: UiText? = null,
-        val password: String = "",
-        val passwordError: UiText? = null,
+        val usernameState: TextFieldState = TextFieldState.new(),
+        val passwordState: TextFieldState = TextFieldState.new(),
         val showForgotPasswordDialog: Boolean = false,
     )
 
@@ -52,11 +52,11 @@ class LoginViewModel @Inject constructor(
     override fun onEvent(event: Event) {
         when (event) {
             is Event.UsernameChanged -> _state.update {
-                it.copy(username = event.newValue, usernameError = null)
+                it.copy(usernameState = TextFieldState.new(text = event.newValue))
             }
 
             is Event.PasswordChanged -> _state.update {
-                it.copy(password = event.newValue, passwordError = null)
+                it.copy(passwordState = TextFieldState.new(text = event.newValue))
             }
 
             Event.LoginClicked -> onLogin()
@@ -74,8 +74,9 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun onLogin() {
-        val username = state.value.username.trim()
-        val password = state.value.password.trim()
+        val state = _state.value
+        val username = state.usernameState.text.trim()
+        val password = state.passwordState.text.trim()
         val validateUsername =
             validateUsernameUseCase.execute(username)
         val validatePassword =
@@ -101,8 +102,8 @@ class LoginViewModel @Inject constructor(
         if (hasError) {
             _state.update {
                 it.copy(
-                    usernameError = usernameError,
-                    passwordError = passwordError,
+                    usernameState = state.usernameState.updateError(usernameError),
+                    passwordState = state.passwordState.updateError(passwordError),
                 )
             }
             return

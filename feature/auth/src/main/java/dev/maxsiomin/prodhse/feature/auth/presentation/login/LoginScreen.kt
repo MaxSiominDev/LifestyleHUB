@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.common.presentation.SnackbarInfo
+import dev.maxsiomin.common.presentation.components.TopRoundedCornerShape
 import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.auth.R
@@ -74,7 +76,7 @@ fun LoginScreen(
 
             is LoginViewModel.Effect.ShowMessage -> {
                 showSnackbar(
-                    dev.maxsiomin.common.presentation.SnackbarInfo(effect.message)
+                    SnackbarInfo(effect.message)
                 )
             }
         }
@@ -127,7 +129,7 @@ fun LoginScreen(
                 .padding(0.dp)
                 .align(Alignment.BottomCenter),
             colors = CardDefaults.cardColors(containerColor = Color.White),
-            shape = dev.maxsiomin.common.presentation.components.TopRoundedCornerShape(20.dp),
+            shape = TopRoundedCornerShape(20.dp),
         ) {
             Column(
                 Modifier.fillMaxWidth(),
@@ -141,11 +143,11 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 32.dp),
-                    value = state.username,
+                    value = state.usernameState.text,
                     onValueChange = {
                         onEvent(LoginViewModel.Event.UsernameChanged(it))
                     },
-                    error = state.usernameError?.asString()
+                    error = state.usernameState.error?.asString()
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -154,11 +156,11 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 32.dp),
-                    value = state.password,
+                    value = state.passwordState.text,
                     onValueChange = {
                         onEvent(LoginViewModel.Event.PasswordChanged(it))
                     },
-                    error = state.passwordError?.asString(),
+                    error = state.passwordState.error?.asString(),
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -229,6 +231,12 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     ProdhseTheme {
-        LoginScreen(LoginViewModel.State(), flow {}, {}, {}, navController = rememberNavController())
+        LoginScreen(
+            LoginViewModel.State(),
+            flow {},
+            {},
+            {},
+            navController = rememberNavController()
+        )
     }
 }

@@ -36,8 +36,7 @@ class SignupViewModel @Inject constructor(
 
     data class State(
         val usernameState: TextFieldState = TextFieldState.new(),
-        val password: String = "",
-        val passwordError: UiText? = null,
+        val passwordState: TextFieldState = TextFieldState.new(),
         val showFireworksAnimation: Boolean = false,
     )
 
@@ -75,7 +74,7 @@ class SignupViewModel @Inject constructor(
             }
 
             is Event.PasswordChanged -> _state.update {
-                it.copy(password = event.newValue, passwordError = null)
+                it.copy(passwordState = TextFieldState.new(text = event.newValue))
             }
 
             Event.LoginClicked -> onEffect(Effect.NavigateToLoginScreen)
@@ -87,7 +86,7 @@ class SignupViewModel @Inject constructor(
     private fun onSignup() {
         val state = _state.value
         val username = state.usernameState.text.trim()
-        val password = state.password.trim()
+        val password = state.passwordState.text.trim()
         val validateUsername =
             validateUsernameUseCase.execute(username)
         val validatePassword =
@@ -128,7 +127,7 @@ class SignupViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     usernameState = state.usernameState.updateError(usernameError),
-                    passwordError = passwordError,
+                    passwordState = state.passwordState.updateError(passwordError),
                 )
             }
             return

@@ -3,7 +3,7 @@ package dev.maxsiomin.prodhse.feature.home.data.repository
 import android.content.SharedPreferences
 import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
-import dev.maxsiomin.prodhse.feature.home.data.mappers.PlaceDetailsDtoToUoModelMapper
+import dev.maxsiomin.prodhse.feature.home.data.mappers.PlaceDetailsDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacesDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacesPhotosDtoToUiModelMapper
 import dev.maxsiomin.prodhse.feature.home.data.remote.places_api.PlacesApi
@@ -11,8 +11,6 @@ import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
 import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.domain.model.Place
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
@@ -59,7 +57,7 @@ internal class PlacesRepositoryImpl @Inject constructor(
         }
 
         val apiResponse = api.getPlaceDetails(id = id)
-        val mapper = PlaceDetailsDtoToUoModelMapper()
+        val mapper = PlaceDetailsDtoToUiModelMapper()
         return when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)
             is Resource.Success -> {

@@ -1,16 +1,18 @@
 package dev.maxsiomin.prodhse.feature.auth.data.mappers
 
+import dev.maxsiomin.common.data.ToDomainMapper
 import dev.maxsiomin.prodhse.feature.auth.data.dto.random_user.Result
 import dev.maxsiomin.prodhse.feature.auth.domain.model.RandomUser
+import javax.inject.Inject
 
-class RandomUserDtoToModelMapper : (Result) -> RandomUser {
+class RandomUserMapper @Inject constructor() : ToDomainMapper<Result, RandomUser>() {
 
-    override fun invoke(result: Result): RandomUser {
-        val nameObject = result.name
+    override fun toDomain(data: Result): RandomUser {
+        val nameObject = data.name
         val fullName = "${nameObject.first} ${nameObject.last}"
         return RandomUser(
             fullName = fullName,
-            avatarUrl = result.picture.large,
+            avatarUrl = data.picture.large,
         )
     }
 
