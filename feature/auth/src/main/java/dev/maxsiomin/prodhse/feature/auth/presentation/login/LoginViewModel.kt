@@ -78,9 +78,9 @@ class LoginViewModel @Inject constructor(
         val username = state.usernameState.text.trim()
         val password = state.passwordState.text.trim()
         val validateUsername =
-            validateUsernameUseCase.execute(username)
+            validateUsernameUseCase(username)
         val validatePassword =
-            validatePasswordUseCase.execute(password)
+            validatePasswordUseCase(password)
 
         val hasError =
             listOf(validateUsername, validatePassword).any { it !is Resource.Success }

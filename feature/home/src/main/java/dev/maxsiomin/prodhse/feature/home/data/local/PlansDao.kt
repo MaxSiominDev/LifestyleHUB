@@ -19,7 +19,7 @@ internal interface PlansDao {
     @Query("SELECT * FROM plans")
     suspend fun getPlans(): List<PlanEntity>
 
-    @Query("SELECT * FROM plans WHERE id=:id")
+    @Query("SELECT * FROM plans WHERE id = :id")
     suspend fun getPlanById(id: Long): PlanEntity?
 
 }

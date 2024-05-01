@@ -1,27 +1,22 @@
 package dev.maxsiomin.prodhse.feature.auth.presentation.signup
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.AuthManager
-import dev.maxsiomin.authlib.domain.model.RegistrationInfo
 import dev.maxsiomin.authlib.domain.RegistrationStatus
+import dev.maxsiomin.authlib.domain.model.RegistrationInfo
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.domain.resource.errorOrNull
 import dev.maxsiomin.common.presentation.StatefulViewModel
-import dev.maxsiomin.common.presentation.asUiText
 import dev.maxsiomin.common.presentation.UiText
+import dev.maxsiomin.common.presentation.asUiText
 import dev.maxsiomin.common.util.TextFieldState
 import dev.maxsiomin.common.util.updateError
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomUserRepository
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForSignupUseCase
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForSignupUseCase
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -88,9 +83,9 @@ class SignupViewModel @Inject constructor(
         val username = state.usernameState.text.trim()
         val password = state.passwordState.text.trim()
         val validateUsername =
-            validateUsernameUseCase.execute(username)
+            validateUsernameUseCase(username)
         val validatePassword =
-            validatePasswordUseCase.execute(password)
+            validatePasswordUseCase(password)
 
         val hasError =
             listOf(validateUsername, validatePassword).any { it !is Resource.Success }

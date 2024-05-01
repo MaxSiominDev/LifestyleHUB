@@ -8,7 +8,7 @@ import androidx.room.Query
 @Dao
 internal interface UsersDao {
 
-    @Query(value = "SELECT * FROM USERS WHERE username=:username")
+    @Query(value = "SELECT * FROM USERS WHERE username = :username")
     suspend fun getUserByName(username: String): UserEntity?
 
     @Insert(onConflict = OnConflictStrategy.ABORT)

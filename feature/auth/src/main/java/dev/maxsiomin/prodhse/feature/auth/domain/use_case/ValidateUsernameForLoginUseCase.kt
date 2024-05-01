@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class ValidateUsernameForLoginUseCase @Inject constructor(){
 
-    fun execute(username: String): Resource<Unit, UsernameForLoginError> {
+    operator fun invoke(username: String): Resource<Unit, UsernameForLoginError> {
         if (username.isBlank()) {
             return Resource.Error(UsernameForLoginError.IsBlank)
         }

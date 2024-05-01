@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class ValidatePasswordForLoginUseCase @Inject constructor()  {
 
-    fun execute(password: String): Resource<Unit, PasswordForLoginError> {
+    operator fun invoke(password: String): Resource<Unit, PasswordForLoginError> {
         if (password.isBlank()) {
             return Resource.Error(PasswordForLoginError.IsBlank)
         }

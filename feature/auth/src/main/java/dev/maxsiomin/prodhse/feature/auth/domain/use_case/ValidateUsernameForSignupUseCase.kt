@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class ValidateUsernameForSignupUseCase @Inject constructor() {
 
-    fun execute(username: String): Resource<Unit, UsernameForSignupError> {
+    operator fun invoke(username: String): Resource<Unit, UsernameForSignupError> {
         if (username.length !in MIN_USERNAME_LENGTH..MAX_USERNAME_LENGTH) {
             return Resource.Error(UsernameForSignupError.InvalidLength)
         }

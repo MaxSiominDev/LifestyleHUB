@@ -8,4 +8,8 @@ internal abstract class UsersDatabase : RoomDatabase() {
 
     abstract val dao: UsersDao
 
+    companion object {
+        const val NAME = "usersDb"
+    }
+
 }

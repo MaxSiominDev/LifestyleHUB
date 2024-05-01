@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class ValidatePasswordForSignupUseCase @Inject constructor() {
 
-    fun execute(password: String): Resource<Unit, PasswordForSignupError> {
+    operator fun invoke(password: String): Resource<Unit, PasswordForSignupError> {
         if (password.length !in MIN_PASSWORD_LENGTH..MAX_PASSWORD_LENGTH) {
             return Resource.Error(PasswordForSignupError.InvalidLength)
         }
