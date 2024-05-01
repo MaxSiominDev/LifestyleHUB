@@ -16,11 +16,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.maxsiomin.prodhse.feature.auth.R
-import dev.maxsiomin.prodhse.feature.auth.theme.grayThemeColor
+import dev.maxsiomin.prodhse.feature.auth.theme.GrayThemeColor
 
 /** Name is terrible but check pthe preview */
 @Composable
-internal fun LineOrLine(modifier: Modifier = Modifier, color: Color = grayThemeColor, lineHeight: Dp = 1.dp) {
+internal fun LineOrLine(modifier: Modifier = Modifier, color: Color = GrayThemeColor, lineHeight: Dp = 1.dp) {
 
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
 

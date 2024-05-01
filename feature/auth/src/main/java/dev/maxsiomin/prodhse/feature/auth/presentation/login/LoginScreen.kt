@@ -41,9 +41,9 @@ import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.LineOrLine
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.PasswordTextField
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.UsernameTextField
-import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColor
-import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColorGradientEnd
-import dev.maxsiomin.prodhse.feature.auth.theme.grayThemeColor
+import dev.maxsiomin.prodhse.feature.auth.theme.CyanThemeColor
+import dev.maxsiomin.prodhse.feature.auth.theme.CyanThemeColorGradientEnd
+import dev.maxsiomin.prodhse.feature.auth.theme.GrayThemeColor
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -93,7 +93,7 @@ fun LoginScreen(
             .fillMaxSize()
             .background(
                 brush = Brush.linearGradient(
-                    1f to cyanThemeColor, 1f to cyanThemeColorGradientEnd,
+                    1f to CyanThemeColor, 1f to CyanThemeColorGradientEnd,
                 )
             )
     ) {
@@ -174,7 +174,7 @@ fun LoginScreen(
                         },
                     text = AnnotatedString(stringResource(id = R.string.forgot_password)),
                     style = TextStyle(
-                        color = cyanThemeColor,
+                        color = CyanThemeColor,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
                     ),
@@ -191,7 +191,7 @@ fun LoginScreen(
                         onEvent(LoginViewModel.Event.LoginClicked)
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = cyanThemeColor,
+                        containerColor = CyanThemeColor,
                         contentColor = Color.White,
                     ),
                 ) {
@@ -213,9 +213,9 @@ fun LoginScreen(
                         onEvent(LoginViewModel.Event.SignupClicked)
                     },
                     colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = grayThemeColor,
+                        contentColor = GrayThemeColor,
                     ),
-                    border = BorderStroke(1.dp, grayThemeColor)
+                    border = BorderStroke(1.dp, GrayThemeColor)
                 ) {
                     Text(text = stringResource(R.string.sign_up))
                 }

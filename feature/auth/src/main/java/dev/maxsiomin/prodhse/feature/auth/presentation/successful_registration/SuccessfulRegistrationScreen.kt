@@ -25,7 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.auth.R
-import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColor
+import dev.maxsiomin.prodhse.feature.auth.theme.CyanThemeColor
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -52,7 +52,7 @@ internal fun SuccessfulRegistrationScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(cyanThemeColor),
+            .background(CyanThemeColor),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -95,7 +95,7 @@ internal fun SuccessfulRegistrationScreen(
                 .padding(horizontal = 40.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.White,
-                contentColor = cyanThemeColor,
+                contentColor = CyanThemeColor,
             ),
             onClick = {
                 onEvent(SuccessfulRegistrationViewModel.Event.LoginClicked)

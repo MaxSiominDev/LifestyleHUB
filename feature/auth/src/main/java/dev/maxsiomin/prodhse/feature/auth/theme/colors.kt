@@ -2,7 +2,7 @@ package dev.maxsiomin.prodhse.feature.auth.theme
 
 import androidx.compose.ui.graphics.Color
 
-internal val cyanThemeColor = Color(0xFF086CFC)
-internal val cyanThemeColorGradientEnd = Color(0xFF197DFD)
+internal val CyanThemeColor = Color(0xFF086CFC)
+internal val CyanThemeColorGradientEnd = Color(0xFF197DFD)
 
-internal val grayThemeColor = Color(0xFF919397)
+internal val GrayThemeColor = Color(0xFF919397)

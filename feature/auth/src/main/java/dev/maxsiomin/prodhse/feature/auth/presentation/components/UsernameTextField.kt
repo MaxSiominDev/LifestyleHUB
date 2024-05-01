@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import dev.maxsiomin.prodhse.feature.auth.R
-import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColor
+import dev.maxsiomin.prodhse.feature.auth.theme.CyanThemeColor
 
 @Composable
 internal fun UsernameTextField(value: String, onValueChange: (String) -> Unit, error: String?, modifier: Modifier = Modifier) {
@@ -22,11 +22,11 @@ internal fun UsernameTextField(value: String, onValueChange: (String) -> Unit, e
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
-            focusedTextColor = cyanThemeColor,
-            focusedIndicatorColor = cyanThemeColor,
-            focusedTrailingIconColor = cyanThemeColor,
-            focusedLeadingIconColor = cyanThemeColor,
-            focusedLabelColor = cyanThemeColor,
+            focusedTextColor = CyanThemeColor,
+            focusedIndicatorColor = CyanThemeColor,
+            focusedTrailingIconColor = CyanThemeColor,
+            focusedLeadingIconColor = CyanThemeColor,
+            focusedLabelColor = CyanThemeColor,
         ),
         onValueChange = {
             onValueChange(it)

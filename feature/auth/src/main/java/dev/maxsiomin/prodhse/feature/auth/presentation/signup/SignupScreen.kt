@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,9 +39,9 @@ import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.LineOrLine
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.PasswordTextField
 import dev.maxsiomin.prodhse.feature.auth.presentation.components.UsernameTextField
-import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColor
-import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColorGradientEnd
-import dev.maxsiomin.prodhse.feature.auth.theme.grayThemeColor
+import dev.maxsiomin.prodhse.feature.auth.theme.CyanThemeColor
+import dev.maxsiomin.prodhse.feature.auth.theme.CyanThemeColorGradientEnd
+import dev.maxsiomin.prodhse.feature.auth.theme.GrayThemeColor
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -87,7 +86,7 @@ fun SignupScreen(
             .fillMaxSize()
             .background(
                 brush = Brush.linearGradient(
-                    1f to cyanThemeColor, 1f to cyanThemeColorGradientEnd,
+                    1f to CyanThemeColor, 1f to CyanThemeColorGradientEnd,
                 )
             )
     ) {
@@ -170,7 +169,7 @@ fun SignupScreen(
                         onEvent(SignupViewModel.Event.SignupClicked)
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = cyanThemeColor,
+                        containerColor = CyanThemeColor,
                         contentColor = Color.White,
                     ),
                 ) {
@@ -192,9 +191,9 @@ fun SignupScreen(
                         onEvent(SignupViewModel.Event.LoginClicked)
                     },
                     colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = grayThemeColor,
+                        contentColor = GrayThemeColor,
                     ),
-                    border = BorderStroke(1.dp, grayThemeColor)
+                    border = BorderStroke(1.dp, GrayThemeColor)
                 ) {
                     Text(text = stringResource(R.string.log_in))
                 }
