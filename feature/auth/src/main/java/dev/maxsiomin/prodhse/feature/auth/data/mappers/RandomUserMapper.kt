@@ -5,7 +5,7 @@ import dev.maxsiomin.prodhse.feature.auth.data.dto.random_user.Result
 import dev.maxsiomin.prodhse.feature.auth.domain.model.RandomUser
 import javax.inject.Inject
 
-class RandomUserMapper @Inject constructor() : ToDomainMapper<Result, RandomUser>() {
+class RandomUserMapper @Inject constructor() : ToDomainMapper<Result, RandomUser> {
 
     override fun toDomain(data: Result): RandomUser {
         val nameObject = data.name

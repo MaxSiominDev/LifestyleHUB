@@ -1,18 +1,19 @@
 package dev.maxsiomin.prodhse.feature.home.data.repository
 
+import dev.maxsiomin.common.data.ToDomainMapper
 import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse
-import dev.maxsiomin.prodhse.feature.home.data.mappers.WeatherDtoToUiModelMapper
+import dev.maxsiomin.prodhse.feature.home.data.mappers.WeatherMapper
 import dev.maxsiomin.prodhse.feature.home.data.remote.weather_api.WeatherApi
 import dev.maxsiomin.prodhse.feature.home.domain.model.Weather
 import dev.maxsiomin.prodhse.feature.home.domain.repository.WeatherRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-internal class WeatherRepositoryImpl @Inject constructor(private val api: WeatherApi) :
-    WeatherRepository {
+internal class WeatherRepositoryImpl @Inject constructor(
+    private val api: WeatherApi,
+    private val weatherMapper: ToDomainMapper<CurrentWeatherResponse, Weather>,
+) : WeatherRepository {
 
     override suspend fun getCurrentWeather(
         lat: String,
@@ -20,18 +21,17 @@ internal class WeatherRepositoryImpl @Inject constructor(private val api: Weathe
         lang: String,
     ): Resource<Weather, NetworkError> {
         val apiResponse = api.getCurrentWeather(lat = lat, lon = lon, lang = lang)
-        val mapper = WeatherDtoToUiModelMapper()
         return when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)
             is Resource.Success -> {
-                val remoteData = mapper.invoke(apiResponse.data)
+                val remoteData = weatherMapper.toDomain(apiResponse.data)
                 Resource.Success(remoteData)
             }
         }
     }
 
     override fun getDefaultWeather(): Weather {
-        return WeatherDtoToUiModelMapper().invoke(CurrentWeatherResponse())
+        return weatherMapper.toDomain(CurrentWeatherResponse())
     }
 
 }

@@ -20,7 +20,7 @@ import dev.maxsiomin.prodhse.feature.home.domain.repository.WeatherRepository
 
 @InstallIn(ViewModelComponent::class)
 @Module
-internal abstract class RepositoryAndNetworkModule {
+internal abstract class RepositoryAndApisModule {
 
     @Binds
     @ViewModelScoped

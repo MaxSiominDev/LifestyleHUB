@@ -1,11 +1,16 @@
 package dev.maxsiomin.prodhse.feature.home.data.repository
 
 import android.content.SharedPreferences
+import dev.maxsiomin.common.data.ToDomainMapper
 import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
-import dev.maxsiomin.prodhse.feature.home.data.mappers.PlaceDetailsDtoToUiModelMapper
-import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacesDtoToUiModelMapper
-import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacesPhotosDtoToUiModelMapper
+import dev.maxsiomin.prodhse.feature.home.data.dto.place_details.PlaceDetailsResponse
+import dev.maxsiomin.prodhse.feature.home.data.dto.place_photos.PlacePhotosResponseItem
+import dev.maxsiomin.prodhse.feature.home.data.dto.places_nearby.PlacesResponse
+import dev.maxsiomin.prodhse.feature.home.data.dto.places_nearby.Result
+import dev.maxsiomin.prodhse.feature.home.data.mappers.FsqId
+import dev.maxsiomin.prodhse.feature.home.data.mappers.PlaceMapper
+import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacePhotosMapper
 import dev.maxsiomin.prodhse.feature.home.data.remote.places_api.PlacesApi
 import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
 import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
@@ -17,6 +22,9 @@ import javax.inject.Inject
 internal class PlacesRepositoryImpl @Inject constructor(
     private val api: PlacesApi,
     private val prefs: SharedPreferences,
+    private val placeMapper: ToDomainMapper<Result, Place?>,
+    private val placeDetailsMapper: ToDomainMapper<PlaceDetailsResponse, PlaceDetails?>,
+    private val placePhotosMapper: ToDomainMapper<Pair<PlacePhotosResponseItem, FsqId>, Photo>,
 ) : PlacesRepository {
 
     override suspend fun getPlacesNearby(
@@ -25,11 +33,10 @@ internal class PlacesRepositoryImpl @Inject constructor(
         lang: String
     ): Resource<List<Place>, NetworkError> {
         val apiResponse = api.getPlaces(lat = lat, lon = lon, lang = lang)
-        val mapper = PlacesDtoToUiModelMapper()
         return when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)
             is Resource.Success -> {
-                apiResponse.data.results?.filterNotNull()?.mapNotNull { mapper.invoke(it) }
+                apiResponse.data.results?.filterNotNull()?.mapNotNull { placeMapper.toDomain(it) }
                     ?.let {
                         Resource.Success(it)
                     } ?: Resource.Error(NetworkError.EmptyResponse)
@@ -39,11 +46,12 @@ internal class PlacesRepositoryImpl @Inject constructor(
 
     override suspend fun getPhotos(id: String): Resource<List<Photo>, NetworkError> {
         val apiResponse = api.getPhotos(id = id)
-        val mapper = PlacesPhotosDtoToUiModelMapper()
         return when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)
             is Resource.Success -> {
-                val remoteData = mapper(apiResponse.data, id)
+                val remoteData: List<Photo> = apiResponse.data.map { item: PlacePhotosResponseItem ->
+                    placePhotosMapper.toDomain(item to id)
+                }
                 Resource.Success(remoteData)
             }
         }
@@ -57,11 +65,10 @@ internal class PlacesRepositoryImpl @Inject constructor(
         }
 
         val apiResponse = api.getPlaceDetails(id = id)
-        val mapper = PlaceDetailsDtoToUiModelMapper()
         return when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)
             is Resource.Success -> {
-                apiResponse.data.let(mapper)?.let {
+                apiResponse.data.let(placeDetailsMapper::toDomain)?.let {
                     savePlaceDetailsToSharedPrefs(it)
                     Resource.Success(it)
                 } ?: Resource.Error(NetworkError.EmptyResponse)

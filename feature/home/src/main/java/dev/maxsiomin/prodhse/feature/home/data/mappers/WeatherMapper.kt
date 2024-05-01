@@ -1,5 +1,6 @@
 package dev.maxsiomin.prodhse.feature.home.data.mappers
 
+import dev.maxsiomin.common.data.ToDomainMapper
 import dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse
 import dev.maxsiomin.prodhse.feature.home.domain.model.TemperatureInfo
 import dev.maxsiomin.prodhse.feature.home.domain.model.WeatherCondition
@@ -8,15 +9,16 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
-internal class WeatherDtoToUiModelMapper : (CurrentWeatherResponse) -> Weather {
+internal class WeatherMapper @Inject constructor() : ToDomainMapper<CurrentWeatherResponse, Weather> {
 
-    override fun invoke(weatherDto: CurrentWeatherResponse): Weather {
+    override fun toDomain(data: CurrentWeatherResponse): Weather {
         return Weather(
-            city = getCity(weatherDto),
-            weatherCondition = getWeatherCondition(weatherDto),
-            temperatureInfo = getTemperatureInfo(weatherDto),
+            city = getCity(data),
+            weatherCondition = getWeatherCondition(data),
+            temperatureInfo = getTemperatureInfo(data),
             date = getDate(),
         )
     }
