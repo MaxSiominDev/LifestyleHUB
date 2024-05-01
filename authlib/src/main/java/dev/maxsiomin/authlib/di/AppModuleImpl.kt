@@ -19,8 +19,8 @@ internal class AppModuleImpl private constructor(private val context: Context) :
         Room.databaseBuilder(
             context,
             UsersDatabase::class.java,
-            "usersDb",
-        ).fallbackToDestructiveMigration().build()
+            UsersDatabase.NAME,
+        ).build()
     }
 
     override val usersDao: UsersDao by lazy {

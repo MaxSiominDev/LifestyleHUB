@@ -1,6 +1,6 @@
 package dev.maxsiomin.authlib.domain.repository
 
-import dev.maxsiomin.authlib.domain.UserInfo
+import dev.maxsiomin.authlib.domain.model.UserInfo
 
 internal interface UsersRepository {
 

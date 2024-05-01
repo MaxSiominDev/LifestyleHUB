@@ -1,20 +1,18 @@
 package dev.maxsiomin.prodhse.feature.home.presentation.home_tld.fullscreen_photo
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.common.extensions.requireArg
+import dev.maxsiomin.common.presentation.StatefulViewModel
 import dev.maxsiomin.prodhse.navdestinations.Screen
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.net.URLDecoder
 import javax.inject.Inject
 
 @HiltViewModel
 class BrowsePhotoViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : StatefulViewModel<BrowsePhotoViewModel.State, Nothing, Nothing>() {
 
     private val imageUrl: String =
         savedStateHandle.requireArg<String>(Screen.BrowsePhotoScreenArgs.URL).let { encodedUrl ->
@@ -25,9 +23,11 @@ class BrowsePhotoViewModel @Inject constructor(
         val url: String,
     )
 
-    var state by mutableStateOf(
+    override val _state = MutableStateFlow(
         State(url = imageUrl)
     )
-        private set
 
+    override fun onEvent(event: Nothing) {
+
+    }
 }

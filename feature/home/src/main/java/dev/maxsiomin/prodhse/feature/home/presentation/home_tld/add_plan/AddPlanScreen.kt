@@ -14,7 +14,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,8 +29,8 @@ import dev.maxsiomin.common.presentation.components.DatePickerDialog
 import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.home.R
-import dev.maxsiomin.prodhse.feature.home.domain.Photo
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
+import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
+import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
@@ -41,15 +40,15 @@ internal fun AddPlanScreen(
     navController: NavController,
     snackbarCallback: SnackbarCallback,
     state: AddPlanViewModel.State,
-    eventFlow: Flow<AddPlanViewModel.UiEvent>,
+    effectFlow: Flow<AddPlanViewModel.Effect>,
     onEvent: (AddPlanViewModel.Event) -> Unit
 ) {
 
-    CollectFlow(eventFlow) { event ->
-        when (event) {
-            is AddPlanViewModel.UiEvent.NavigateBack -> navController.popBackStack()
-            is AddPlanViewModel.UiEvent.ShowMessage -> snackbarCallback(
-                SnackbarInfo(message = event.message)
+    CollectFlow(effectFlow) { effect ->
+        when (effect) {
+            is AddPlanViewModel.Effect.NavigateBack -> navController.popBackStack()
+            is AddPlanViewModel.Effect.ShowMessage -> snackbarCallback(
+                SnackbarInfo(message = effect.message)
             )
         }
     }
@@ -167,7 +166,7 @@ private fun AddPlanScreenPreview() {
             ),
             onEvent = {},
             navController = rememberNavController(),
-            eventFlow = flow { },
+            effectFlow = flow { },
             snackbarCallback = {}
         )
     }

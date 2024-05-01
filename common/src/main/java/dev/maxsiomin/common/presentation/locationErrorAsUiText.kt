@@ -8,7 +8,7 @@ fun LocationError.asUiText(): UiText {
     return when (this) {
 
         is LocationError.Unknown -> {
-            UiText.StringResource(R.string.unknown_error)
+            UiText.StringResource(R.string.unknown_location_error)
         }
 
         LocationError.GpsDisabled -> {

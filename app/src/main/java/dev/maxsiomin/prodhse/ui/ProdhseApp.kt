@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import dev.maxsiomin.common.presentation.SnackbarInfo
 import dev.maxsiomin.prodhse.ProdhseAppState
+import dev.maxsiomin.prodhse.R
 import dev.maxsiomin.prodhse.navdestinations.topLevelDestinations
 import kotlinx.coroutines.launch
 
@@ -32,20 +33,19 @@ fun ProdhseApp(appState: ProdhseAppState) {
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val showSnackbar = remember {
+    val showSnackbar: (SnackbarInfo) -> Unit = remember {
         { info: SnackbarInfo ->
             scope.launch {
                 snackbarHostState.showSnackbar(
                     message = info.message.asString(context),
-                    withDismissAction = true,
+                    actionLabel = context.getString(R.string.hide),
                     duration = SnackbarDuration.Short,
                 )
             }
-            Unit
         }
     }
 
-    var selectedIndex by rememberSaveable {
+    var selectedBottomNavBarIndex by rememberSaveable {
         mutableIntStateOf(0)
     }
 
@@ -54,25 +54,25 @@ fun ProdhseApp(appState: ProdhseAppState) {
         bottomBar = {
             NavigationBar {
                 topLevelDestinations.forEachIndexed { index, destination ->
-                    val isSelected = selectedIndex == index
+                    val isSelected = selectedBottomNavBarIndex == index
                     NavigationBarItem(
                         selected = isSelected,
                         onClick = {
                             appState.navigateToTopLevelDestination(
                                 topLevelDestination = destination,
-                                currentTopLevelDestination = topLevelDestinations[selectedIndex],
+                                currentTopLevelDestination = topLevelDestinations[selectedBottomNavBarIndex],
                             )
-                            selectedIndex = index
+                            selectedBottomNavBarIndex = index
                         },
                         icon = {
                             val vector =
                                 if (isSelected) destination.selectedIcon else destination.unselectedIcon
                             Icon(
                                 imageVector = vector,
-                                contentDescription = stringResource(id = destination.titleTextId),
+                                contentDescription = destination.title.asString(),
                             )
                         },
-                        label = { Text(text = stringResource(id = destination.titleTextId)) }
+                        label = { Text(text = destination.title.asString()) }
                     )
                 }
 
@@ -87,7 +87,7 @@ fun ProdhseApp(appState: ProdhseAppState) {
             ProdhseNavHost(
                 appState = appState,
                 showSnackbar = showSnackbar,
-                onTldChanged = { selectedIndex = it },
+                onTldChanged = { selectedBottomNavBarIndex = it },
             )
         }
     }

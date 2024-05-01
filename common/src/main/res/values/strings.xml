@@ -2,6 +2,7 @@
 <resources>
 
     <string name="unknown_error">Unknown error</string>
+    <string name="unknown_location_error">Unknown location error</string>
     <string name="server_error">Oops, something went wrong. Please try again.</string>
     <string name="select_date">Select date</string>
 

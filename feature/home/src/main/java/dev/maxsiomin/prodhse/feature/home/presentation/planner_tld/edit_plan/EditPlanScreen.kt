@@ -14,7 +14,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,20 +31,20 @@ import kotlinx.coroutines.flow.Flow
 @Composable
 internal fun EditPlanScreen(
     state: EditPlanViewModel.State,
-    eventsFlow: Flow<EditPlanViewModel.UiEvent>,
+    effectFlow: Flow<EditPlanViewModel.Effect>,
     onEvent: (EditPlanViewModel.Event) -> Unit,
     showSnackbar: SnackbarCallback,
     navController: NavController,
 ) {
 
-    CollectFlow(eventsFlow) { event ->
-        when (event) {
-            is EditPlanViewModel.UiEvent.NavigateBack -> {
+    CollectFlow(effectFlow) { effect ->
+        when (effect) {
+            is EditPlanViewModel.Effect.NavigateBack -> {
                 navController.popBackStack()
             }
 
-            is EditPlanViewModel.UiEvent.ShowMessage -> {
-                showSnackbar(SnackbarInfo(event.message))
+            is EditPlanViewModel.Effect.ShowMessage -> {
+                showSnackbar(SnackbarInfo(effect.message))
             }
         }
     }

@@ -22,8 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import dev.maxsiomin.prodhse.feature.auth.R
-import dev.maxsiomin.prodhse.feature.auth.presentation.LoginViewModel
-import dev.maxsiomin.prodhse.feature.auth.theme.cyanThemeColor
+import dev.maxsiomin.prodhse.feature.auth.theme.CyanThemeColor
 
 @Composable
 internal fun PasswordTextField(value: String, error: String?, onValueChange: (String) -> Unit, modifier: Modifier = Modifier) {
@@ -35,11 +34,11 @@ internal fun PasswordTextField(value: String, error: String?, onValueChange: (St
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
-            focusedTextColor = cyanThemeColor,
-            focusedIndicatorColor = cyanThemeColor,
-            focusedTrailingIconColor = cyanThemeColor,
-            focusedLeadingIconColor = cyanThemeColor,
-            focusedLabelColor = cyanThemeColor,
+            focusedTextColor = CyanThemeColor,
+            focusedIndicatorColor = CyanThemeColor,
+            focusedTrailingIconColor = CyanThemeColor,
+            focusedLeadingIconColor = CyanThemeColor,
+            focusedLabelColor = CyanThemeColor,
         ),
         onValueChange = {
             onValueChange(it)

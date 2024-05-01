@@ -5,6 +5,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -12,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import dev.maxsiomin.common.extensions.openAppSettings
 import dev.maxsiomin.common.presentation.SnackbarCallback
@@ -29,7 +33,7 @@ import kotlinx.coroutines.flow.Flow
 internal fun HomeScreen(
     state: HomeViewModel.State,
     onEvent: (HomeViewModel.Event) -> Unit,
-    eventsFlow: Flow<HomeViewModel.UiEvent>,
+    effectFlow: Flow<HomeViewModel.Effect>,
     navController: NavController,
     showSnackbar: SnackbarCallback,
 ) {
@@ -56,51 +60,43 @@ internal fun HomeScreen(
             }
         )
 
-    CollectFlow(eventsFlow) { event ->
-        when (event) {
-            is HomeViewModel.UiEvent.ShowMessage -> {
-                showSnackbar(SnackbarInfo(event.message))
-            }
+    CollectFlow(effectFlow) { effect ->
+        when (effect) {
+            is HomeViewModel.Effect.ShowMessage -> showSnackbar(SnackbarInfo(effect.message))
 
-            HomeViewModel.UiEvent.RequestLocationPermission -> {
+            HomeViewModel.Effect.RequestLocationPermission -> {
                 locationPermissionResultLauncher.launch(permissions)
             }
 
-            is HomeViewModel.UiEvent.GoToDetailsScreen -> {
-                navController.navigate(Screen.DetailsScreen.withArgs(event.fsqId))
+            is HomeViewModel.Effect.GoToDetailsScreen -> {
+                navController.navigate(Screen.DetailsScreen.withArgs(effect.fsqId))
             }
 
-            is HomeViewModel.UiEvent.GoToAddPlanScreen -> {
-                navController.navigate(Screen.AddPlanScreen.withArgs(event.fsqId))
+            is HomeViewModel.Effect.GoToAddPlanScreen -> {
+                navController.navigate(Screen.AddPlanScreen.withArgs(effect.fsqId))
             }
+
+            HomeViewModel.Effect.GoToAppSettings -> activity.openAppSettings()
         }
     }
 
     if (state.showLocationPermissionDialog) {
         PermissionDialog(
             permissionTextProvider = LocationPermissionTextProvider,
-            isPermanentlyDeclined = !activity.shouldShowRequestPermissionRationale(PermissionChecker.COARSE_LOCATION_PERMISSION),
+            isPermanentlyDeclined = !activity.shouldShowRequestPermissionRationale(
+                PermissionChecker.COARSE_LOCATION_PERMISSION
+            ),
             onDismiss = {
-                onEvent(HomeViewModel.Event.DismissLocationDialog)
+                onEvent(HomeViewModel.Event.LocationDialog.Dismissed)
             },
             onOkClick = {
-                onEvent(HomeViewModel.Event.DismissLocationDialog)
-                locationPermissionResultLauncher.launch(permissions)
+                onEvent(HomeViewModel.Event.LocationDialog.Confirmed)
             },
             onGoToAppSettingsClick = {
-                onEvent(HomeViewModel.Event.DismissLocationDialog)
-                activity.openAppSettings()
+                onEvent(HomeViewModel.Event.LocationDialog.GoToAppSettings)
             },
         )
     }
-
-    val items: List<HomeFeedItem> = remember(state.places) {
-        buildList {
-            add(HomeFeedItem.Weather)
-            addAll(state.places.map { HomeFeedItem.Place(it) })
-        }
-    }
-
 
     Box(
         Modifier
@@ -109,41 +105,51 @@ internal fun HomeScreen(
     ) {
 
         PullToRefreshLazyColumn(
-            items = items,
-            content = { feedItem ->
-                when (feedItem) {
-
-                    is HomeFeedItem.Weather -> {
-                        WeatherItem(
-                            state = state, onEvent = onEvent,
-                        )
-                    }
-
-                    is HomeFeedItem.Place -> {
-                        PlaceCard(
-                            place = feedItem.place,
-                            goToDetails = {
-                                onEvent(HomeViewModel.Event.OnVenueClicked(feedItem.place.fsqId))
-                            },
-                            addToPlans = {
-                                onEvent(HomeViewModel.Event.AddToPlans(feedItem.place.fsqId))
-                            }
-                        )
-                    }
-
-                }
-            },
             isRefreshing = state.isRefreshing,
             onRefresh = {
                 onEvent(HomeViewModel.Event.Refresh)
+            },
+        ) {
+            item {
+                WeatherItem(
+                    state = state, onEvent = onEvent,
+                )
             }
-        )
+            items(state.places) { place ->
+                PlaceCard(
+                    place = place,
+                    goToDetails = {
+                        onEvent(HomeViewModel.Event.OnVenueClicked(place.fsqId))
+                    },
+                    addToPlans = {
+                        onEvent(HomeViewModel.Event.AddToPlans(place.fsqId))
+                    }
+                )
+            }
+        }
 
-        if (state.places.isEmpty() && !state.isRefreshing) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = stringResource(R.string.no_places_nearby)
-            )
+        when {
+            state.places.isEmpty() && state.placesStatus is HomeViewModel.PlacesStatus.Success -> {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = stringResource(R.string.no_places_nearby)
+                )
+            }
+
+            state.placesStatus is HomeViewModel.PlacesStatus.Loading -> {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp)
+                )
+            }
+
+            state.placesStatus is HomeViewModel.PlacesStatus.Error -> {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = state.placesStatus.message.asString(),
+                )
+            }
         }
 
     }

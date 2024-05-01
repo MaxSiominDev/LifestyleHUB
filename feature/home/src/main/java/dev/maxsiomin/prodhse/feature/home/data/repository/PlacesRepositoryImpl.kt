@@ -1,78 +1,77 @@
 package dev.maxsiomin.prodhse.feature.home.data.repository
 
 import android.content.SharedPreferences
+import dev.maxsiomin.common.data.ToDomainMapper
 import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
-import dev.maxsiomin.prodhse.feature.home.data.mappers.PlaceDetailsDtoToUoModelMapper
-import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacesDtoToUiModelMapper
-import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacesPhotosDtoToUiModelMapper
+import dev.maxsiomin.prodhse.feature.home.data.dto.place_details.PlaceDetailsResponse
+import dev.maxsiomin.prodhse.feature.home.data.dto.place_photos.PlacePhotosResponseItem
+import dev.maxsiomin.prodhse.feature.home.data.dto.places_nearby.PlacesResponse
+import dev.maxsiomin.prodhse.feature.home.data.dto.places_nearby.Result
+import dev.maxsiomin.prodhse.feature.home.data.mappers.FsqId
+import dev.maxsiomin.prodhse.feature.home.data.mappers.PlaceMapper
+import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacePhotosMapper
 import dev.maxsiomin.prodhse.feature.home.data.remote.places_api.PlacesApi
-import dev.maxsiomin.prodhse.feature.home.domain.Photo
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
-import dev.maxsiomin.prodhse.feature.home.domain.Place
+import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
+import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
+import dev.maxsiomin.prodhse.feature.home.domain.model.Place
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 internal class PlacesRepositoryImpl @Inject constructor(
     private val api: PlacesApi,
     private val prefs: SharedPreferences,
+    private val placeMapper: ToDomainMapper<Result, Place?>,
+    private val placeDetailsMapper: ToDomainMapper<PlaceDetailsResponse, PlaceDetails?>,
+    private val placePhotosMapper: ToDomainMapper<Pair<PlacePhotosResponseItem, FsqId>, Photo>,
 ) : PlacesRepository {
 
     override suspend fun getPlacesNearby(
         lat: String,
         lon: String,
         lang: String
-    ): Flow<Resource<List<Place>, NetworkError>> {
-        return flow {
-            val apiResponse = api.getPlaces(lat = lat, lon = lon, lang = lang)
-            val mapper = PlacesDtoToUiModelMapper()
-            when (apiResponse) {
-                is Resource.Error -> emit(Resource.Error(apiResponse.error))
-                is Resource.Success -> {
-                    apiResponse.data.results?.filterNotNull()?.mapNotNull { mapper.invoke(it) }
-                        ?.let {
-                            emit(Resource.Success(it))
-                        } ?: emit(Resource.Error(NetworkError.EmptyResponse))
-                }
+    ): Resource<List<Place>, NetworkError> {
+        val apiResponse = api.getPlaces(lat = lat, lon = lon, lang = lang)
+        return when (apiResponse) {
+            is Resource.Error -> Resource.Error(apiResponse.error)
+            is Resource.Success -> {
+                apiResponse.data.results?.filterNotNull()?.mapNotNull { placeMapper.toDomain(it) }
+                    ?.let {
+                        Resource.Success(it)
+                    } ?: Resource.Error(NetworkError.EmptyResponse)
             }
         }
     }
 
-    override suspend fun getPhotos(id: String): Flow<Resource<List<Photo>, NetworkError>> {
-        return flow {
-            val apiResponse = api.getPhotos(id = id)
-            val mapper = PlacesPhotosDtoToUiModelMapper()
-            when (apiResponse) {
-                is Resource.Error -> emit(Resource.Error(apiResponse.error))
-                is Resource.Success -> {
-                    val remoteData = mapper(apiResponse.data, id)
-                    emit(Resource.Success(remoteData))
+    override suspend fun getPhotos(id: String): Resource<List<Photo>, NetworkError> {
+        val apiResponse = api.getPhotos(id = id)
+        return when (apiResponse) {
+            is Resource.Error -> Resource.Error(apiResponse.error)
+            is Resource.Success -> {
+                val remoteData: List<Photo> = apiResponse.data.map { item: PlacePhotosResponseItem ->
+                    placePhotosMapper.toDomain(item to id)
                 }
+                Resource.Success(remoteData)
             }
         }
     }
 
-    override suspend fun getPlaceDetails(id: String): Flow<Resource<PlaceDetails, NetworkError>> {
-        return flow {
-            val localData = getPlaceDetailsFromSharedPrefs(id)
-            val currentMillis = System.currentTimeMillis()
-            if (localData != null && currentMillis - localData.timeUpdated < CACHE_EXPIRATION_PERIOD) {
-                emit(Resource.Success(localData))
-                return@flow
-            }
+    override suspend fun getPlaceDetails(id: String): Resource<PlaceDetails, NetworkError> {
+        val localData = getPlaceDetailsFromSharedPrefs(id)
+        val currentMillis = System.currentTimeMillis()
+        if (localData != null && currentMillis - localData.timeUpdated < CACHE_EXPIRATION_PERIOD) {
+            return Resource.Success(localData)
+        }
 
-            val apiResponse = api.getPlaceDetails(id = id)
-            val mapper = PlaceDetailsDtoToUoModelMapper()
-            when (apiResponse) {
-                is Resource.Error -> emit(Resource.Error(apiResponse.error))
-                is Resource.Success -> {
-                    apiResponse.data.let(mapper)?.let {
-                        emit(Resource.Success(it))
-                    } ?: emit(Resource.Error(NetworkError.EmptyResponse))
-                }
+        val apiResponse = api.getPlaceDetails(id = id)
+        return when (apiResponse) {
+            is Resource.Error -> Resource.Error(apiResponse.error)
+            is Resource.Success -> {
+                apiResponse.data.let(placeDetailsMapper::toDomain)?.let {
+                    savePlaceDetailsToSharedPrefs(it)
+                    Resource.Success(it)
+                } ?: Resource.Error(NetworkError.EmptyResponse)
             }
         }
     }

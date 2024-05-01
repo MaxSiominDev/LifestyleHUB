@@ -43,8 +43,8 @@ import dev.maxsiomin.common.extensions.openPhoneNumber
 import dev.maxsiomin.common.presentation.SnackbarCallback
 import dev.maxsiomin.common.presentation.SnackbarInfo
 import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
-import dev.maxsiomin.prodhse.feature.home.domain.Photo
-import dev.maxsiomin.prodhse.feature.home.domain.PlaceDetails
+import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
+import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
@@ -53,7 +53,7 @@ import kotlinx.coroutines.flow.flow
 @Composable
 internal fun DetailsScreen(
     state: DetailsViewModel.State,
-    eventsFlow: Flow<DetailsViewModel.UiEvent>,
+    effectFlow: Flow<DetailsViewModel.Effect>,
     onEvent: (DetailsViewModel.Event) -> Unit,
     navController: NavController,
     showSnackbar: SnackbarCallback,
@@ -62,22 +62,22 @@ internal fun DetailsScreen(
     val isPreview = LocalInspectionMode.current
     val context = LocalContext.current
 
-    CollectFlow(eventsFlow) { event ->
-        when (event) {
-            is DetailsViewModel.UiEvent.NavigateToPhotoScreen -> {
+    CollectFlow(effectFlow) { effect ->
+        when (effect) {
+            is DetailsViewModel.Effect.NavigateToPhotoScreen -> {
                 navController.navigate(
-                    Screen.BrowsePhotoScreen.withArgs(event.url)
+                    Screen.BrowsePhotoScreen.withArgs(effect.url)
                 )
             }
 
-            is DetailsViewModel.UiEvent.NavigateToAddPlanScreen -> {
+            is DetailsViewModel.Effect.NavigateToAddPlanScreen -> {
                 navController.navigate(
-                    Screen.AddPlanScreen.withArgs(event.fsqId)
+                    Screen.AddPlanScreen.withArgs(effect.fsqId)
                 )
             }
 
-            is DetailsViewModel.UiEvent.ShowMessage -> {
-                showSnackbar(SnackbarInfo(message = event.message))
+            is DetailsViewModel.Effect.ShowMessage -> {
+                showSnackbar(SnackbarInfo(message = effect.message))
             }
         }
     }
@@ -304,7 +304,7 @@ private fun DetailsScreenPreview() {
                 )
             ),
             onEvent = {},
-            eventsFlow = flow { },
+            effectFlow = flow { },
             navController = rememberNavController(),
             showSnackbar = {},
         )

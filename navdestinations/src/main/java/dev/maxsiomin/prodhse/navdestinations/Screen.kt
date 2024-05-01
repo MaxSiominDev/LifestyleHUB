@@ -7,7 +7,14 @@ import androidx.navigation.navArgument
 /** Don't forget to add new screens to [TopLevelDestination] */
 sealed class Screen(val route: String, val arguments: List<NamedNavArgument> = emptyList()) {
 
-    // TLD
+    // All TLDs that have own backstack are defined here
+    object Tld {
+        data object Home : Screen("home_tld")
+        data object Planner : Screen("planner_tld")
+        data object Profile : Screen("profile_tld")
+    }
+
+
     data object HomeScreen : Screen("home_screen")
 
     object DetailsScreenArgs {
@@ -45,7 +52,6 @@ sealed class Screen(val route: String, val arguments: List<NamedNavArgument> = e
         )
     )
 
-    // TLD
     data object PlannerScreen : Screen("planner_screen")
 
     object EditPlanScreenArgs {
@@ -59,7 +65,6 @@ sealed class Screen(val route: String, val arguments: List<NamedNavArgument> = e
         )
     )
 
-    // TLD
     data object ProfileScreen : Screen("profile_screen")
 
     data object AuthScreen : Screen("auth_screen")
