@@ -25,7 +25,12 @@ import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.theme.CyanThemeColor
 
 @Composable
-internal fun PasswordTextField(value: String, error: String?, onValueChange: (String) -> Unit, modifier: Modifier = Modifier) {
+internal fun PasswordTextField(
+    value: String,
+    error: String?,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
 
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     TextField(

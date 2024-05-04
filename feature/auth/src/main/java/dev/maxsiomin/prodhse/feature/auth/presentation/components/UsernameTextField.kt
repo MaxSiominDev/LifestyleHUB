@@ -14,7 +14,12 @@ import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.theme.CyanThemeColor
 
 @Composable
-internal fun UsernameTextField(value: String, onValueChange: (String) -> Unit, error: String?, modifier: Modifier = Modifier) {
+internal fun UsernameTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    error: String?,
+    modifier: Modifier = Modifier
+) {
 
     TextField(
         modifier = modifier,

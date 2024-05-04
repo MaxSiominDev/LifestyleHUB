@@ -23,7 +23,6 @@ class DefaultLocationTracker @Inject constructor(
     private val locationClient: FusedLocationProviderClient,
 ) : LocationTracker {
 
-
     override suspend fun getCurrentLocation(): Resource<Location, LocationError> {
         val hasAccessCoarseLocationPermission = ContextCompat.checkSelfPermission(
             context,

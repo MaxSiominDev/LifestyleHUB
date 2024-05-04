@@ -2,20 +2,21 @@ package dev.maxsiomin.prodhse.feature.auth.presentation.profile
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.authlib.domain.AuthStatus
-import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.presentation.StatefulViewModel
-import kotlinx.coroutines.delay
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.GetAuthStatusFlowUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.GetAuthStatusValueUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.LogoutUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 internal class ProfileViewModel @Inject constructor(
-    private val authManager: AuthManager,
+    private val logoutUseCase: LogoutUseCase,
+    private val getAuthStatusFlowUseCase: GetAuthStatusFlowUseCase,
+    private val getAuthStatusValueUseCase: GetAuthStatusValueUseCase,
 ) : StatefulViewModel<ProfileViewModel.State, Nothing, ProfileViewModel.Event>() {
 
     data class State(
@@ -32,18 +33,18 @@ internal class ProfileViewModel @Inject constructor(
     override fun onEvent(event: Event) {
         when (event) {
             Event.LogoutClicked -> viewModelScope.launch {
-                authManager.logout()
+                logoutUseCase()
             }
         }
     }
 
     init {
-        val status = authManager.authStatus.value
+        val status = getAuthStatusValueUseCase()
         _state.update {
             it.copy(authStatus = status)
         }
         viewModelScope.launch {
-            authManager.authStatus.collect {
+            getAuthStatusFlowUseCase().collect {
                 _state.update {  oldState ->
                     oldState.copy(authStatus = it)
                 }

@@ -52,7 +52,6 @@ object CoreModule {
     fun provideLocationClient(
         @ApplicationContext context: Context,
         client: FusedLocationProviderClient,
-        permissionChecker: PermissionChecker,
     ): LocationTracker {
         return DefaultLocationTracker(context, client)
     }

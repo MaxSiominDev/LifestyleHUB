@@ -2,8 +2,6 @@ package dev.maxsiomin.prodhse.feature.auth.presentation.login
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.authlib.AuthManager
-import dev.maxsiomin.authlib.domain.model.LoginInfo
 import dev.maxsiomin.authlib.domain.LoginStatus
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.domain.resource.errorOrNull
@@ -12,6 +10,8 @@ import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.util.TextFieldState
 import dev.maxsiomin.common.util.updateError
 import dev.maxsiomin.prodhse.feature.auth.R
+import dev.maxsiomin.prodhse.feature.auth.domain.AuthError
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.LoginWithUsernameAndPasswordUseCase
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForLoginUseCase
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForLoginUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authManager: AuthManager,
+    private val loginWithUsernameAndPasswordUseCase: LoginWithUsernameAndPasswordUseCase,
     private val validateUsernameUseCase: ValidateUsernameForLoginUseCase,
     private val validatePasswordUseCase: ValidatePasswordForLoginUseCase,
 ) : StatefulViewModel<LoginViewModel.State, LoginViewModel.Effect, LoginViewModel.Event>() {
@@ -110,20 +110,26 @@ class LoginViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            val loginInfo = LoginInfo(username = username, password = password)
-            val loginStatus = authManager.loginWithUsernameAndPassword(loginInfo)
+            val loginStatus =
+                loginWithUsernameAndPasswordUseCase(username = username, password = password)
             when (loginStatus) {
 
-                LoginStatus.Success -> {
+                is Resource.Success -> {
                     onEffect(Effect.NavigateToProfileScreen)
                 }
 
-                is LoginStatus.Failure -> {
-                    onEffect(
-                        Effect.ShowMessage(
-                            UiText.DynamicString(loginStatus.reason)
-                        )
-                    )
+                is Resource.Error -> {
+                    val effect: Effect = when (loginStatus.error) {
+
+                        is AuthError.Login.Unknown -> {
+                            val errorMessage = (loginStatus.error as AuthError.Login.Unknown).reason
+                            Effect.ShowMessage(
+                                UiText.DynamicString(errorMessage)
+                            )
+                        }
+
+                    }
+                    onEffect(effect)
                 }
 
             }

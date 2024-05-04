@@ -2,9 +2,7 @@ package dev.maxsiomin.prodhse.feature.auth.presentation.signup
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.authlib.domain.RegistrationStatus
-import dev.maxsiomin.authlib.domain.model.RegistrationInfo
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.domain.resource.errorOrNull
 import dev.maxsiomin.common.presentation.StatefulViewModel
@@ -13,7 +11,10 @@ import dev.maxsiomin.common.presentation.asUiText
 import dev.maxsiomin.common.util.TextFieldState
 import dev.maxsiomin.common.util.updateError
 import dev.maxsiomin.prodhse.feature.auth.R
-import dev.maxsiomin.prodhse.feature.auth.domain.repository.RandomUserRepository
+import dev.maxsiomin.prodhse.feature.auth.domain.AuthError
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.CheckIfUsernameExistsUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.GetRandomUserDataUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.RegisterUseCase
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForSignupUseCase
 import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForSignupUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,8 +24,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignupViewModel @Inject constructor(
-    private val repo: RandomUserRepository,
-    private val authManager: AuthManager,
+    private val getRandomUserDataUseCase: GetRandomUserDataUseCase,
+    private val checkIfUsernameExistsUseCase: CheckIfUsernameExistsUseCase,
+    private val registerUseCase: RegisterUseCase,
     private val validateUsernameUseCase: ValidateUsernameForSignupUseCase,
     private val validatePasswordUseCase: ValidatePasswordForSignupUseCase,
 ) : StatefulViewModel<SignupViewModel.State, SignupViewModel.Effect, SignupViewModel.Event>() {
@@ -82,6 +84,40 @@ class SignupViewModel @Inject constructor(
         val state = _state.value
         val username = state.usernameState.text.trim()
         val password = state.passwordState.text.trim()
+
+        if (validateInputs(state).not()) return
+
+        viewModelScope.launch {
+            val usernameAlreadyExists = checkIfUsernameExistsUseCase(username = username)
+            if (usernameAlreadyExists) {
+                onUsernameAlreadyExists()
+                return@launch
+            }
+
+            val randomUserResource = getRandomUserDataUseCase()
+            when (randomUserResource) {
+                is Resource.Error -> {
+                    onRegistrationError(randomUserResource.error.asUiText())
+                }
+
+                is Resource.Success -> {
+                    val randomUserData = randomUserResource.data
+                    registerNewUser(
+                        username = username,
+                        password = password,
+                        fullname = randomUserData.fullName,
+                        avatarUrl = randomUserData.avatarUrl,
+                    )
+                }
+            }
+        }
+    }
+
+    /** @return whether inputs are valid or not */
+    private fun validateInputs(state: State): Boolean {
+        val username = state.usernameState.text.trim()
+        val password = state.passwordState.text.trim()
+
         val validateUsername =
             validateUsernameUseCase(username)
         val validatePassword =
@@ -125,49 +161,49 @@ class SignupViewModel @Inject constructor(
                     passwordState = state.passwordState.updateError(passwordError),
                 )
             }
-            return
         }
 
-        viewModelScope.launch {
-            val usernameAlreadyExists = authManager.checkIfUsernameExists(username)
-            if (usernameAlreadyExists) {
-                val error = UiText.StringResource(R.string.username_already_exists)
-                _state.update {
-                    it.copy(
-                        usernameState = state.usernameState.updateError(error)
-                    )
-                }
-                return@launch
-            }
+        return hasError.not()
+    }
 
-            val randomUserResource = repo.getRandomUser()
-            when (randomUserResource) {
-                is Resource.Error -> {
-                    onRegistrationError(randomUserResource.error.asUiText())
-                }
+    private fun onUsernameAlreadyExists() {
+        val error = UiText.StringResource(R.string.username_already_exists)
+        _state.update {
+            it.copy(
+                usernameState = it.usernameState.updateError(error)
+            )
+        }
+    }
 
-                is Resource.Success -> {
-                    val data = randomUserResource.data
+    private suspend fun registerNewUser(
+        username: String,
+        password: String,
+        fullname: String,
+        avatarUrl: String
+    ) {
+        val registrationStatus = registerUseCase(
+            username = username,
+            password = password,
+            fullname = fullname,
+            avatarUrl = avatarUrl
+        )
 
-                    val registrationStatus = authManager.registerUser(
-                        RegistrationInfo(
-                            username = username,
-                            password = password,
-                            avatarUrl = data.avatarUrl,
-                            fullName = data.fullName,
+        when (registrationStatus) {
+            is Resource.Error -> {
+                when (registrationStatus.error) {
+                    is AuthError.Signup.Unknown -> {
+                        val errorMessage =
+                            (registrationStatus.error as AuthError.Signup.Unknown).reason
+                        onRegistrationError(
+                            UiText.DynamicString(errorMessage)
                         )
-                    )
-
-                    when (registrationStatus) {
-                        is RegistrationStatus.Failure -> {
-                            onRegistrationError(UiText.DynamicString(registrationStatus.reason))
-                        }
-
-                        is RegistrationStatus.Success -> {
-                            onRegistrationSuccess()
-                        }
                     }
                 }
+
+            }
+
+            is Resource.Success -> {
+                onRegistrationSuccess()
             }
         }
     }
