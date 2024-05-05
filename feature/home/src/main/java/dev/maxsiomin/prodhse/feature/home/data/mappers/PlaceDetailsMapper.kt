@@ -14,7 +14,7 @@ internal class PlaceDetailsMapper @Inject constructor() : ToDomainMapper<PlaceDe
         if (category.isNullOrEmpty()) return null
         val address = data.location?.formattedAddress ?: return null
         val name = data.name ?: return null
-        val id = data.fsqId ?: return null
+        val fsqId = data.fsqId ?: return null
         val rating = data.rating
         val website = data.website
         val isVerified = data.verified
@@ -22,7 +22,7 @@ internal class PlaceDetailsMapper @Inject constructor() : ToDomainMapper<PlaceDe
         val isOpenNow = data.hours?.openNow
         val photos = data.photos?.mapNotNull {
             it?.let {
-                Photo(id = id, url = "${it.prefix}original${it.suffix}")
+                Photo(id = fsqId, url = "${it.prefix}original${it.suffix}")
             }
         } ?: emptyList()
         val phone = data.phone
@@ -39,7 +39,7 @@ internal class PlaceDetailsMapper @Inject constructor() : ToDomainMapper<PlaceDe
             isVerified = isVerified ?: false,
             isOpenNow = isOpenNow ?: false,
             photos = photos,
-            fsqId = id,
+            fsqId = fsqId,
             phone = phone,
             email = email,
         )

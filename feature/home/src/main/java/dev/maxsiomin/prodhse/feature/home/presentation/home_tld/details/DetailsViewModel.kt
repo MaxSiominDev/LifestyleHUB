@@ -9,17 +9,18 @@ import dev.maxsiomin.common.presentation.StatefulViewModel
 import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.presentation.asErrorUiText
 import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
-import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.other.EncodeUrlUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.places.GetPlaceDetailsByIdUseCase
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.net.URLEncoder
 import javax.inject.Inject
 
 @HiltViewModel
 internal class DetailsViewModel @Inject constructor(
-    private val placesRepo: PlacesRepository,
+    private val getPlaceDetailsByIdUseCase: GetPlaceDetailsByIdUseCase,
+    private val encodeUrlUseCase: EncodeUrlUseCase,
     savedStateHandle: SavedStateHandle,
 ) : StatefulViewModel<DetailsViewModel.State, DetailsViewModel.Effect, DetailsViewModel.Event>() {
 
@@ -38,7 +39,7 @@ internal class DetailsViewModel @Inject constructor(
     private val fsqId: String = savedStateHandle.requireArg(Screen.DetailsScreenArgs.FSQ_ID)
 
     init {
-        loadPlaceDetails(fsqId)
+        loadPlaceDetails(fsqId = fsqId)
     }
 
 
@@ -50,7 +51,7 @@ internal class DetailsViewModel @Inject constructor(
     override fun onEvent(event: Event) {
         when (event) {
             is Event.ImageClicked -> {
-                val encodedUrl = URLEncoder.encode(event.url, "UTF-8")
+                val encodedUrl = encodeUrlUseCase(event.url)
                 onEffect(Effect.NavigateToPhotoScreen(encodedUrl))
             }
 
@@ -58,17 +59,17 @@ internal class DetailsViewModel @Inject constructor(
         }
     }
 
-    private fun loadPlaceDetails(id: String) {
+    private fun loadPlaceDetails(fsqId: String) {
         viewModelScope.launch {
-            val placeDetailsNetworkErrorResource = placesRepo.getPlaceDetails(id)
-            when (placeDetailsNetworkErrorResource) {
+            val resource = getPlaceDetailsByIdUseCase(fsqId = fsqId)
+            when (resource) {
                 is Resource.Error -> {
-                    onEffect(Effect.ShowMessage(placeDetailsNetworkErrorResource.asErrorUiText()))
+                    onEffect(Effect.ShowMessage(resource.asErrorUiText()))
                 }
 
                 is Resource.Success -> {
                     _state.update {
-                        it.copy(placeDetails = placeDetailsNetworkErrorResource.data)
+                        it.copy(placeDetails = resource.data)
                     }
                 }
             }

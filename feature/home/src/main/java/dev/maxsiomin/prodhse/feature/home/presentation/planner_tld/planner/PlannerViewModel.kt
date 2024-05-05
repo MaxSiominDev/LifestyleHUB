@@ -6,6 +6,8 @@ import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.presentation.StatefulViewModel
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.plans.BatchAddPlaceDetailsToPlansUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.plans.GetAllPlansUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
@@ -16,8 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class PlannerViewModel @Inject constructor(
-    private val plansRepo: PlansRepository,
-    private val placesRepo: PlacesRepository,
+    private val getAllPlansUseCase: GetAllPlansUseCase,
+    private val batchAddPlaceDetailsToPlansUseCase: BatchAddPlaceDetailsToPlansUseCase,
+
 ) : StatefulViewModel<PlannerViewModel.State, PlannerViewModel.Effect, PlannerViewModel.Event>() {
 
     data class State(
@@ -54,39 +57,11 @@ internal class PlannerViewModel @Inject constructor(
             it.copy(isRefreshing = true)
         }
         viewModelScope.launch {
-            val plannerItems = mutableListOf<PlannerItem>()
-            val plans = plansRepo.getPlans()
-            plans.map { currentPlan ->
-                async {
-                    var plannerItem: PlannerItem? = null
-                    val placeDetailsResource = placesRepo.getPlaceDetails(currentPlan.placeFsqId)
-
-                    when (placeDetailsResource) {
-                        is Resource.Error -> Unit
-
-                        is Resource.Success -> {
-                            plannerItem = PlannerItem(placeDetailsResource.data, currentPlan)
-                        }
-                    }
-
-                    plannerItem?.let {
-                        plannerItems.add(it)
-                    }
-                }
-            }.awaitAll()
-
-            val sortedItems = plannerItems.sortedWith(
-                compareByDescending<PlannerItem> {
-                    it.plan.date
-                }.thenBy {
-                    it.place.name
-                }.thenBy {
-                    it.plan.noteTitle
-                }
-            )
+            val plans = getAllPlansUseCase()
+            val plannerItems = batchAddPlaceDetailsToPlansUseCase(plans)
 
             _state.update {
-                it.copy(items = sortedItems, isRefreshing = false)
+                it.copy(items = plannerItems, isRefreshing = false)
             }
         }
     }

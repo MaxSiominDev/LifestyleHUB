@@ -7,17 +7,15 @@ import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.presentation.StatefulViewModel
 import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.presentation.asErrorUiText
-import dev.maxsiomin.prodhse.core.location.PermissionChecker
-import dev.maxsiomin.prodhse.core.util.LocaleManager
 import dev.maxsiomin.prodhse.feature.home.R
-import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
 import dev.maxsiomin.prodhse.feature.home.domain.model.Place
 import dev.maxsiomin.prodhse.feature.home.domain.model.Weather
-import dev.maxsiomin.prodhse.feature.home.domain.repository.LocationRepository
-import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
-import dev.maxsiomin.prodhse.feature.home.domain.repository.WeatherRepository
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.places.BatchAddPhotosToPlacesUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.other.CheckLocationPermissionUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.other.GetCurrentLocationUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.weather.GetCurrentWeatherUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.weather.GetDefaultWeatherUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.places.GetPlacesNearbyUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -26,11 +24,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    private val placesRepo: PlacesRepository,
-    private val weatherRepo: WeatherRepository,
-    private val locationRepo: LocationRepository,
-    private val localeManager: LocaleManager,
-    private val permissionChecker: PermissionChecker,
+    private val getDefaultWeatherUseCase: GetDefaultWeatherUseCase,
+    private val getCurrentWeatherUseCase: GetCurrentWeatherUseCase,
+    private val getCurrentLocationUseCase: GetCurrentLocationUseCase,
+    private val getPlacesNearbyUseCase: GetPlacesNearbyUseCase,
+    private val batchAddPhotosToPlacesUseCase: BatchAddPhotosToPlacesUseCase,
+    private val checkLocationPermissionUseCase: CheckLocationPermissionUseCase,
 ) : StatefulViewModel<HomeViewModel.State, HomeViewModel.Effect, HomeViewModel.Event>() {
 
     private var locationIsRefreshing = false
@@ -93,7 +92,7 @@ internal class HomeViewModel @Inject constructor(
     )
 
     override val _state = MutableStateFlow(
-        State(weather = weatherRepo.getDefaultWeather())
+        State(weather = getDefaultWeatherUseCase())
     )
 
 
@@ -176,9 +175,7 @@ internal class HomeViewModel @Inject constructor(
             // I need this delay so that pull refresh lazy column had enough time to react to state change
             delay(1)
 
-            if (permissionChecker.hasPermission(PermissionChecker.COARSE_LOCATION_PERMISSION)
-                    .not()
-            ) {
+            if (checkLocationPermissionUseCase().not()) {
                 locationIsRefreshing = false
                 viewModelScope.launch {
                     onEffect(Effect.RequestLocationPermission)
@@ -192,7 +189,7 @@ internal class HomeViewModel @Inject constructor(
                 return@launch
             }
 
-            val locationResource = locationRepo.getCurrentLocation()
+            val locationResource = getCurrentLocationUseCase()
             when (locationResource) {
                 is Resource.Error -> {
                     locationIsRefreshing = false
@@ -227,11 +224,10 @@ internal class HomeViewModel @Inject constructor(
         placesIsRefreshing = true
 
         viewModelScope.launch {
-            val lat = location.latitude.toString()
-            val lon = location.longitude.toString()
-            val lang = localeManager.getLocaleLanguage()
+            val lat = location.latitude
+            val lon = location.longitude
 
-            val placesNearbyResource = placesRepo.getPlacesNearby(lat = lat, lon = lon, lang = lang)
+            val placesNearbyResource = getPlacesNearbyUseCase(lat = lat, lon = lon)
             placesIsRefreshing = false
             when (placesNearbyResource) {
                 is Resource.Error -> {
@@ -255,23 +251,13 @@ internal class HomeViewModel @Inject constructor(
     }
 
     private fun loadPhotos(places: List<Place>) {
-        val placeHolderUrl = "file:///android_asset/placeholder.png"
         viewModelScope.launch {
-            val placesWithPhoto = places.map {
-                async {
-                    var photo: Photo? = null
-                    val photosResource = placesRepo.getPhotos(id = it.fsqId)
-                    when (photosResource) {
-                        is Resource.Error -> Unit
-                        is Resource.Success -> {
-                            photo = photosResource.data.firstOrNull()
-                        }
-                    }
-                    it.copy(photoUrl = photo?.url ?: placeHolderUrl)
-                }
-            }.awaitAll()
+            val placesWithPhotos = batchAddPhotosToPlacesUseCase(
+                places = places,
+                placeholderUrl = IMAGE_PLACEHOLDER
+            )
             _state.update {
-                it.copy(places = placesWithPhoto)
+                it.copy(places = placesWithPhotos)
             }
         }
     }
@@ -283,11 +269,10 @@ internal class HomeViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            val lat = location.latitude.toString()
-            val lon = location.longitude.toString()
-            val lang = localeManager.getLocaleLanguage()
+            val lat = location.latitude
+            val lon = location.longitude
 
-            val weatherResource = weatherRepo.getCurrentWeather(lat = lat, lon = lon, lang = lang)
+            val weatherResource = getCurrentWeatherUseCase(lat = lat, lon = lon)
             weatherIsRefreshing = false
             when (weatherResource) {
                 is Resource.Error -> {
@@ -307,5 +292,9 @@ internal class HomeViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    companion object {
+        const val IMAGE_PLACEHOLDER = "file:///android_asset/placeholder.png"
     }
 }

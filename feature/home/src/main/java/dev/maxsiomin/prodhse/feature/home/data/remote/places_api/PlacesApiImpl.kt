@@ -31,18 +31,18 @@ internal class PlacesApiImpl @Inject constructor(private val client: HttpClient)
         }
     }
 
-    override suspend fun getPhotos(id: String): Resource<List<PlacePhotosResponseItem>, NetworkError> {
+    override suspend fun getPhotos(fsqId: String): Resource<List<PlacePhotosResponseItem>, NetworkError> {
         return client.safeGet {
-            url(HttpRoutes.getPlacePhotosUrl(fsqId = id))
+            url(HttpRoutes.getPlacePhotosUrl(fsqId = fsqId))
             parameter("sort", "NEWEST")
             header("Accept", "application/json")
             header("Authorization", ApiKeys.FOURS_SQUARE)
         }
     }
 
-    override suspend fun getPlaceDetails(id: String): Resource<PlaceDetailsResponse, NetworkError> {
+    override suspend fun getPlaceDetails(fsqId: String): Resource<PlaceDetailsResponse, NetworkError> {
         return client.safeGet {
-            url(HttpRoutes.getPlaceDetailsUrl(fsqId = id))
+            url(HttpRoutes.getPlaceDetailsUrl(fsqId = fsqId))
             parameter("fields", placeDetailsFields)
             header("Accept", "application/json")
             header("Authorization", ApiKeys.FOURS_SQUARE)

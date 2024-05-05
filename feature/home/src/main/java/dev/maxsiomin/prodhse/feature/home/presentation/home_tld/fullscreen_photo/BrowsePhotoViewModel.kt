@@ -4,20 +4,24 @@ import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.common.extensions.requireArg
 import dev.maxsiomin.common.presentation.StatefulViewModel
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.other.DecodeUrlUseCase
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
-import java.net.URLDecoder
 import javax.inject.Inject
 
 @HiltViewModel
 class BrowsePhotoViewModel @Inject constructor(
+    private val decodeUrlUseCase: DecodeUrlUseCase,
     savedStateHandle: SavedStateHandle
 ) : StatefulViewModel<BrowsePhotoViewModel.State, Nothing, Nothing>() {
 
-    private val imageUrl: String =
-        savedStateHandle.requireArg<String>(Screen.BrowsePhotoScreenArgs.URL).let { encodedUrl ->
-            URLDecoder.decode(encodedUrl, "UTF-8")
-        }
+    private val imageUrl: String
+
+    init {
+        val encodedUrl: String = savedStateHandle.requireArg(Screen.BrowsePhotoScreenArgs.URL)
+        imageUrl = decodeUrlUseCase(encodedUrl = encodedUrl)
+    }
+
 
     data class State(
         val url: String,

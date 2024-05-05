@@ -1,6 +1,7 @@
 package dev.maxsiomin.prodhse.feature.home.data.mappers
 
 import dev.maxsiomin.common.data.BidirectionalMapper
+import dev.maxsiomin.common.util.DateConverters
 import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.prodhse.feature.home.data.local.PlanEntity
 import dev.maxsiomin.prodhse.feature.home.domain.model.Plan
@@ -15,7 +16,7 @@ internal class PlanMapper @Inject constructor(
             placeFsqId = data.placeId,
             noteTitle = data.noteTitle,
             noteText = data.noteText,
-            date = data.date,
+            date = DateConverters.epochMillisToLocalDate(data.date),
             databaseId = data.id,
             dateString = dateFormatter.formatDate(data.date),
         )
@@ -27,7 +28,7 @@ internal class PlanMapper @Inject constructor(
             placeId = domain.placeFsqId,
             noteTitle = domain.noteTitle,
             noteText = domain.noteText,
-            date = domain.date,
+            date = DateConverters.localDateToEpochMillis(domain.date),
         )
     }
 

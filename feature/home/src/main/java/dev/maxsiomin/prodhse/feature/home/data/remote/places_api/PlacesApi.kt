@@ -14,8 +14,8 @@ internal interface PlacesApi {
         lang: String
     ): Resource<PlacesResponse, NetworkError>
 
-    suspend fun getPhotos(id: String): Resource<List<PlacePhotosResponseItem>, NetworkError>
+    suspend fun getPhotos(fsqId: String): Resource<List<PlacePhotosResponseItem>, NetworkError>
 
-    suspend fun getPlaceDetails(id: String): Resource<PlaceDetailsResponse, NetworkError>
+    suspend fun getPlaceDetails(fsqId: String): Resource<PlaceDetailsResponse, NetworkError>
 
 }

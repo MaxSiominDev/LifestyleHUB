@@ -5,7 +5,6 @@ import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
 import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.domain.model.Place
-import kotlinx.coroutines.flow.Flow
 
 internal interface PlacesRepository {
 
@@ -16,11 +15,11 @@ internal interface PlacesRepository {
     ): Resource<List<Place>, NetworkError>
 
     suspend fun getPhotos(
-        id: String,
+        fsqId: String,
     ): Resource<List<Photo>, NetworkError>
 
     suspend fun getPlaceDetails(
-        id: String,
+        fsqId: String,
     ): Resource<PlaceDetails, NetworkError>
 
 }

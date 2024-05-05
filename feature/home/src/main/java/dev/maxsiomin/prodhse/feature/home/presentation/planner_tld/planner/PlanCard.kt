@@ -25,6 +25,7 @@ import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
 import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.domain.model.Plan
 import dev.maxsiomin.prodhse.feature.home.R
+import java.time.LocalDate
 
 @Composable
 internal fun PlanCard(placeDetails: PlaceDetails, plan: Plan, onClick: () -> Unit) {
@@ -118,7 +119,7 @@ private fun VenueCardPreview() {
                 noteTitle = "Go to museum with rokymiel",
                 noteText = "",
                 dateString = "March 27, 2024",
-                date = 0
+                date = LocalDate.now(),
             )
         )
     }

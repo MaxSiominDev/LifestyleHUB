@@ -6,11 +6,8 @@ import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.data.dto.place_details.PlaceDetailsResponse
 import dev.maxsiomin.prodhse.feature.home.data.dto.place_photos.PlacePhotosResponseItem
-import dev.maxsiomin.prodhse.feature.home.data.dto.places_nearby.PlacesResponse
 import dev.maxsiomin.prodhse.feature.home.data.dto.places_nearby.Result
 import dev.maxsiomin.prodhse.feature.home.data.mappers.FsqId
-import dev.maxsiomin.prodhse.feature.home.data.mappers.PlaceMapper
-import dev.maxsiomin.prodhse.feature.home.data.mappers.PlacePhotosMapper
 import dev.maxsiomin.prodhse.feature.home.data.remote.places_api.PlacesApi
 import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
 import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
@@ -44,27 +41,27 @@ internal class PlacesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPhotos(id: String): Resource<List<Photo>, NetworkError> {
-        val apiResponse = api.getPhotos(id = id)
+    override suspend fun getPhotos(fsqId: String): Resource<List<Photo>, NetworkError> {
+        val apiResponse = api.getPhotos(fsqId = fsqId)
         return when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)
             is Resource.Success -> {
                 val remoteData: List<Photo> = apiResponse.data.map { item: PlacePhotosResponseItem ->
-                    placePhotosMapper.toDomain(item to id)
+                    placePhotosMapper.toDomain(item to fsqId)
                 }
                 Resource.Success(remoteData)
             }
         }
     }
 
-    override suspend fun getPlaceDetails(id: String): Resource<PlaceDetails, NetworkError> {
-        val localData = getPlaceDetailsFromSharedPrefs(id)
+    override suspend fun getPlaceDetails(fsqId: String): Resource<PlaceDetails, NetworkError> {
+        val localData = getPlaceDetailsFromSharedPrefs(fsqId)
         val currentMillis = System.currentTimeMillis()
         if (localData != null && currentMillis - localData.timeUpdated < CACHE_EXPIRATION_PERIOD) {
             return Resource.Success(localData)
         }
 
-        val apiResponse = api.getPlaceDetails(id = id)
+        val apiResponse = api.getPlaceDetails(fsqId = fsqId)
         return when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)
             is Resource.Success -> {

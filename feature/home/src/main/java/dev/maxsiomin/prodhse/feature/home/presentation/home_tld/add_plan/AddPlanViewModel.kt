@@ -8,13 +8,12 @@ import dev.maxsiomin.common.extensions.requireArg
 import dev.maxsiomin.common.presentation.StatefulViewModel
 import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.presentation.asErrorUiText
-import dev.maxsiomin.common.util.DateConverters
-import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
-import dev.maxsiomin.prodhse.feature.home.domain.model.Plan
-import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
-import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.date.GetInitialStringDateUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.places.GetPlaceDetailsByIdUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.date.LocalDateToStringDateUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.plans.SaveNewPlanUseCase
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -24,9 +23,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class AddPlanViewModel @Inject constructor(
-    private val plansRepo: PlansRepository,
-    private val placesRepo: PlacesRepository,
-    private val dateFormatter: DateFormatter,
+    private val saveNewPlanUseCase: SaveNewPlanUseCase,
+    private val getInitialStringDateUseCase: GetInitialStringDateUseCase,
+    private val getPlaceDetailsByIdUseCase: GetPlaceDetailsByIdUseCase,
+    private val localDateToStringDateUseCase: LocalDateToStringDateUseCase,
     savedStateHandle: SavedStateHandle,
 ) : StatefulViewModel<AddPlanViewModel.State, AddPlanViewModel.Effect, AddPlanViewModel.Event>() {
 
@@ -44,7 +44,7 @@ internal class AddPlanViewModel @Inject constructor(
 
     override val _state = MutableStateFlow(
         State(
-            dateString = dateFormatter.formatDate(System.currentTimeMillis()),
+            dateString = getInitialStringDateUseCase(),
             dateLocalDate = LocalDate.now(),
         )
     )
@@ -70,24 +70,26 @@ internal class AddPlanViewModel @Inject constructor(
             is Event.NoteTitleChanged -> _state.update {
                 it.copy(noteTitle = event.newValue)
             }
+
             is Event.NoteTextChanged -> _state.update {
                 it.copy(noteText = event.newValue)
             }
+
             Event.SaveClicked -> onSaveClicked()
-            Event.Refresh -> loadPlaceDetails(id = fsqId)
+            Event.Refresh -> loadPlaceDetails(fsqId = fsqId)
         }
     }
 
     init {
-        loadPlaceDetails(id = fsqId)
+        loadPlaceDetails(fsqId = fsqId)
     }
 
-    private fun loadPlaceDetails(id: String) {
+    private fun loadPlaceDetails(fsqId: String) {
         viewModelScope.launch {
             _state.update {
                 it.copy(isLoading = true)
             }
-            val placeDetailsResource = placesRepo.getPlaceDetails(id)
+            val placeDetailsResource = getPlaceDetailsByIdUseCase(fsqId)
             when (placeDetailsResource) {
 
                 is Resource.Error -> {
@@ -112,11 +114,9 @@ internal class AddPlanViewModel @Inject constructor(
     }
 
     private fun onNewDate(newDate: LocalDate) {
-        val epochMillis = DateConverters.localDateToEpochMillis(newDate)
-
         _state.update {
             it.copy(
-                dateString = dateFormatter.formatDate(epochMillis),
+                dateString = localDateToStringDateUseCase(localDate = newDate),
                 dateLocalDate = newDate,
             )
         }
@@ -124,20 +124,16 @@ internal class AddPlanViewModel @Inject constructor(
 
     private fun onSaveClicked() {
         viewModelScope.launch {
-            val state = state.value
-            val fsqId = fsqId
+            val state = _state.value
             val name = state.placeDetails?.name ?: return@launch
 
-            val plan = Plan(
+            saveNewPlanUseCase(
                 placeFsqId = fsqId,
                 noteTitle = state.noteTitle,
                 noteText = state.noteText,
-                date = DateConverters.localDateToEpochMillis(state.dateLocalDate),
-                // Room will create new record
-                databaseId = 0,
-                dateString = state.dateString,
+                date = state.dateLocalDate,
+                state.dateString,
             )
-            plansRepo.addPlan(plan)
 
             onEffect(Effect.ShowMessage(UiText.StringResource(R.string.plan_added, name)))
             onEffect(Effect.NavigateBack)

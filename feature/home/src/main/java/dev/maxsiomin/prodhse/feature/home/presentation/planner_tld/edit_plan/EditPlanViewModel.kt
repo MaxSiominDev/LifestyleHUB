@@ -8,13 +8,14 @@ import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.extensions.requireArg
 import dev.maxsiomin.common.presentation.StatefulViewModel
 import dev.maxsiomin.common.presentation.asErrorUiText
-import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.common.presentation.UiText
-import dev.maxsiomin.common.util.DateConverters
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
-import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
-import dev.maxsiomin.prodhse.feature.home.domain.repository.PlansRepository
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.date.GetInitialStringDateUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.plans.GetPlanByIdUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.date.LocalDateToStringDateUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.places.GetPlaceDetailsByIdUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.plans.SaveEditedPlanUseCase
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -24,9 +25,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class EditPlanViewModel @Inject constructor(
-    private val dateFormatter: DateFormatter,
-    private val plansRepo: PlansRepository,
-    private val placesRepo: PlacesRepository,
+    private val getInitialStringDateUseCase: GetInitialStringDateUseCase,
+    private val localDateToStringDateUseCase: LocalDateToStringDateUseCase,
+    private val getPlanByIdUseCase: GetPlanByIdUseCase,
+    private val saveEditedPlanUseCase: SaveEditedPlanUseCase,
+    private val getPlaceDetailsByIdUseCase: GetPlaceDetailsByIdUseCase,
     savedStateHandle: SavedStateHandle,
 ) : StatefulViewModel<EditPlanViewModel.State, EditPlanViewModel.Effect, EditPlanViewModel.Event>() {
 
@@ -49,7 +52,7 @@ internal class EditPlanViewModel @Inject constructor(
 
     override val _state = MutableStateFlow(
         State(
-            dateString = dateFormatter.formatDate(System.currentTimeMillis()),
+            dateString = getInitialStringDateUseCase(),
             dateLocalDate = LocalDate.now(),
             originalLocalDate = LocalDate.now(),
         )
@@ -70,7 +73,7 @@ internal class EditPlanViewModel @Inject constructor(
     }
 
     init {
-        loadPlan(id = planId)
+        loadPlan(planId = planId)
     }
 
     override fun onEvent(event: Event) {
@@ -96,7 +99,7 @@ internal class EditPlanViewModel @Inject constructor(
 
             Event.SaveClicked -> onSaveClicked()
 
-            Event.Refresh -> loadPlan(id = planId)
+            Event.Refresh -> loadPlan(planId = planId)
         }
     }
 
@@ -111,9 +114,10 @@ internal class EditPlanViewModel @Inject constructor(
         }
     }
 
-    private fun loadPlan(id: Long) {
+    private fun loadPlan(planId: Long) {
         viewModelScope.launch {
-            val plan = when (val planResource = plansRepo.getPlanById(id)) {
+            val planResource = getPlanByIdUseCase(planId = planId)
+            val plan = when (planResource) {
                 is Resource.Error -> {
                     val message: UiText = when (planResource.error) {
                         DatabaseError.NotFound -> UiText.StringResource(R.string.plan_not_found)
@@ -131,19 +135,19 @@ internal class EditPlanViewModel @Inject constructor(
                     originalNoteText = plan.noteText,
                     noteText = plan.noteText,
                     dateString = plan.dateString,
-                    dateLocalDate = DateConverters.epochMillisToLocalDate(plan.date)
+                    dateLocalDate = plan.date,
                 )
             }
             loadPlaceDetails(plan.placeFsqId)
         }
     }
 
-    private fun loadPlaceDetails(id: String) {
+    private fun loadPlaceDetails(fsqId: String) {
         _state.update {
             it.copy(isLoading = true)
         }
         viewModelScope.launch {
-            val placeDetailsResource = placesRepo.getPlaceDetails(id)
+            val placeDetailsResource = getPlaceDetailsByIdUseCase(fsqId = fsqId)
             when (placeDetailsResource) {
                 is Resource.Error -> {
                     _state.update {
@@ -162,15 +166,13 @@ internal class EditPlanViewModel @Inject constructor(
                     }
                 }
             }
-
         }
     }
 
     private fun onNewDate(newDate: LocalDate) {
-        val epochMillis = DateConverters.localDateToEpochMillis(newDate)
         _state.update {
             it.copy(
-                dateString = dateFormatter.formatDate(epochMillis),
+                dateString = localDateToStringDateUseCase(newDate),
                 dateLocalDate = newDate,
             )
         }
@@ -180,7 +182,8 @@ internal class EditPlanViewModel @Inject constructor(
         viewModelScope.launch {
             val state = state.value
 
-            val plan = when (val planResource = plansRepo.getPlanById(planId)) {
+            val planResource = getPlanByIdUseCase.invoke(planId)
+            val plan = when (planResource) {
                 is Resource.Error -> {
                     val message: UiText = when (planResource.error) {
                         DatabaseError.NotFound -> UiText.StringResource(R.string.plan_not_found)
@@ -192,15 +195,13 @@ internal class EditPlanViewModel @Inject constructor(
                 is Resource.Success -> planResource.data
             }
 
-            val millis = DateConverters.localDateToEpochMillis(state.dateLocalDate)
-
             val newPlan = plan.copy(
                 noteTitle = state.noteTitle,
                 noteText = state.noteText,
-                date = millis,
-                dateString = dateFormatter.formatDate(millis),
+                date = state.dateLocalDate,
+                dateString = localDateToStringDateUseCase(state.dateLocalDate),
             )
-            plansRepo.editPlan(newPlan)
+            saveEditedPlanUseCase(newPlan)
 
             onEffect(Effect.ShowMessage(UiText.StringResource(R.string.plan_updated)))
             onEffect(Effect.NavigateBack)
