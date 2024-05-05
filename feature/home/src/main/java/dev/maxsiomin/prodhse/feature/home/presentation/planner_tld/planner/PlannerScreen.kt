@@ -12,6 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.common.presentation.SnackbarInfo
+import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.presentation.components.PullToRefreshLazyColumn
 import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.feature.home.R
@@ -23,13 +26,28 @@ internal fun PlannerScreen(
     state: PlannerViewModel.State,
     effectFlow: Flow<PlannerViewModel.Effect>,
     onEvent: (PlannerViewModel.Event) -> Unit,
-    navController: NavController
+    navController: NavController,
+    showSnackbar: SnackbarCallback,
 ) {
 
     CollectFlow(effectFlow) { effect ->
         when (effect) {
             is PlannerViewModel.Effect.GoToEditPlanScreen -> {
                 navController.navigate(Screen.EditPlanScreen.withArgs(effect.planId.toString()))
+            }
+
+            is PlannerViewModel.Effect.ShowMessage -> {
+                showSnackbar(
+                    SnackbarInfo(effect.message)
+                )
+            }
+
+            is PlannerViewModel.Effect.ShowUndoSnackbar -> {
+                showSnackbar(
+                    SnackbarInfo(effect.message, action = UiText.StringResource(R.string.undo)) {
+                        onEvent(PlannerViewModel.Event.Undo)
+                    }
+                )
             }
         }
     }
@@ -42,10 +60,13 @@ internal fun PlannerScreen(
             items(state.items) { plannerItem ->
                 PlanCard(
                     placeDetails = plannerItem.place,
-                    onClick = {
-                        onEvent(PlannerViewModel.Event.PlanClicked(plannerItem.plan.databaseId))
-                    },
                     plan = plannerItem.plan,
+                    onDelete = {
+                        onEvent(PlannerViewModel.Event.DeleteClicked(plannerItem.plan))
+                    },
+                    onClick = {
+                        onEvent(PlannerViewModel.Event.PlanClicked(plannerItem.plan))
+                    },
                 )
             }
         }

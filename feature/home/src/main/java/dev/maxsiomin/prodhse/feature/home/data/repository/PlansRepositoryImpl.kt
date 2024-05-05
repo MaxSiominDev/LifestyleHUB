@@ -16,7 +16,7 @@ internal class PlansRepositoryImpl @Inject constructor(
 
     override suspend fun addPlan(plan: Plan) {
         val entity = planMapper.toData(plan)
-        dao.insertPlan(entity)
+        dao.upsertPlan(entity)
     }
 
     override suspend fun getPlans(): List<Plan> {
@@ -27,7 +27,7 @@ internal class PlansRepositoryImpl @Inject constructor(
 
     override suspend fun editPlan(plan: Plan) {
         val entity = planMapper.toData(plan)
-        dao.updatePlan(entity)
+        dao.upsertPlan(entity)
     }
 
     override suspend fun getPlanById(id: Long): Resource<Plan, DatabaseError> {
@@ -37,6 +37,10 @@ internal class PlansRepositoryImpl @Inject constructor(
         } else {
             Resource.Error(DatabaseError.NotFound)
         }
+    }
+
+    override suspend fun deletePlan(plan: Plan) {
+        dao.deletePlan(planMapper.toData(plan))
     }
 
 }

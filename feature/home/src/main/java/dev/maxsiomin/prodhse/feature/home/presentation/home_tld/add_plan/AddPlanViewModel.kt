@@ -10,10 +10,11 @@ import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.presentation.asErrorUiText
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
+import dev.maxsiomin.prodhse.feature.home.domain.model.Plan
 import dev.maxsiomin.prodhse.feature.home.domain.use_case.date.GetInitialStringDateUseCase
 import dev.maxsiomin.prodhse.feature.home.domain.use_case.places.GetPlaceDetailsByIdUseCase
 import dev.maxsiomin.prodhse.feature.home.domain.use_case.date.LocalDateToStringDateUseCase
-import dev.maxsiomin.prodhse.feature.home.domain.use_case.plans.SaveNewPlanUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.plans.SavePlanUseCase
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -23,7 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class AddPlanViewModel @Inject constructor(
-    private val saveNewPlanUseCase: SaveNewPlanUseCase,
+    private val savePlanUseCase: SavePlanUseCase,
     private val getInitialStringDateUseCase: GetInitialStringDateUseCase,
     private val getPlaceDetailsByIdUseCase: GetPlaceDetailsByIdUseCase,
     private val localDateToStringDateUseCase: LocalDateToStringDateUseCase,
@@ -127,13 +128,15 @@ internal class AddPlanViewModel @Inject constructor(
             val state = _state.value
             val name = state.placeDetails?.name ?: return@launch
 
-            saveNewPlanUseCase(
+            val plan = Plan(
                 placeFsqId = fsqId,
                 noteTitle = state.noteTitle,
                 noteText = state.noteText,
                 date = state.dateLocalDate,
-                state.dateString,
+                dateString = state.dateString,
+                databaseId = null,
             )
+            savePlanUseCase(plan)
 
             onEffect(Effect.ShowMessage(UiText.StringResource(R.string.plan_added, name)))
             onEffect(Effect.NavigateBack)

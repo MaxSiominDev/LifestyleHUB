@@ -29,5 +29,9 @@
     <string name="expand">Expand</string>
 
     <string name="missing_permission">Missing location permission</string>
+    <string name="delete_plan">Delete plan</string>
+    <string name="plan_restored">Plan restored</string>
+    <string name="plan_deleted">Plan deleted</string>
+    <string name="undo">Undo</string>
 
 </resources>

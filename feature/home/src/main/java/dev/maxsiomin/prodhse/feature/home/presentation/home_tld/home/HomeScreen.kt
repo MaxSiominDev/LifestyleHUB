@@ -146,7 +146,7 @@ internal fun HomeScreen(
 
             state.placesStatus is HomeViewModel.PlacesStatus.Error -> {
                 Text(
-                    modifier = Modifier.align(Alignment.Center),
+                    modifier = Modifier.align(Alignment.Center).padding(16.dp),
                     text = state.placesStatus.message.asString(),
                 )
             }

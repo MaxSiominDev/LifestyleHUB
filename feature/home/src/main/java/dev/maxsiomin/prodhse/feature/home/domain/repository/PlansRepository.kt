@@ -14,4 +14,6 @@ internal interface PlansRepository {
 
     suspend fun getPlanById(id: Long): Resource<Plan, DatabaseError>
 
+    suspend fun deletePlan(plan: Plan)
+
 }

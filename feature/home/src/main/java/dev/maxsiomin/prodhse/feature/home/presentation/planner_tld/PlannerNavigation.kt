@@ -45,6 +45,7 @@ fun PlannerNavHost(navController: NavHostController, showSnackbar: SnackbarCallb
                 effectFlow = viewModel.effectFlow,
                 onEvent = viewModel::onEvent,
                 navController = navController,
+                showSnackbar = showSnackbar,
             )
         }
 

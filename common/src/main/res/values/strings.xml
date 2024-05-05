@@ -11,5 +11,6 @@
 
     <string name="grant_permission">Grant permission</string>
     <string name="permission_required">Permission required</string>
+    <string name="hide">Hide</string>
 
 </resources>

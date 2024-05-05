@@ -15,7 +15,7 @@ import dev.maxsiomin.prodhse.feature.home.domain.use_case.date.GetInitialStringD
 import dev.maxsiomin.prodhse.feature.home.domain.use_case.plans.GetPlanByIdUseCase
 import dev.maxsiomin.prodhse.feature.home.domain.use_case.date.LocalDateToStringDateUseCase
 import dev.maxsiomin.prodhse.feature.home.domain.use_case.places.GetPlaceDetailsByIdUseCase
-import dev.maxsiomin.prodhse.feature.home.domain.use_case.plans.SaveEditedPlanUseCase
+import dev.maxsiomin.prodhse.feature.home.domain.use_case.plans.SavePlanUseCase
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -28,7 +28,7 @@ internal class EditPlanViewModel @Inject constructor(
     private val getInitialStringDateUseCase: GetInitialStringDateUseCase,
     private val localDateToStringDateUseCase: LocalDateToStringDateUseCase,
     private val getPlanByIdUseCase: GetPlanByIdUseCase,
-    private val saveEditedPlanUseCase: SaveEditedPlanUseCase,
+    private val savePlanUseCase: SavePlanUseCase,
     private val getPlaceDetailsByIdUseCase: GetPlaceDetailsByIdUseCase,
     savedStateHandle: SavedStateHandle,
 ) : StatefulViewModel<EditPlanViewModel.State, EditPlanViewModel.Effect, EditPlanViewModel.Event>() {
@@ -201,7 +201,7 @@ internal class EditPlanViewModel @Inject constructor(
                 date = state.dateLocalDate,
                 dateString = localDateToStringDateUseCase(state.dateLocalDate),
             )
-            saveEditedPlanUseCase(newPlan)
+            savePlanUseCase(newPlan)
 
             onEffect(Effect.ShowMessage(UiText.StringResource(R.string.plan_updated)))
             onEffect(Effect.NavigateBack)

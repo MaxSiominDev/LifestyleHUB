@@ -38,9 +38,11 @@ fun ProdhseApp(appState: ProdhseAppState) {
             scope.launch {
                 snackbarHostState.showSnackbar(
                     message = info.message.asString(context),
-                    actionLabel = context.getString(R.string.hide),
+                    actionLabel = info.action.asString(context),
                     duration = SnackbarDuration.Short,
-                )
+                ).also { result ->
+                    info.onResult?.invoke(result)
+                }
             }
         }
     }

@@ -24,7 +24,7 @@ internal class PlanMapper @Inject constructor(
 
     override fun toData(domain: Plan): PlanEntity {
         return PlanEntity(
-            id = domain.databaseId,
+            id = domain.databaseId ?: 0,
             placeId = domain.placeFsqId,
             noteTitle = domain.noteTitle,
             noteText = domain.noteText,
