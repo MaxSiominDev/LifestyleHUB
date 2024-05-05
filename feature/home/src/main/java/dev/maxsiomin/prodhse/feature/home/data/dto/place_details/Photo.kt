@@ -6,7 +6,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Photo(
+internal data class Photo(
     @SerialName("id")
     val id: String? = null,
     @SerialName("created_at")

@@ -5,7 +5,7 @@ import dev.maxsiomin.prodhse.feature.home.data.dto.places_nearby.Result
 import dev.maxsiomin.prodhse.feature.home.domain.model.Place
 import javax.inject.Inject
 
-class PlaceMapper @Inject constructor(): ToDomainMapper<Result, Place?> {
+internal class PlaceMapper @Inject constructor(): ToDomainMapper<Result, Place?> {
 
     override fun toDomain(data: Result): Place? {
         val category = data.categories?.mapNotNull { it?.name }

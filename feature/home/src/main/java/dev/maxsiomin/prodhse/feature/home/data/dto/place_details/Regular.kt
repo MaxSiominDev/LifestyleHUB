@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Regular(
+internal data class Regular(
     @SerialName("close")
     val close: String? = null,
     @SerialName("day")

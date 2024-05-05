@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Geocodes(
+internal data class Geocodes(
     @SerialName("main")
     val main: Main? = null,
     @SerialName("roof")

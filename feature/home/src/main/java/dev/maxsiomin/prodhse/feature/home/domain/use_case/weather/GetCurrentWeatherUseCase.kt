@@ -7,7 +7,7 @@ import dev.maxsiomin.prodhse.feature.home.domain.model.Weather
 import dev.maxsiomin.prodhse.feature.home.domain.repository.WeatherRepository
 import javax.inject.Inject
 
-class GetCurrentWeatherUseCase @Inject constructor(
+internal class GetCurrentWeatherUseCase @Inject constructor(
     private val weatherRepo: WeatherRepository,
     private val localeManager: LocaleManager,
 ) {

@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Parent(
+internal data class Parent(
     @SerialName("fsq_id")
     val fsqId: String? = null,
     @SerialName("name")

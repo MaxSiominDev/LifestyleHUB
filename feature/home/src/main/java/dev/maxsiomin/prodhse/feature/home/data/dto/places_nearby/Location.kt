@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Location(
+internal data class Location(
     @SerialName("address")
     val address: String? = null,
     @SerialName("address_extended")

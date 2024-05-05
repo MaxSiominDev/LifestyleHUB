@@ -7,7 +7,7 @@ import dev.maxsiomin.prodhse.core.location.LocationTracker
 import dev.maxsiomin.prodhse.feature.home.domain.repository.LocationRepository
 import javax.inject.Inject
 
-class LocationRepositoryImpl @Inject constructor(
+internal class LocationRepositoryImpl @Inject constructor(
     private val locationTracker: LocationTracker,
 ): LocationRepository {
 

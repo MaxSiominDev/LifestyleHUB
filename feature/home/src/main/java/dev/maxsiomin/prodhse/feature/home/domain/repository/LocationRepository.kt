@@ -4,7 +4,7 @@ import android.location.Location
 import dev.maxsiomin.common.domain.resource.LocationError
 import dev.maxsiomin.common.domain.resource.Resource
 
-interface LocationRepository {
+internal interface LocationRepository {
 
     suspend fun getCurrentLocation(): Resource<Location, LocationError>
 

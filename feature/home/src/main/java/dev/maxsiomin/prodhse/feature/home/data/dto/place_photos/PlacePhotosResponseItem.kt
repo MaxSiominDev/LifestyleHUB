@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class PlacePhotosResponseItem(
+internal data class PlacePhotosResponseItem(
     @SerialName("id")
     val id: String? = null,
     @SerialName("created_at")

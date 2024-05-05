@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Icon(
+internal data class Icon(
     @SerialName("prefix")
     val prefix: String? = null,
     @SerialName("suffix")

@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Main(
+internal data class Main(
     @SerialName("latitude")
     val latitude: Double? = null,
     @SerialName("longitude")

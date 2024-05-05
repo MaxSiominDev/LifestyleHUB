@@ -6,7 +6,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class PlaceDetailsResponse(
+internal data class PlaceDetailsResponse(
     @SerialName("fsq_id")
     val fsqId: String? = null,
     @SerialName("categories")

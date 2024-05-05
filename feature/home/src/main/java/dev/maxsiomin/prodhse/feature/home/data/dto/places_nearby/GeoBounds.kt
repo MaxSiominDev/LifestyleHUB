@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class GeoBounds(
+internal data class GeoBounds(
     @SerialName("circle")
     val circle: Circle? = null
 )

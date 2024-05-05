@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class RelatedPlaces(
+internal data class RelatedPlaces(
     @SerialName("parent")
     val parent: Parent? = null
 )

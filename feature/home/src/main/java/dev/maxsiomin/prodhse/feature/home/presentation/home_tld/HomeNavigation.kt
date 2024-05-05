@@ -13,8 +13,8 @@ import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.add_plan.AddPlan
 import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.add_plan.AddPlanViewModel
 import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.details.DetailsScreenRoot
 import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.details.DetailsViewModel
-import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.fullscreen_photo.BrowsePhotoScreenRoot
-import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.fullscreen_photo.BrowsePhotoViewModel
+import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.browse_photo.BrowsePhotoScreenRoot
+import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.browse_photo.BrowsePhotoViewModel
 import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home.HomeScreenRoot
 import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home.HomeViewModel
 import dev.maxsiomin.prodhse.navdestinations.Screen
@@ -35,7 +35,7 @@ fun NavGraphBuilder.addHomeNavigation(
 }
 
 @Composable
-fun HomeNavHost(navController: NavHostController, showSnackbar: SnackbarCallback) {
+private fun HomeNavHost(navController: NavHostController, showSnackbar: SnackbarCallback) {
 
     NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
 

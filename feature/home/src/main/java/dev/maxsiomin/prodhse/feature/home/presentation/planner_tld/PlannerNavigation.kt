@@ -31,7 +31,7 @@ fun NavGraphBuilder.addPlannerNavigation(
 }
 
 @Composable
-fun PlannerNavHost(navController: NavHostController, showSnackbar: SnackbarCallback) {
+private fun PlannerNavHost(navController: NavHostController, showSnackbar: SnackbarCallback) {
 
     NavHost(navController = navController, startDestination = Screen.PlannerScreen.route) {
 

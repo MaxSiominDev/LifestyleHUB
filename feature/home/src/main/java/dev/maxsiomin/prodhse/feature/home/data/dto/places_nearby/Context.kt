@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Context(
+internal data class Context(
     @SerialName("geo_bounds")
     val geoBounds: GeoBounds? = null
 )

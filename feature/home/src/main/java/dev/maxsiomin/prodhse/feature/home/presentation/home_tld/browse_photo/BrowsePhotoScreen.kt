@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.home.presentation.home_tld.fullscreen_photo
+package dev.maxsiomin.prodhse.feature.home.presentation.home_tld.browse_photo
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

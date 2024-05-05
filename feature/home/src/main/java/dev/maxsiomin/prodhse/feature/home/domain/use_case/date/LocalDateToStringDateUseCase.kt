@@ -5,7 +5,7 @@ import dev.maxsiomin.prodhse.core.util.DateFormatter
 import java.time.LocalDate
 import javax.inject.Inject
 
-class LocalDateToStringDateUseCase @Inject constructor(private val dateFormatter: DateFormatter) {
+internal class LocalDateToStringDateUseCase @Inject constructor(private val dateFormatter: DateFormatter) {
 
     operator fun invoke(localDate: LocalDate): String {
         val epochMillis = DateConverters.localDateToEpochMillis(localDate)

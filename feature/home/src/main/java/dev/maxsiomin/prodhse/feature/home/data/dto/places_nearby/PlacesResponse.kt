@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class PlacesResponse(
+internal data class PlacesResponse(
     @SerialName("results")
     val results: List<Result?>? = null,
     @SerialName("context")

@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Roof(
+internal data class Roof(
     @SerialName("latitude")
     val latitude: Double? = null,
     @SerialName("longitude")

@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Result(
+internal data class Result(
     @SerialName("fsq_id")
     val fsqId: String? = null,
     @SerialName("categories")

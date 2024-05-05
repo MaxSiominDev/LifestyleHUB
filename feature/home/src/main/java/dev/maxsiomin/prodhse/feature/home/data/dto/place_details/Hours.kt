@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Hours(
+internal data class Hours(
     @SerialName("display")
     val display: String? = null,
     @SerialName("is_local_holiday")

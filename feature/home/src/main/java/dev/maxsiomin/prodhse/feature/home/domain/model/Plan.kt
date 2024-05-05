@@ -2,7 +2,7 @@ package dev.maxsiomin.prodhse.feature.home.domain.model
 
 import java.time.LocalDate
 
-data class Plan(
+internal data class Plan(
     val placeFsqId: String,
     val noteTitle: String,
     val noteText: String,

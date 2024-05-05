@@ -34,10 +34,10 @@ import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.feature.home.domain.model.TemperatureInfo
 import dev.maxsiomin.prodhse.feature.home.domain.model.WeatherCondition
 import dev.maxsiomin.prodhse.feature.home.domain.model.Weather
-import dev.maxsiomin.prodhse.feature.home.presentation.theme.dayBackground
-import dev.maxsiomin.prodhse.feature.home.presentation.theme.dayTextColor
-import dev.maxsiomin.prodhse.feature.home.presentation.theme.nightBackground
-import dev.maxsiomin.prodhse.feature.home.presentation.theme.nightTextColor
+import dev.maxsiomin.prodhse.feature.home.presentation.theme.DayBackground
+import dev.maxsiomin.prodhse.feature.home.presentation.theme.DayTextColor
+import dev.maxsiomin.prodhse.feature.home.presentation.theme.NightBackground
+import dev.maxsiomin.prodhse.feature.home.presentation.theme.NightTextColor
 
 @Composable
 internal fun WeatherCard(weather: Weather, weatherStatus: HomeViewModel.WeatherStatus) {
@@ -46,10 +46,10 @@ internal fun WeatherCard(weather: Weather, weatherStatus: HomeViewModel.WeatherS
 
     val isNight = weather.weatherCondition.isNight
     val background = remember(isNight) {
-        if (isNight) nightBackground else dayBackground
+        if (isNight) NightBackground else DayBackground
     }
     val textColor = remember(isNight) {
-        if (isNight) nightTextColor else dayTextColor
+        if (isNight) NightTextColor else DayTextColor
     }
 
     val isLoading = weatherStatus == HomeViewModel.WeatherStatus.Loading
