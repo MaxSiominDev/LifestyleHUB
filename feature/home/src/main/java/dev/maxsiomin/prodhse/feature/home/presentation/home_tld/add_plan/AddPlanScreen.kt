@@ -14,6 +14,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,8 +22,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.common.presentation.SnackbarCallback
 import dev.maxsiomin.common.presentation.SnackbarInfo
 import dev.maxsiomin.common.presentation.components.DatePickerDialog
@@ -31,20 +33,16 @@ import dev.maxsiomin.prodhse.core.presentation.theme.ProdhseTheme
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
 import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
 
 @Composable
-internal fun AddPlanScreen(
+internal fun AddPlanScreenRoot(
     navController: NavController,
     snackbarCallback: SnackbarCallback,
-    state: AddPlanViewModel.State,
-    effectFlow: Flow<AddPlanViewModel.Effect>,
-    onEvent: (AddPlanViewModel.Event) -> Unit
+    viewModel: AddPlanViewModel = hiltViewModel(),
 ) {
 
-    CollectFlow(effectFlow) { effect ->
+    CollectFlow(viewModel.effectFlow) { effect ->
         when (effect) {
             is AddPlanViewModel.Effect.NavigateBack -> navController.popBackStack()
             is AddPlanViewModel.Effect.ShowMessage -> snackbarCallback(
@@ -53,6 +51,15 @@ internal fun AddPlanScreen(
         }
     }
 
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    AddPlanScreen(state = state, onEvent = viewModel::onEvent)
+}
+
+@Composable
+private fun AddPlanScreen(
+    state: AddPlanViewModel.State,
+    onEvent: (AddPlanViewModel.Event) -> Unit,
+) {
     Column(
         Modifier
             .fillMaxSize()
@@ -126,7 +133,6 @@ internal fun AddPlanScreen(
             }
         }
     }
-
 }
 
 @Preview
@@ -164,10 +170,7 @@ private fun AddPlanScreenPreview() {
                 dateString = "March 26, 2024",
                 dateLocalDate = LocalDate.now(),
             ),
-            onEvent = {},
-            navController = rememberNavController(),
-            effectFlow = flow { },
-            snackbarCallback = {}
+            onEvent = {}
         )
     }
 }

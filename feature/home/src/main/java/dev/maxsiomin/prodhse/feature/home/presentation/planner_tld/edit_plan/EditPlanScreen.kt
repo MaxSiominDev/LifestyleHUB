@@ -14,30 +14,32 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import dev.maxsiomin.common.presentation.SnackbarCallback
+import dev.maxsiomin.common.presentation.SnackbarInfo
 import dev.maxsiomin.common.presentation.components.DatePickerDialog
 import dev.maxsiomin.common.util.CollectFlow
-import dev.maxsiomin.common.presentation.SnackbarInfo
 import dev.maxsiomin.prodhse.feature.home.R
-import kotlinx.coroutines.flow.Flow
 
 @Composable
-internal fun EditPlanScreen(
-    state: EditPlanViewModel.State,
-    effectFlow: Flow<EditPlanViewModel.Effect>,
-    onEvent: (EditPlanViewModel.Event) -> Unit,
+internal fun EditPlanScreenRoot(
     showSnackbar: SnackbarCallback,
     navController: NavController,
+    viewModel: EditPlanViewModel = hiltViewModel(),
 ) {
 
-    CollectFlow(effectFlow) { effect ->
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    CollectFlow(viewModel.effectFlow) { effect ->
         when (effect) {
             is EditPlanViewModel.Effect.NavigateBack -> {
                 navController.popBackStack()
@@ -49,6 +51,15 @@ internal fun EditPlanScreen(
         }
     }
 
+    EditPlanScreen(state = state, onEvent = viewModel::onEvent)
+
+}
+
+@Composable
+private fun EditPlanScreen(
+    state: EditPlanViewModel.State,
+    onEvent: (EditPlanViewModel.Event) -> Unit
+) {
     Column(
         Modifier
             .fillMaxSize()
@@ -125,5 +136,4 @@ internal fun EditPlanScreen(
             }
         }
     }
-
 }

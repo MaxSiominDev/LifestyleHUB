@@ -22,6 +22,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,8 +33,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.common.extensions.underlinedText
@@ -47,22 +49,15 @@ import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
 import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.R
 import dev.maxsiomin.prodhse.navdestinations.Screen
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 @Composable
-internal fun DetailsScreen(
-    state: DetailsViewModel.State,
-    effectFlow: Flow<DetailsViewModel.Effect>,
-    onEvent: (DetailsViewModel.Event) -> Unit,
+internal fun DetailsScreenRoot(
     navController: NavController,
     showSnackbar: SnackbarCallback,
+    viewModel: DetailsViewModel = hiltViewModel(),
 ) {
 
-    val isPreview = LocalInspectionMode.current
-    val context = LocalContext.current
-
-    CollectFlow(effectFlow) { effect ->
+    CollectFlow(viewModel.effectFlow) { effect ->
         when (effect) {
             is DetailsViewModel.Effect.NavigateToPhotoScreen -> {
                 navController.navigate(
@@ -82,9 +77,23 @@ internal fun DetailsScreen(
         }
     }
 
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val placeDetails = state.placeDetails ?: return
+    DetailsScreen(
+        placeDetails = placeDetails,
+        onEvent = viewModel::onEvent
+    )
 
+}
+
+@Composable
+private fun DetailsScreen(
+    placeDetails: PlaceDetails,
+    onEvent: (DetailsViewModel.Event) -> Unit,
+) {
     val scrollState = rememberScrollState()
+    val isPreview = LocalInspectionMode.current
+    val context = LocalContext.current
 
     Column(
         Modifier
@@ -96,53 +105,7 @@ internal fun DetailsScreen(
         Spacer(modifier = Modifier.height(10.dp))
 
         if (placeDetails.photos.isNotEmpty()) {
-            val mainPhotoModifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp)
-            if (isPreview) {
-                Image(
-                    modifier = mainPhotoModifier,
-                    painter = painterResource(id = R.drawable.place_preview),
-                    contentDescription = null
-                )
-            } else {
-                val mainPhotoUrl = placeDetails.photos.first().url
-                AsyncImage(
-                    modifier = mainPhotoModifier.clickable {
-                        onEvent(DetailsViewModel.Event.ImageClicked(url = mainPhotoUrl))
-                    },
-                    model = mainPhotoUrl,
-                    contentDescription = null,
-                )
-            }
-
-            if (placeDetails.photos.size > 1) {
-                LazyRow(modifier = Modifier.height(120.dp)) {
-                    items(
-                        placeDetails.photos.toMutableList()
-                            .apply { removeFirst() }) { currentPhoto ->
-                        val photoModifier = Modifier
-                            .fillMaxHeight()
-                            .padding(4.dp)
-                        if (isPreview) {
-                            Image(
-                                modifier = photoModifier,
-                                painter = painterResource(id = R.drawable.place_preview),
-                                contentDescription = null
-                            )
-                        } else {
-                            AsyncImage(
-                                modifier = photoModifier.clickable {
-                                    onEvent(DetailsViewModel.Event.ImageClicked(url = currentPhoto.url))
-                                },
-                                model = currentPhoto.url,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                }
-            }
-
+            PhotoGrid(photos = placeDetails.photos, onEvent = onEvent)
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -215,7 +178,7 @@ internal fun DetailsScreen(
             )
         }
 
-        if (state.placeDetails.isOpenNow) {
+        if (placeDetails.isOpenNow) {
             Text(
                 modifier = Modifier.padding(vertical = 8.dp),
                 text = stringResource(id = R.string.open_now),
@@ -266,7 +229,62 @@ internal fun DetailsScreen(
             )
         }
     }
+}
 
+@Composable
+private fun PhotoGrid(photos: List<Photo>, onEvent: (DetailsViewModel.Event) -> Unit) {
+    val isPreview = LocalInspectionMode.current
+    val mainPhotoModifier = Modifier
+        .fillMaxWidth()
+        .padding(4.dp)
+    if (isPreview) {
+        Image(
+            modifier = mainPhotoModifier,
+            painter = painterResource(id = R.drawable.place_preview),
+            contentDescription = null
+        )
+    } else {
+        val mainPhotoUrl = photos.first().url
+        AsyncImage(
+            modifier = mainPhotoModifier.clickable {
+                onEvent(DetailsViewModel.Event.ImageClicked(url = mainPhotoUrl))
+            },
+            model = mainPhotoUrl,
+            contentDescription = null,
+        )
+    }
+
+    if (photos.size > 1) {
+        val photosWithoutFirst = photos.toMutableList().apply { removeFirst() }
+        SecondaryPhotosRow(photos = photosWithoutFirst, onEvent = onEvent)
+    }
+}
+
+@Composable
+private fun SecondaryPhotosRow(photos: List<Photo>, onEvent: (DetailsViewModel.Event) -> Unit) {
+    val isPreview = LocalInspectionMode.current
+    LazyRow(modifier = Modifier.height(120.dp)) {
+        items(photos) { currentPhoto ->
+            val photoModifier = Modifier
+                .fillMaxHeight()
+                .padding(4.dp)
+            if (isPreview) {
+                Image(
+                    modifier = photoModifier,
+                    painter = painterResource(id = R.drawable.place_preview),
+                    contentDescription = null
+                )
+            } else {
+                AsyncImage(
+                    modifier = photoModifier.clickable {
+                        onEvent(DetailsViewModel.Event.ImageClicked(url = currentPhoto.url))
+                    },
+                    model = currentPhoto.url,
+                    contentDescription = null
+                )
+            }
+        }
+    }
 }
 
 @Preview
@@ -275,38 +293,33 @@ private fun DetailsScreenPreview() {
 
     ProdhseTheme {
         DetailsScreen(
-            state = DetailsViewModel.State(
-                placeDetails = PlaceDetails(
-                    name = "Кафе Studio 89.5",
-                    address = "Маросейка, д. 13, 101000, Москва",
-                    photos = listOf(
-                        Photo(id = "", url = ""),
-                        Photo(id = "", url = ""),
-                        Photo(id = "", url = ""),
-                        Photo(id = "", url = ""),
-                        Photo(id = "", url = ""),
-                        Photo(id = "", url = ""),
-                    ),
-                    workingHours = listOf(
-                        "Mon-Thu 11:00-23:00",
-                        "Fri 11:00-24:00",
-                        "Sat-Sun 0:00-2:00",
-                    ),
-                    isVerified = true,
-                    rating = 9.3,
-                    website = "https://megapolism.ru",
-                    isOpenNow = true,
-                    fsqId = "",
-                    categories = "Cafe",
-                    timeUpdated = System.currentTimeMillis(),
-                    email = "example@example.com",
-                    phone = "+79291234576",
-                )
+            placeDetails = PlaceDetails(
+                name = "Кафе Studio 89.5",
+                address = "Маросейка, д. 13, 101000, Москва",
+                photos = listOf(
+                    Photo(id = "", url = ""),
+                    Photo(id = "", url = ""),
+                    Photo(id = "", url = ""),
+                    Photo(id = "", url = ""),
+                    Photo(id = "", url = ""),
+                    Photo(id = "", url = ""),
+                ),
+                workingHours = listOf(
+                    "Mon-Thu 11:00-23:00",
+                    "Fri 11:00-24:00",
+                    "Sat-Sun 0:00-2:00",
+                ),
+                isVerified = true,
+                rating = 9.3,
+                website = "https://megapolism.ru",
+                isOpenNow = true,
+                fsqId = "",
+                categories = "Cafe",
+                timeUpdated = System.currentTimeMillis(),
+                email = "example@example.com",
+                phone = "+79291234576",
             ),
-            onEvent = {},
-            effectFlow = flow { },
-            navController = rememberNavController(),
-            showSnackbar = {},
+            onEvent = {}
         )
     }
 

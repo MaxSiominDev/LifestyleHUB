@@ -2,18 +2,16 @@ package dev.maxsiomin.prodhse.feature.home.presentation.planner_tld
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.common.presentation.SnackbarCallback
-import dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.edit_plan.EditPlanScreen
+import dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.edit_plan.EditPlanScreenRoot
 import dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.edit_plan.EditPlanViewModel
-import dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.planner.PlannerScreen
+import dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.planner.PlannerScreenRoot
 import dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.planner.PlannerViewModel
 import dev.maxsiomin.prodhse.navdestinations.Screen
 
@@ -39,11 +37,8 @@ fun PlannerNavHost(navController: NavHostController, showSnackbar: SnackbarCallb
 
         composable(route = Screen.PlannerScreen.route) {
             val viewModel: PlannerViewModel = hiltViewModel()
-            val state by viewModel.state.collectAsStateWithLifecycle()
-            PlannerScreen(
-                state = state,
-                effectFlow = viewModel.effectFlow,
-                onEvent = viewModel::onEvent,
+            PlannerScreenRoot(
+                viewModel = viewModel,
                 navController = navController,
                 showSnackbar = showSnackbar,
             )
@@ -54,11 +49,8 @@ fun PlannerNavHost(navController: NavHostController, showSnackbar: SnackbarCallb
             arguments = Screen.EditPlanScreen.arguments,
         ) {
             val viewModel: EditPlanViewModel = hiltViewModel()
-            val state by viewModel.state.collectAsStateWithLifecycle()
-            EditPlanScreen(
-                state = state,
-                effectFlow = viewModel.effectFlow,
-                onEvent = viewModel::onEvent,
+            EditPlanScreenRoot(
+                viewModel = viewModel,
                 showSnackbar = showSnackbar,
                 navController = navController,
             )

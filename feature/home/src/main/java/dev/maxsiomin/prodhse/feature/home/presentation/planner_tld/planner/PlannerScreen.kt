@@ -7,10 +7,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import dev.maxsiomin.common.presentation.SnackbarCallback
 import dev.maxsiomin.common.presentation.SnackbarInfo
@@ -18,19 +21,20 @@ import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.presentation.components.PullToRefreshLazyColumn
 import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.feature.home.R
+import dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.edit_plan.EditPlanViewModel
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-internal fun PlannerScreen(
-    state: PlannerViewModel.State,
-    effectFlow: Flow<PlannerViewModel.Effect>,
-    onEvent: (PlannerViewModel.Event) -> Unit,
+internal fun PlannerScreenRoot(
     navController: NavController,
     showSnackbar: SnackbarCallback,
+    viewModel: PlannerViewModel = hiltViewModel(),
 ) {
 
-    CollectFlow(effectFlow) { effect ->
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    CollectFlow(viewModel.effectFlow) { effect ->
         when (effect) {
             is PlannerViewModel.Effect.GoToEditPlanScreen -> {
                 navController.navigate(Screen.EditPlanScreen.withArgs(effect.planId.toString()))
@@ -45,13 +49,19 @@ internal fun PlannerScreen(
             is PlannerViewModel.Effect.ShowUndoSnackbar -> {
                 showSnackbar(
                     SnackbarInfo(effect.message, action = UiText.StringResource(R.string.undo)) {
-                        onEvent(PlannerViewModel.Event.Undo)
+                        viewModel.onEvent(PlannerViewModel.Event.Undo)
                     }
                 )
             }
         }
     }
 
+    PlannerScreen(state = state, onEvent = viewModel::onEvent)
+
+}
+
+@Composable
+private fun PlannerScreen(state: PlannerViewModel.State, onEvent: (PlannerViewModel.Event) -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         PullToRefreshLazyColumn(
             isRefreshing = state.isRefreshing,
@@ -86,5 +96,4 @@ internal fun PlannerScreen(
             )
         }
     }
-
 }

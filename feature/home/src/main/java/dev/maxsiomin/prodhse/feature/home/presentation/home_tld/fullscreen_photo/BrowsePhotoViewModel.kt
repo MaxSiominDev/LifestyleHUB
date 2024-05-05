@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class BrowsePhotoViewModel @Inject constructor(
+internal class BrowsePhotoViewModel @Inject constructor(
     private val decodeUrlUseCase: DecodeUrlUseCase,
     savedStateHandle: SavedStateHandle
 ) : StatefulViewModel<BrowsePhotoViewModel.State, Nothing, Nothing>() {
