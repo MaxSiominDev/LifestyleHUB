@@ -2,24 +2,22 @@ package dev.maxsiomin.prodhse.feature.auth.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.common.presentation.SnackbarCallback
-import dev.maxsiomin.prodhse.feature.auth.presentation.auth.AuthScreen
+import dev.maxsiomin.prodhse.feature.auth.presentation.auth.AuthScreenRoot
 import dev.maxsiomin.prodhse.feature.auth.presentation.auth.AuthViewModel
-import dev.maxsiomin.prodhse.feature.auth.presentation.login.LoginScreen
+import dev.maxsiomin.prodhse.feature.auth.presentation.login.LoginScreenRoot
 import dev.maxsiomin.prodhse.feature.auth.presentation.login.LoginViewModel
-import dev.maxsiomin.prodhse.feature.auth.presentation.profile.ProfileScreen
+import dev.maxsiomin.prodhse.feature.auth.presentation.profile.ProfileScreenRoot
 import dev.maxsiomin.prodhse.feature.auth.presentation.profile.ProfileViewModel
-import dev.maxsiomin.prodhse.feature.auth.presentation.signup.SignupScreen
+import dev.maxsiomin.prodhse.feature.auth.presentation.signup.SignupScreenRoot
 import dev.maxsiomin.prodhse.feature.auth.presentation.signup.SignupViewModel
-import dev.maxsiomin.prodhse.feature.auth.presentation.successful_registration.SuccessfulRegistrationScreen
+import dev.maxsiomin.prodhse.feature.auth.presentation.successful_registration.SuccessfulRegistrationScreenRoot
 import dev.maxsiomin.prodhse.feature.auth.presentation.successful_registration.SuccessfulRegistrationViewModel
 import dev.maxsiomin.prodhse.navdestinations.Screen
 
@@ -45,30 +43,24 @@ fun ProfileNavHost(navController: NavHostController, showSnackbar: SnackbarCallb
 
         composable(route = Screen.ProfileScreen.route) {
             val viewModel: ProfileViewModel = hiltViewModel()
-            val state by viewModel.state.collectAsStateWithLifecycle()
-            ProfileScreen(
-                state = state,
-                onEvent = viewModel::onEvent,
+            ProfileScreenRoot(
+                viewModel = viewModel,
                 navController = navController,
             )
         }
 
         composable(route = Screen.AuthScreen.route) {
             val viewModel: AuthViewModel = hiltViewModel()
-            AuthScreen(
-                effectFlow = viewModel.effectFlow,
-                onEvent = viewModel::onEvent,
+            AuthScreenRoot(
+                viewModel = viewModel,
                 navController = navController,
             )
         }
 
         composable(route = Screen.LoginScreen.route) {
             val viewModel: LoginViewModel = hiltViewModel()
-            val state by viewModel.state.collectAsStateWithLifecycle()
-            LoginScreen(
-                state = state,
-                effectFlow = viewModel.effectFlow,
-                onEvent = viewModel::onEvent,
+            LoginScreenRoot(
+                viewModel = viewModel,
                 showSnackbar = showSnackbar,
                 navController = navController,
             )
@@ -76,11 +68,8 @@ fun ProfileNavHost(navController: NavHostController, showSnackbar: SnackbarCallb
 
         composable(route = Screen.SignupScreen.route) {
             val viewModel: SignupViewModel = hiltViewModel()
-            val state by viewModel.state.collectAsStateWithLifecycle()
-            SignupScreen(
-                state = state,
-                effectFlow = viewModel.effectFlow,
-                onEvent = viewModel::onEvent,
+            SignupScreenRoot(
+                viewModel = viewModel,
                 navController = navController,
                 showSnackbar = showSnackbar,
             )
@@ -88,10 +77,9 @@ fun ProfileNavHost(navController: NavHostController, showSnackbar: SnackbarCallb
 
         composable(route = Screen.SuccessfulRegistrationScreen.route) {
             val viewModel: SuccessfulRegistrationViewModel = hiltViewModel()
-            SuccessfulRegistrationScreen(
+            SuccessfulRegistrationScreenRoot(
                 navController = navController,
-                effectFlow = viewModel.effectFlow,
-                onEvent = viewModel::onEvent
+                viewModel = viewModel,
             )
         }
 

@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.common.util.CollectFlow
@@ -40,17 +41,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 @Composable
-internal fun AuthScreen(
-    effectFlow: Flow<AuthViewModel.Effect>,
-    onEvent: (AuthViewModel.Event) -> Unit,
-    navController: NavController
+internal fun AuthScreenRoot(
+    navController: NavController,
+    viewModel: AuthViewModel = hiltViewModel(),
 ) {
 
     BackHandler {
         navController.popBackStack(Screen.ProfileScreen.route, inclusive = true)
     }
 
-    CollectFlow(effectFlow) { effect ->
+    CollectFlow(viewModel.effectFlow) { effect ->
         when (effect) {
             is AuthViewModel.Effect.NavigateToLoginScreen -> {
                 navController.navigate(Screen.LoginScreen.route)
@@ -62,6 +62,12 @@ internal fun AuthScreen(
         }
     }
 
+    AuthScreen(onEvent = viewModel::onEvent)
+
+}
+
+@Composable
+private fun AuthScreen(onEvent: (AuthViewModel.Event) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -142,13 +148,12 @@ internal fun AuthScreen(
             .size(110.dp)
             .padding(start = 40.dp, top = 40.dp)
     )
-
 }
 
 @Preview
 @Composable
 private fun AuthScreenPreview() {
     ProdhseTheme {
-        AuthScreen(flow {}, {}, rememberNavController())
+        AuthScreen(onEvent = {})
     }
 }

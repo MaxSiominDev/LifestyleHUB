@@ -17,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,8 +29,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import dev.maxsiomin.authlib.domain.AuthStatus
 import dev.maxsiomin.authlib.domain.model.UserInfo
@@ -40,13 +42,12 @@ import dev.maxsiomin.prodhse.feature.auth.theme.CyanThemeColorGradientEnd
 import dev.maxsiomin.prodhse.navdestinations.Screen
 
 @Composable
-internal fun ProfileScreen(
-    state: ProfileViewModel.State,
-    onEvent: (ProfileViewModel.Event) -> Unit,
-    navController: NavController
+internal fun ProfileScreenRoot(
+    navController: NavController,
+    viewModel: ProfileViewModel = hiltViewModel(),
 ) {
 
-    val isPreview = LocalInspectionMode.current
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     if (state.authStatus == AuthStatus.NotAuthenticated) {
         navController.navigate(Screen.AuthScreen.route)
@@ -63,7 +64,16 @@ internal fun ProfileScreen(
         }
     }
 
-    val userInfo = (state.authStatus as? AuthStatus.Authenticated)?.userInfo ?: return
+    (state.authStatus as? AuthStatus.Authenticated)?.userInfo?.let {  userInfo ->
+        AuthenticatedProfileScreen(userInfo = userInfo, onEvent = viewModel::onEvent)
+    }
+
+}
+
+@Composable
+private fun AuthenticatedProfileScreen(userInfo: UserInfo, onEvent: (ProfileViewModel.Event) -> Unit) {
+
+    val isPreview = LocalInspectionMode.current
 
     Column(
         Modifier
@@ -121,26 +131,20 @@ internal fun ProfileScreen(
         Spacer(modifier = Modifier.weight(0.75f))
 
     }
-
 }
 
 @Preview
 @Composable
 private fun ProfileScreenPreview() {
     ProdhseTheme {
-        ProfileScreen(
-            state = ProfileViewModel.State(
-                authStatus = AuthStatus.Authenticated(
-                    userInfo = UserInfo(
-                        username = "maxsiomindev",
-                        fullName = "Max S.",
-                        avatarUrl = "",
-                        passwordHash = "",
-                    )
-                )
+        AuthenticatedProfileScreen(
+            userInfo = UserInfo(
+                username = "maxsiomindev",
+                fullName = "Max S.",
+                avatarUrl = "",
+                passwordHash = "",
             ),
             onEvent = {},
-            navController = rememberNavController()
         )
     }
 }

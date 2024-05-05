@@ -5,7 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +21,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -30,6 +33,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.maxsiomin.common.presentation.SnackbarCallback
@@ -49,15 +55,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 @Composable
-fun LoginScreen(
-    state: LoginViewModel.State,
-    effectFlow: Flow<LoginViewModel.Effect>,
-    onEvent: (LoginViewModel.Event) -> Unit,
+fun LoginScreenRoot(
     showSnackbar: SnackbarCallback,
-    navController: NavController
+    navController: NavController,
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
 
-    CollectFlow(effectFlow) { effect ->
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    CollectFlow(viewModel.effectFlow) { effect ->
         when (effect) {
 
             is LoginViewModel.Effect.NavigateToSignupScreen -> {
@@ -84,10 +90,16 @@ fun LoginScreen(
 
     if (state.showForgotPasswordDialog) {
         ForgotPasswordDialog(
-            onDismissRequest = { onEvent(LoginViewModel.Event.DismissForgotPasswordDialog) },
+            onDismissRequest = { viewModel.onEvent(LoginViewModel.Event.DismissForgotPasswordDialog) },
         )
     }
 
+    LoginScreen(state = state, onEvent = viewModel::onEvent)
+
+}
+
+@Composable
+private fun LoginScreen(state: LoginViewModel.State, onEvent: (LoginViewModel.Event) -> Unit) {
     Box(
         Modifier
             .fillMaxSize()
@@ -123,108 +135,117 @@ fun LoginScreen(
             Spacer(modifier = Modifier.weight(0.85f))
         }
 
-        Card(
-            Modifier
-                .fillMaxWidth()
-                .padding(0.dp)
-                .align(Alignment.BottomCenter),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
-            shape = TopRoundedCornerShape(20.dp),
-        ) {
-            Column(
-                Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
-            ) {
-
-                Spacer(modifier = Modifier.height(50.dp))
-
-                UsernameTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 32.dp),
-                    value = state.usernameState.text,
-                    onValueChange = {
-                        onEvent(LoginViewModel.Event.UsernameChanged(it))
-                    },
-                    error = state.usernameState.error?.asString()
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                PasswordTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 32.dp),
-                    value = state.passwordState.text,
-                    onValueChange = {
-                        onEvent(LoginViewModel.Event.PasswordChanged(it))
-                    },
-                    error = state.passwordState.error?.asString(),
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .padding(end = 32.dp)
-                        .clickable {
-                            onEvent(LoginViewModel.Event.ForgotPasswordClicked)
-                        },
-                    text = AnnotatedString(stringResource(id = R.string.forgot_password)),
-                    style = TextStyle(
-                        color = CyanThemeColor,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Normal,
-                    ),
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 32.dp, vertical = 2.dp),
-                    shape = RoundedCornerShape(10.dp),
-                    onClick = {
-                        onEvent(LoginViewModel.Event.LoginClicked)
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = CyanThemeColor,
-                        contentColor = Color.White,
-                    ),
-                ) {
-                    Text(text = stringResource(id = R.string.log_in))
-                }
-
-                LineOrLine(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 32.dp, vertical = 16.dp)
-                )
-
-                OutlinedButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 32.dp, vertical = 2.dp),
-                    shape = RoundedCornerShape(10.dp),
-                    onClick = {
-                        onEvent(LoginViewModel.Event.SignupClicked)
-                    },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = GrayThemeColor,
-                    ),
-                    border = BorderStroke(1.dp, GrayThemeColor)
-                ) {
-                    Text(text = stringResource(R.string.sign_up))
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-            }
-        }
+        BottomCard(state = state, onEvent = onEvent)
     }
+}
 
+@Composable
+private fun BoxScope.BottomCard(state: LoginViewModel.State, onEvent: (LoginViewModel.Event) -> Unit) {
+    Card(
+        Modifier
+            .fillMaxWidth()
+            .padding(0.dp)
+            .align(Alignment.BottomCenter),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        shape = TopRoundedCornerShape(20.dp),
+    ) {
+        BottomCardContent(state = state, onEvent = onEvent)
+    }
+}
+
+@Composable
+private fun BottomCardContent(state: LoginViewModel.State, onEvent: (LoginViewModel.Event) -> Unit) {
+    Column(
+        Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Bottom
+    ) {
+
+        Spacer(modifier = Modifier.height(50.dp))
+
+        UsernameTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp),
+            value = state.usernameState.text,
+            onValueChange = {
+                onEvent(LoginViewModel.Event.UsernameChanged(it))
+            },
+            error = state.usernameState.error?.asString()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        PasswordTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp),
+            value = state.passwordState.text,
+            onValueChange = {
+                onEvent(LoginViewModel.Event.PasswordChanged(it))
+            },
+            error = state.passwordState.error?.asString(),
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(end = 32.dp)
+                .clickable {
+                    onEvent(LoginViewModel.Event.ForgotPasswordClicked)
+                },
+            text = AnnotatedString(stringResource(id = R.string.forgot_password)),
+            style = TextStyle(
+                color = CyanThemeColor,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Normal,
+            ),
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp, vertical = 2.dp),
+            shape = RoundedCornerShape(10.dp),
+            onClick = {
+                onEvent(LoginViewModel.Event.LoginClicked)
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = CyanThemeColor,
+                contentColor = Color.White,
+            ),
+        ) {
+            Text(text = stringResource(id = R.string.log_in))
+        }
+
+        LineOrLine(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp, vertical = 16.dp)
+        )
+
+        OutlinedButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp, vertical = 2.dp),
+            shape = RoundedCornerShape(10.dp),
+            onClick = {
+                onEvent(LoginViewModel.Event.SignupClicked)
+            },
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = GrayThemeColor,
+            ),
+            border = BorderStroke(1.dp, GrayThemeColor)
+        ) {
+            Text(text = stringResource(R.string.sign_up))
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+    }
 }
 
 @Preview
@@ -233,10 +254,7 @@ private fun LoginScreenPreview() {
     ProdhseTheme {
         LoginScreen(
             LoginViewModel.State(),
-            flow {},
-            {},
-            {},
-            navController = rememberNavController()
+            onEvent = {},
         )
     }
 }
