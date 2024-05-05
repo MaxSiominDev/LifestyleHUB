@@ -177,9 +177,7 @@ internal class HomeViewModel @Inject constructor(
 
             if (checkLocationPermissionUseCase().not()) {
                 locationIsRefreshing = false
-                viewModelScope.launch {
-                    onEffect(Effect.RequestLocationPermission)
-                }
+                onEffect(Effect.RequestLocationPermission)
                 _state.update {
                     it.copy(
                         weatherStatus = WeatherStatus.Error,

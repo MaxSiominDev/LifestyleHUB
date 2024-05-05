@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import dev.maxsiomin.common.presentation.UiText
 import dev.maxsiomin.common.presentation.components.PullToRefreshLazyColumn
 import dev.maxsiomin.common.util.CollectFlow
 import dev.maxsiomin.prodhse.feature.home.R
+import dev.maxsiomin.prodhse.feature.home.presentation.home_tld.home.HomeViewModel
 import dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.edit_plan.EditPlanViewModel
 import dev.maxsiomin.prodhse.navdestinations.Screen
 import kotlinx.coroutines.flow.Flow
@@ -33,6 +35,10 @@ internal fun PlannerScreenRoot(
 ) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(PlannerViewModel.Event.Refresh)
+    }
 
     CollectFlow(viewModel.effectFlow) { effect ->
         when (effect) {
