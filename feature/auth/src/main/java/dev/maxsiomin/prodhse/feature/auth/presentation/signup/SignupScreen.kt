@@ -51,7 +51,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 @Composable
-fun SignupScreenRoot(
+internal fun SignupScreenRoot(
     showSnackbar: SnackbarCallback,
     navController: NavController,
     viewModel: SignupViewModel = hiltViewModel(),

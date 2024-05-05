@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Coordinates(
+internal data class Coordinates(
     @SerialName("latitude")
     val latitude: String,
     @SerialName("longitude")

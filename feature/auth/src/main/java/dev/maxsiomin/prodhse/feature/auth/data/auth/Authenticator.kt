@@ -11,7 +11,7 @@ import dev.maxsiomin.prodhse.feature.auth.domain.model.RegistrationInfo
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-interface Authenticator {
+internal interface Authenticator {
 
     suspend fun loginWithUsernameAndPassword(
         username: String,
@@ -30,7 +30,7 @@ interface Authenticator {
 
 }
 
-class AuthenticatorImpl @Inject constructor(
+internal class AuthenticatorImpl @Inject constructor(
     private val authManager: AuthManager
 ) : Authenticator {
 

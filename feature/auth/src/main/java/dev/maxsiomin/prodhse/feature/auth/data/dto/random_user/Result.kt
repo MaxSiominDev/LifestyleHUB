@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Result(
+internal data class Result(
     @SerialName("gender")
     val gender: String,
     @SerialName("name")

@@ -2,7 +2,7 @@ package dev.maxsiomin.prodhse.feature.auth.domain
 
 import dev.maxsiomin.common.domain.resource.Error
 
-sealed interface AuthError : Error {
+internal sealed interface AuthError : Error {
 
     sealed interface Login : AuthError {
         data class Unknown(val reason: String) : Login

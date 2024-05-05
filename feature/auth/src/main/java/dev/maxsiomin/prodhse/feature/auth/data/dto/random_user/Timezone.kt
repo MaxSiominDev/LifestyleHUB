@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Timezone(
+internal data class Timezone(
     @SerialName("offset")
     val offset: String,
     @SerialName("description")

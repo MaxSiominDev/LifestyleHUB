@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Picture(
+internal data class Picture(
     @SerialName("large")
     val large: String,
     @SerialName("medium")

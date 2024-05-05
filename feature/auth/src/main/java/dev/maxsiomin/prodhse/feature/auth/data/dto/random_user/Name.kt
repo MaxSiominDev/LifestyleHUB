@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Name(
+internal data class Name(
     @SerialName("title")
     val title: String,
     @SerialName("first")

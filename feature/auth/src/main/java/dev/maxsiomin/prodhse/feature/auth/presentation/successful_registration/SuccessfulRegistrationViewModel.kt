@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class SuccessfulRegistrationViewModel @Inject constructor() :
+internal class SuccessfulRegistrationViewModel @Inject constructor() :
     StatefulViewModel<Nothing, SuccessfulRegistrationViewModel.Effect, SuccessfulRegistrationViewModel.Event>() {
 
     override val _state: MutableStateFlow<Nothing>

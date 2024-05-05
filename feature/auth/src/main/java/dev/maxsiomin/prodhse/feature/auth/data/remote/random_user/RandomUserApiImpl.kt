@@ -8,7 +8,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.url
 import javax.inject.Inject
 
-class RandomUserApiImpl @Inject constructor(private val client: HttpClient) : RandomUserApi {
+internal class RandomUserApiImpl @Inject constructor(private val client: HttpClient) : RandomUserApi {
 
     override suspend fun getRandomUser(): Resource<RandomUserResponse, NetworkError> {
         return client.safeGet {

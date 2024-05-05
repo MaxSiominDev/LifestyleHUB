@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+internal class LoginViewModel @Inject constructor(
     private val loginWithUsernameAndPasswordUseCase: LoginWithUsernameAndPasswordUseCase,
     private val validateUsernameUseCase: ValidateUsernameForLoginUseCase,
     private val validatePasswordUseCase: ValidatePasswordForLoginUseCase,

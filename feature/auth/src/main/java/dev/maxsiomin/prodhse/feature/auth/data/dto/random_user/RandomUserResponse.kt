@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class RandomUserResponse(
+internal data class RandomUserResponse(
     @SerialName("results")
     val results: List<Result>,
     @SerialName("info")

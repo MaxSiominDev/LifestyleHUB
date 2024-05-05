@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Login(
+internal data class Login(
     @SerialName("uuid")
     val uuid: String,
     @SerialName("username")

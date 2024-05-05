@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Dob(
+internal data class Dob(
     @SerialName("date")
     val date: String,
     @SerialName("age")

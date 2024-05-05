@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignupViewModel @Inject constructor(
+internal class SignupViewModel @Inject constructor(
     private val getRandomUserDataUseCase: GetRandomUserDataUseCase,
     private val checkIfUsernameExistsUseCase: CheckIfUsernameExistsUseCase,
     private val registerUseCase: RegisterUseCase,

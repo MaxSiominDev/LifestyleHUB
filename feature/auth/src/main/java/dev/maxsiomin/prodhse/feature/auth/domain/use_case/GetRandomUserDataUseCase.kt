@@ -6,10 +6,10 @@ import dev.maxsiomin.prodhse.feature.auth.domain.model.RandomUserData
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.UsersRepository
 import javax.inject.Inject
 
-class GetRandomUserDataUseCase @Inject constructor(private val repo: UsersRepository) {
+internal class GetRandomUserDataUseCase @Inject constructor(private val usersRepo: UsersRepository) {
 
     suspend operator fun invoke(): Resource<RandomUserData, NetworkError> {
-        return repo.getRandomUserData()
+        return usersRepo.getRandomUserData()
     }
 
 }

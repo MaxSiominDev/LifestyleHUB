@@ -6,7 +6,7 @@ import dev.maxsiomin.prodhse.feature.auth.domain.model.RegistrationInfo
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.UsersRepository
 import javax.inject.Inject
 
-class RegisterUseCase @Inject constructor(private val repo: UsersRepository) {
+internal class RegisterUseCase @Inject constructor(private val usersRepo: UsersRepository) {
 
     suspend operator fun invoke(
         username: String,
@@ -20,7 +20,7 @@ class RegisterUseCase @Inject constructor(private val repo: UsersRepository) {
             fullName = fullname,
             avatarUrl = avatarUrl,
         )
-        return repo.signupWithUsernameAndPassword(registrationInfo)
+        return usersRepo.signupWithUsernameAndPassword(registrationInfo)
     }
 
 }

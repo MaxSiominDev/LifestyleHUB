@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Info(
+internal data class Info(
     @SerialName("seed")
     val seed: String,
     @SerialName("results")

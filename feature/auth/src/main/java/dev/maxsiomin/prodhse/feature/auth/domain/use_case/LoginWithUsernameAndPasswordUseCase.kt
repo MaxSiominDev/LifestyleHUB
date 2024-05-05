@@ -5,12 +5,12 @@ import dev.maxsiomin.prodhse.feature.auth.domain.AuthError
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.UsersRepository
 import javax.inject.Inject
 
-class LoginWithUsernameAndPasswordUseCase @Inject constructor(
-    private val repo: UsersRepository,
+internal class LoginWithUsernameAndPasswordUseCase @Inject constructor(
+    private val usersRepo: UsersRepository,
 ) {
 
     suspend operator fun invoke(username: String, password: String): Resource<Unit, AuthError.Login> {
-        return repo.loginWithUsernameAndPassword(username = username, password = password)
+        return usersRepo.loginWithUsernameAndPassword(username = username, password = password)
     }
 
 }

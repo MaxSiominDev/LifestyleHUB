@@ -37,7 +37,7 @@ fun NavGraphBuilder.addProfileNavigation(
 }
 
 @Composable
-fun ProfileNavHost(navController: NavHostController, showSnackbar: SnackbarCallback) {
+private fun ProfileNavHost(navController: NavHostController, showSnackbar: SnackbarCallback) {
 
     NavHost(navController = navController, startDestination = Screen.ProfileScreen.route) {
 

@@ -8,7 +8,7 @@ import dev.maxsiomin.prodhse.feature.auth.domain.model.RandomUserData
 import dev.maxsiomin.prodhse.feature.auth.domain.model.RegistrationInfo
 import kotlinx.coroutines.flow.Flow
 
-interface UsersRepository {
+internal interface UsersRepository {
 
     suspend fun getRandomUserData(): Resource<RandomUserData, NetworkError>
 

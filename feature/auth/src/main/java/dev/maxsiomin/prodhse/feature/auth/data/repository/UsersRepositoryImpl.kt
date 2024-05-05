@@ -14,7 +14,7 @@ import dev.maxsiomin.prodhse.feature.auth.domain.repository.UsersRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class UsersRepositoryImpl @Inject constructor(
+internal class UsersRepositoryImpl @Inject constructor(
     private val api: RandomUserApi,
     private val authenticator: Authenticator,
     private val randomUserDataMapper: ToDomainMapper<Result, RandomUserData>,

@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Street(
+internal data class Street(
     @SerialName("number")
     val number: Int,
     @SerialName("name")

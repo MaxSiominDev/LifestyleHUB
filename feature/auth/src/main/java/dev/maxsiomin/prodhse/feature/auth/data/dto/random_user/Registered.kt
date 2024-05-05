@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 
 @Keep
 @Serializable
-data class Registered(
+internal data class Registered(
     @SerialName("date")
     val date: String,
     @SerialName("age")

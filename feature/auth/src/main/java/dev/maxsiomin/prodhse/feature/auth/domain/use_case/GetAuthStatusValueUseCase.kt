@@ -4,10 +4,10 @@ import dev.maxsiomin.authlib.domain.AuthStatus
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.UsersRepository
 import javax.inject.Inject
 
-class GetAuthStatusValueUseCase @Inject constructor(private val repo: UsersRepository) {
+internal class GetAuthStatusValueUseCase @Inject constructor(private val usersRepo: UsersRepository) {
 
     operator fun invoke(): AuthStatus {
-        return repo.getAuthStatus()
+        return usersRepo.getAuthStatus()
     }
 
 }

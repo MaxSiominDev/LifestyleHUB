@@ -55,7 +55,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 @Composable
-fun LoginScreenRoot(
+internal fun LoginScreenRoot(
     showSnackbar: SnackbarCallback,
     navController: NavController,
     viewModel: LoginViewModel = hiltViewModel(),

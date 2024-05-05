@@ -18,7 +18,7 @@ import dev.maxsiomin.prodhse.feature.auth.domain.repository.UsersRepository
 
 @InstallIn(ViewModelComponent::class)
 @Module
-abstract class AuthModule {
+internal abstract class AuthModule {
 
     @ViewModelScoped
     @Binds

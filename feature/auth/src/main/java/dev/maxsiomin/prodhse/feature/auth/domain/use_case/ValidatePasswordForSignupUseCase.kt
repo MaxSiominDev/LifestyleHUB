@@ -4,7 +4,7 @@ import dev.maxsiomin.common.domain.resource.Error
 import dev.maxsiomin.common.domain.resource.Resource
 import javax.inject.Inject
 
-class ValidatePasswordForSignupUseCase @Inject constructor() {
+internal class ValidatePasswordForSignupUseCase @Inject constructor() {
 
     operator fun invoke(password: String): Resource<Unit, PasswordForSignupError> {
         if (password.length !in MIN_PASSWORD_LENGTH..MAX_PASSWORD_LENGTH) {
