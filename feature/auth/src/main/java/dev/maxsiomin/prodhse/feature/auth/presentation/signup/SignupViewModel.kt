@@ -2,7 +2,6 @@ package dev.maxsiomin.prodhse.feature.auth.presentation.signup
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.authlib.domain.RegistrationStatus
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.domain.resource.errorOrNull
 import dev.maxsiomin.common.presentation.StatefulViewModel
@@ -12,11 +11,11 @@ import dev.maxsiomin.common.util.TextFieldState
 import dev.maxsiomin.common.util.updateError
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.domain.AuthError
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.CheckIfUsernameExistsUseCase
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.GetRandomUserDataUseCase
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.RegisterUseCase
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForSignupUseCase
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForSignupUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.auth.CheckIfUsernameExistsUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.auth.GetRandomUserDataUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.auth.RegisterUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.validation.ValidatePasswordForSignupUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.validation.ValidateUsernameForSignupUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

@@ -2,7 +2,6 @@ package dev.maxsiomin.prodhse.feature.auth.presentation.login
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.authlib.domain.LoginStatus
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.domain.resource.errorOrNull
 import dev.maxsiomin.common.presentation.StatefulViewModel
@@ -11,9 +10,9 @@ import dev.maxsiomin.common.util.TextFieldState
 import dev.maxsiomin.common.util.updateError
 import dev.maxsiomin.prodhse.feature.auth.R
 import dev.maxsiomin.prodhse.feature.auth.domain.AuthError
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.LoginWithUsernameAndPasswordUseCase
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidatePasswordForLoginUseCase
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.ValidateUsernameForLoginUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.auth.LoginWithUsernameAndPasswordUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.validation.ValidatePasswordForLoginUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.validation.ValidateUsernameForLoginUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

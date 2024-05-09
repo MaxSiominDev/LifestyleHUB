@@ -4,12 +4,16 @@ import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 internal class GetPhotosOfPlaceUseCase @Inject constructor(private val placesRepo: PlacesRepository) {
 
-    suspend operator fun invoke(fsqId: String): Resource<List<Photo>, NetworkError> {
-        return placesRepo.getPhotos(fsqId = fsqId)
+    suspend operator fun invoke(
+        fsqId: String
+    ): Resource<List<Photo>, NetworkError> = withContext(Dispatchers.IO) {
+        return@withContext placesRepo.getPhotos(fsqId = fsqId)
     }
 
 }

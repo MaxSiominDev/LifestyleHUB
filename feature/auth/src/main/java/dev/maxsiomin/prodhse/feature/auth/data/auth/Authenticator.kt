@@ -20,7 +20,7 @@ internal interface Authenticator {
 
     suspend fun logout()
 
-    suspend fun getAuthStatusFlow(): Flow<AuthStatus>
+    fun getAuthStatusFlow(): Flow<AuthStatus>
 
     fun getAuthStatus(): AuthStatus
 
@@ -59,7 +59,7 @@ internal class AuthenticatorImpl @Inject constructor(
         authManager.logout()
     }
 
-    override suspend fun getAuthStatusFlow(): Flow<AuthStatus> {
+    override fun getAuthStatusFlow(): Flow<AuthStatus> {
         return authManager.authStatus
     }
 

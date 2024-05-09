@@ -4,9 +4,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.maxsiomin.authlib.domain.AuthStatus
 import dev.maxsiomin.common.presentation.StatefulViewModel
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.GetAuthStatusFlowUseCase
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.GetAuthStatusValueUseCase
-import dev.maxsiomin.prodhse.feature.auth.domain.use_case.LogoutUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.auth.GetAuthStatusFlowUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.auth.GetAuthStatusValueUseCase
+import dev.maxsiomin.prodhse.feature.auth.domain.use_case.auth.LogoutUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

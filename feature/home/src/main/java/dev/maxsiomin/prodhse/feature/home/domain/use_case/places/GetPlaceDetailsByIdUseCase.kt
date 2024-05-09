@@ -4,12 +4,16 @@ import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 internal class GetPlaceDetailsByIdUseCase @Inject constructor(private val placesRepo: PlacesRepository) {
 
-    suspend operator fun invoke(fsqId: String): Resource<PlaceDetails, NetworkError> {
-        return placesRepo.getPlaceDetails(fsqId = fsqId)
+    suspend operator fun invoke(
+        fsqId: String
+    ): Resource<PlaceDetails, NetworkError> = withContext(Dispatchers.IO) {
+        return@withContext placesRepo.getPlaceDetails(fsqId = fsqId)
     }
 
 }

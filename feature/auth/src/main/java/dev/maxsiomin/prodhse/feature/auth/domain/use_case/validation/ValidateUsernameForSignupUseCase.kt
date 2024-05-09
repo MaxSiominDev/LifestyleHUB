@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.auth.domain.use_case
+package dev.maxsiomin.prodhse.feature.auth.domain.use_case.validation
 
 import dev.maxsiomin.common.domain.resource.Error
 import dev.maxsiomin.common.domain.resource.Resource

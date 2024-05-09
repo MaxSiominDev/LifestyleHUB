@@ -1,4 +1,4 @@
-package dev.maxsiomin.prodhse.feature.auth.domain.use_case
+package dev.maxsiomin.prodhse.feature.auth.domain.use_case.auth
 
 import dev.maxsiomin.authlib.domain.AuthStatus
 import dev.maxsiomin.prodhse.feature.auth.domain.repository.UsersRepository
