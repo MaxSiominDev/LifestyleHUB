@@ -7,6 +7,8 @@ import dev.maxsiomin.authlib.data.mappers.UserInfoToUserEntityMapper
 import dev.maxsiomin.authlib.data.room.UsersDao
 import dev.maxsiomin.authlib.domain.model.UserInfo
 import dev.maxsiomin.authlib.domain.repository.UsersRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 @SuppressLint("ApplySharedPref")
@@ -20,30 +22,32 @@ internal class UsersRepositoryImpl(
         Timber.i(allKeys.toString())
     }
 
-    override suspend fun getUserByName(username: String): UserInfo? {
-        val entity = dao.getUserByName(username) ?: return null
-        return UserEntityToUserInfoMapper().invoke(entity)
+    override suspend fun getUserByName(username: String): UserInfo? = withContext(Dispatchers.IO) {
+        val entity = dao.getUserByName(username) ?: return@withContext null
+        return@withContext UserEntityToUserInfoMapper().invoke(entity)
     }
 
-    override suspend fun getCurrentUsername(): String? {
-        return prefs.getString(KEY_USERNAME, null)
+    override suspend fun getCurrentUsername(): String? = withContext(Dispatchers.IO) {
+        return@withContext prefs.getString(KEY_USERNAME, null)
     }
 
-    override suspend fun registerUser(userInfo: UserInfo) {
+    override suspend fun registerUser(userInfo: UserInfo) = withContext(Dispatchers.IO) {
         val entity = UserInfoToUserEntityMapper().invoke(userInfo)
         dao.insertNewUser(entity)
     }
 
-    override suspend fun login(username: String) {
+    override suspend fun login(username: String) = withContext(Dispatchers.IO) {
         prefs.edit().apply {
             putString(KEY_USERNAME, username)
         }.commit()
+        Unit
     }
 
-    override suspend fun logout() {
+    override suspend fun logout() = withContext(Dispatchers.IO) {
         prefs.edit().apply {
             remove(KEY_USERNAME)
         }.commit()
+        Unit
     }
 
     private companion object {

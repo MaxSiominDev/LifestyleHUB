@@ -1,5 +1,6 @@
 package dev.maxsiomin.prodhse.feature.home.data.repository
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import dev.maxsiomin.common.data.ToDomainMapper
 import dev.maxsiomin.common.domain.resource.DataError
@@ -12,9 +13,11 @@ import dev.maxsiomin.prodhse.feature.home.data.dto.places_nearby.Result
 import dev.maxsiomin.prodhse.feature.home.data.mappers.FsqId
 import dev.maxsiomin.prodhse.feature.home.data.remote.places_api.PlacesApi
 import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
-import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.domain.model.Place
+import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.domain.repository.PlacesRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
@@ -30,9 +33,9 @@ internal class PlacesRepositoryImpl @Inject constructor(
         lat: String,
         lon: String,
         lang: String
-    ): Resource<List<Place>, DataError> {
+    ): Resource<List<Place>, DataError> = withContext(Dispatchers.IO) {
         val apiResponse = api.getPlaces(lat = lat, lon = lon, lang = lang)
-        return when (apiResponse) {
+        return@withContext when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)
             is Resource.Success -> {
                 apiResponse.data.results?.filterNotNull()?.mapNotNull { placeMapper.toDomain(it) }
@@ -43,58 +46,67 @@ internal class PlacesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPhotos(fsqId: String): Resource<List<Photo>, DataError> {
+    override suspend fun getPhotos(
+        fsqId: String
+    ): Resource<List<Photo>, DataError> = withContext(Dispatchers.IO) {
         val apiResponse = api.getPhotos(fsqId = fsqId)
-        return when (apiResponse) {
+        return@withContext when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)
             is Resource.Success -> {
-                val remoteData: List<Photo> = apiResponse.data.map { item: PlacePhotosResponseItem ->
-                    placePhotosMapper.toDomain(item to fsqId)
-                }
+                val remoteData: List<Photo> =
+                    apiResponse.data.map { item: PlacePhotosResponseItem ->
+                        placePhotosMapper.toDomain(item to fsqId)
+                    }
                 Resource.Success(remoteData)
             }
         }
     }
 
-    override suspend fun getPlaceDetails(fsqId: String): Resource<PlaceDetails, DataError> {
+    override suspend fun getPlaceDetails(
+        fsqId: String
+    ): Resource<PlaceDetails, DataError> = withContext(Dispatchers.IO) {
         val localData = getPlaceDetailsFromSharedPrefs(fsqId)
         val currentMillis = System.currentTimeMillis()
         if (localData != null && currentMillis - localData.timeUpdated < CACHE_EXPIRATION_PERIOD) {
-            return Resource.Success(localData)
+            return@withContext Resource.Success(localData)
         }
 
         val apiResponse = api.getPlaceDetails(fsqId = fsqId)
-        when (apiResponse) {
-            is Resource.Error -> return Resource.Error(apiResponse.error)
+        return@withContext when (apiResponse) {
+            is Resource.Error -> Resource.Error(apiResponse.error)
             is Resource.Success -> {
                 val placeDetails = placeDetailsMapper.toDomain(apiResponse.data)
-                if (placeDetails == null) {
-                    return Resource.Error(NetworkError.EmptyResponse)
-                }
+                    ?: return@withContext Resource.Error(NetworkError.EmptyResponse)
+
                 savePlaceDetailsToSharedPrefs(placeDetails)
+
                 val updatedLocalData = getPlaceDetailsFromSharedPrefs(fsqId)
                 if (updatedLocalData == null) {
-                    return Resource.Error(LocalError.Unknown(null))
+                    Resource.Error(LocalError.Unknown(null))
                 } else {
-                    return Resource.Success(updatedLocalData)
+                    Resource.Success(updatedLocalData)
                 }
             }
         }
     }
 
-    private fun savePlaceDetailsToSharedPrefs(place: PlaceDetails) {
-        prefs.edit().apply {
-            val jsonString = Json.encodeToString(PlaceDetails.serializer(), place)
-            val key = getPlacePrefsKey(place.fsqId)
-            putString(key, jsonString)
-        }.apply()
+    @SuppressLint("ApplySharedPref")
+    private suspend fun savePlaceDetailsToSharedPrefs(place: PlaceDetails) {
+        withContext(Dispatchers.IO) {
+            prefs.edit().apply {
+                val jsonString = Json.encodeToString(PlaceDetails.serializer(), place)
+                val key = getPlacePrefsKey(place.fsqId)
+                putString(key, jsonString)
+            }.commit()
+        }
     }
 
-    private fun getPlaceDetailsFromSharedPrefs(id: String): PlaceDetails? {
-        val key = getPlacePrefsKey(id)
-        val jsonString = prefs.getString(key, null) ?: return null
-        return Json.decodeFromString(PlaceDetails.serializer(), jsonString)
-    }
+    private suspend fun getPlaceDetailsFromSharedPrefs(id: String): PlaceDetails? =
+        withContext(Dispatchers.IO) {
+            val key = getPlacePrefsKey(id)
+            val jsonString = prefs.getString(key, null) ?: return@withContext null
+            return@withContext Json.decodeFromString(PlaceDetails.serializer(), jsonString)
+        }
 
     companion object {
         private fun getPlacePrefsKey(id: String) = "venue/$id"

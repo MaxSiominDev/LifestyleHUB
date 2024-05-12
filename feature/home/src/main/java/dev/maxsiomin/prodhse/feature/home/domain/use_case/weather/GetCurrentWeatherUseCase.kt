@@ -19,7 +19,11 @@ internal class GetCurrentWeatherUseCase @Inject constructor(
         lon: Double
     ): Resource<Weather, DataError> = withContext(Dispatchers.IO) {
         val lang = localeManager.getLocaleLanguage()
-        return@withContext weatherRepo.getCurrentWeather(lat = lat.toString(), lon = lon.toString(), lang = lang)
+        return@withContext weatherRepo.getCurrentWeather(
+            lat = lat.toString(),
+            lon = lon.toString(),
+            lang = lang
+        )
     }
 
 }
