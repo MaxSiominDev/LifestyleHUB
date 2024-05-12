@@ -1,5 +1,6 @@
 package dev.maxsiomin.prodhse.feature.auth.domain.use_case.auth
 
+import dev.maxsiomin.common.domain.resource.DataError
 import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.auth.domain.model.RandomUserData
@@ -10,7 +11,7 @@ import javax.inject.Inject
 
 internal class GetRandomUserDataUseCase @Inject constructor(private val usersRepo: UsersRepository) {
 
-    suspend operator fun invoke(): Resource<RandomUserData, NetworkError> =
+    suspend operator fun invoke(): Resource<RandomUserData, DataError> =
         withContext(Dispatchers.IO) {
             return@withContext usersRepo.getRandomUserData()
         }

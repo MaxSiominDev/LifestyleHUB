@@ -30,7 +30,7 @@ internal class PlacesRepositoryImpl @Inject constructor(
         lat: String,
         lon: String,
         lang: String
-    ): Resource<List<Place>, NetworkError> {
+    ): Resource<List<Place>, DataError> {
         val apiResponse = api.getPlaces(lat = lat, lon = lon, lang = lang)
         return when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)
@@ -43,7 +43,7 @@ internal class PlacesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPhotos(fsqId: String): Resource<List<Photo>, NetworkError> {
+    override suspend fun getPhotos(fsqId: String): Resource<List<Photo>, DataError> {
         val apiResponse = api.getPhotos(fsqId = fsqId)
         return when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)

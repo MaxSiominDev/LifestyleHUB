@@ -2,6 +2,7 @@ package dev.maxsiomin.prodhse.feature.auth.data.repository
 
 import dev.maxsiomin.authlib.domain.AuthStatus
 import dev.maxsiomin.common.data.ToDomainMapper
+import dev.maxsiomin.common.domain.resource.DataError
 import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.auth.data.auth.Authenticator
@@ -20,7 +21,7 @@ internal class UsersRepositoryImpl @Inject constructor(
     private val randomUserDataMapper: ToDomainMapper<Result, RandomUserData>,
 ) : UsersRepository {
 
-    override suspend fun getRandomUserData(): Resource<RandomUserData, NetworkError> {
+    override suspend fun getRandomUserData(): Resource<RandomUserData, DataError> {
         val apiResponse = api.getRandomUser()
         return when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)

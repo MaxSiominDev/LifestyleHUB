@@ -1,6 +1,7 @@
 package dev.maxsiomin.prodhse.feature.home.data.repository
 
 import dev.maxsiomin.common.data.ToDomainMapper
+import dev.maxsiomin.common.domain.resource.DataError
 import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.data.dto.current_weather_response.CurrentWeatherResponse
@@ -19,7 +20,7 @@ internal class WeatherRepositoryImpl @Inject constructor(
         lat: String,
         lon: String,
         lang: String,
-    ): Resource<Weather, NetworkError> {
+    ): Resource<Weather, DataError> {
         val apiResponse = api.getCurrentWeather(lat = lat, lon = lon, lang = lang)
         return when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)

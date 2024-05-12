@@ -1,11 +1,10 @@
 package dev.maxsiomin.prodhse.feature.home.domain.repository
 
 import dev.maxsiomin.common.domain.resource.DataError
-import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.domain.model.Photo
-import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 import dev.maxsiomin.prodhse.feature.home.domain.model.Place
+import dev.maxsiomin.prodhse.feature.home.domain.model.PlaceDetails
 
 internal interface PlacesRepository {
 
@@ -13,11 +12,11 @@ internal interface PlacesRepository {
         lat: String,
         lon: String,
         lang: String
-    ): Resource<List<Place>, NetworkError>
+    ): Resource<List<Place>, DataError>
 
     suspend fun getPhotos(
         fsqId: String,
-    ): Resource<List<Photo>, NetworkError>
+    ): Resource<List<Photo>, DataError>
 
     suspend fun getPlaceDetails(
         fsqId: String,

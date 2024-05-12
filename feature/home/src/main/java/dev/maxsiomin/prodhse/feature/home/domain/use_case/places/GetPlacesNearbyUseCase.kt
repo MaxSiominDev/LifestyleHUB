@@ -1,6 +1,6 @@
 package dev.maxsiomin.prodhse.feature.home.domain.use_case.places
 
-import dev.maxsiomin.common.domain.resource.NetworkError
+import dev.maxsiomin.common.domain.resource.DataError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.core.util.LocaleManager
 import dev.maxsiomin.prodhse.feature.home.domain.model.Place
@@ -17,7 +17,7 @@ internal class GetPlacesNearbyUseCase @Inject constructor(
     suspend operator fun invoke(
         lat: Double,
         lon: Double
-    ): Resource<List<Place>, NetworkError> = withContext(Dispatchers.IO) {
+    ): Resource<List<Place>, DataError> = withContext(Dispatchers.IO) {
         val lang = localeManager.getLocaleLanguage()
         return@withContext placesRepo.getPlacesNearby(
             lat = lat.toString(),
