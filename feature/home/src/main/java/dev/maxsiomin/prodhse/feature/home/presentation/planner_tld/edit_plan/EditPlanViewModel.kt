@@ -3,7 +3,7 @@ package dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.edit_plan
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.maxsiomin.common.domain.resource.DatabaseError
+import dev.maxsiomin.common.domain.resource.LocalError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.common.extensions.requireArg
 import dev.maxsiomin.common.presentation.StatefulViewModel
@@ -120,7 +120,7 @@ internal class EditPlanViewModel @Inject constructor(
             val plan = when (planResource) {
                 is Resource.Error -> {
                     val message: UiText = when (planResource.error) {
-                        DatabaseError.NotFound -> UiText.StringResource(R.string.plan_not_found)
+                        is LocalError.Unknown -> UiText.StringResource(R.string.plan_not_found)
                     }
                     onEffect(Effect.ShowMessage(message))
                     return@launch
@@ -185,10 +185,7 @@ internal class EditPlanViewModel @Inject constructor(
             val planResource = getPlanByIdUseCase.invoke(planId)
             val plan = when (planResource) {
                 is Resource.Error -> {
-                    val message: UiText = when (planResource.error) {
-                        DatabaseError.NotFound -> UiText.StringResource(R.string.plan_not_found)
-                    }
-                    onEffect(Effect.ShowMessage(message))
+                    onEffect(Effect.ShowMessage(planResource.asErrorUiText()))
                     return@launch
                 }
 

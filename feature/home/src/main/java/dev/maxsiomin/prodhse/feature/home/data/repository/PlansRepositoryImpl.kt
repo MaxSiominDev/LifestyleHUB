@@ -1,7 +1,7 @@
 package dev.maxsiomin.prodhse.feature.home.data.repository
 
 import dev.maxsiomin.common.data.BidirectionalMapper
-import dev.maxsiomin.common.domain.resource.DatabaseError
+import dev.maxsiomin.common.domain.resource.LocalError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.data.local.PlanEntity
 import dev.maxsiomin.prodhse.feature.home.data.local.PlansDao
@@ -30,12 +30,12 @@ internal class PlansRepositoryImpl @Inject constructor(
         dao.upsertPlan(entity)
     }
 
-    override suspend fun getPlanById(id: Long): Resource<Plan, DatabaseError> {
+    override suspend fun getPlanById(id: Long): Resource<Plan, LocalError> {
         val plan = dao.getPlanById(id)?.let(planMapper::toDomain)
         return if (plan != null) {
             Resource.Success(plan)
         } else {
-            Resource.Error(DatabaseError.NotFound)
+            Resource.Error(LocalError.Unknown(null))
         }
     }
 

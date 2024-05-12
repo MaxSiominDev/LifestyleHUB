@@ -2,6 +2,8 @@ package dev.maxsiomin.prodhse.feature.home.data.repository
 
 import android.content.SharedPreferences
 import dev.maxsiomin.common.data.ToDomainMapper
+import dev.maxsiomin.common.domain.resource.DataError
+import dev.maxsiomin.common.domain.resource.LocalError
 import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
 import dev.maxsiomin.prodhse.feature.home.data.dto.place_details.PlaceDetailsResponse
@@ -54,7 +56,7 @@ internal class PlacesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPlaceDetails(fsqId: String): Resource<PlaceDetails, NetworkError> {
+    override suspend fun getPlaceDetails(fsqId: String): Resource<PlaceDetails, DataError> {
         val localData = getPlaceDetailsFromSharedPrefs(fsqId)
         val currentMillis = System.currentTimeMillis()
         if (localData != null && currentMillis - localData.timeUpdated < CACHE_EXPIRATION_PERIOD) {
@@ -62,13 +64,20 @@ internal class PlacesRepositoryImpl @Inject constructor(
         }
 
         val apiResponse = api.getPlaceDetails(fsqId = fsqId)
-        return when (apiResponse) {
-            is Resource.Error -> Resource.Error(apiResponse.error)
+        when (apiResponse) {
+            is Resource.Error -> return Resource.Error(apiResponse.error)
             is Resource.Success -> {
-                apiResponse.data.let(placeDetailsMapper::toDomain)?.let {
-                    savePlaceDetailsToSharedPrefs(it)
-                    Resource.Success(it)
-                } ?: Resource.Error(NetworkError.EmptyResponse)
+                val placeDetails = placeDetailsMapper.toDomain(apiResponse.data)
+                if (placeDetails == null) {
+                    return Resource.Error(NetworkError.EmptyResponse)
+                }
+                savePlaceDetailsToSharedPrefs(placeDetails)
+                val updatedLocalData = getPlaceDetailsFromSharedPrefs(fsqId)
+                if (updatedLocalData == null) {
+                    return Resource.Error(LocalError.Unknown(null))
+                } else {
+                    return Resource.Success(updatedLocalData)
+                }
             }
         }
     }
