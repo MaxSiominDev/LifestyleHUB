@@ -9,6 +9,7 @@ import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
+import io.ktor.utils.io.CancellationException
 
 suspend inline fun <reified T> HttpClient.safeGet(
     requestBuilder: HttpRequestBuilder.() -> Unit
@@ -20,6 +21,8 @@ suspend inline fun <reified T> HttpClient.safeGet(
         } else {
             Resource.Success(response)
         }
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: RedirectResponseException) {
         Resource.Error(NetworkError.Redirected)
     } catch (e: ClientRequestException) {
