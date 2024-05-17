@@ -13,7 +13,7 @@ ktorClientContentNegotiation = "2.3.9"
 ktorClientLogging = "2.3.9"
 ktorClientSerialization = "2.3.9"
 ktorSerializationKotlinxJson = "2.3.9"
-lifecycleRuntimeKtx = "2.7.0"
+lifecycleRuntimeKtx = "2.8.0"
 activityCompose = "1.9.0"
 composeBom = "2024.05.00"
 lottieCompose = "6.4.0"
@@ -31,9 +31,10 @@ ktor = "2.3.9"
 kotlinxSerialization = "1.9.23"
 timber = "5.0.1"
 coil = "2.6.0"
+truthVersion = "1.4.2"
 uiTooling = "1.6.7"
 gradle = "8.4.0"
-lifecycleRuntimeCompose = "2.7.0"
+lifecycleRuntimeCompose = "2.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -45,6 +46,7 @@ androidx-preference-ktx = { module = "androidx.preference:preference-ktx", versi
 androidx-room-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+google-truth = { module = "com.google.truth:truth", version.ref = "truthVersion" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

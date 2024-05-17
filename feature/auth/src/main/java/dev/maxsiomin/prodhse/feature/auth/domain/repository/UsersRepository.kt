@@ -19,7 +19,7 @@ internal interface UsersRepository {
 
     suspend fun logout()
 
-    fun getAuthStatusFlow(): Flow<AuthStatus>
+    fun getAuthStatusStream(): Flow<AuthStatus>
 
     fun getAuthStatus(): AuthStatus
 

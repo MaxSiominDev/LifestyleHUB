@@ -52,7 +52,7 @@ internal class UsersRepositoryImpl @Inject constructor(
         authenticator.logout()
     }
 
-    override fun getAuthStatusFlow(): Flow<AuthStatus> {
+    override fun getAuthStatusStream(): Flow<AuthStatus> {
         return authenticator.getAuthStatusFlow()
     }
 
