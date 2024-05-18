@@ -14,6 +14,4 @@ internal interface UsersDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertNewUser(userEntity: UserEntity)
 
-
-
 }
