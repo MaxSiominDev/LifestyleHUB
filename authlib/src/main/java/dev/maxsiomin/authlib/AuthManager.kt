@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 
 class AuthManager internal constructor(
     private val repo: UsersRepository,
+    private val stringHasher: StringHasher,
 ) {
 
     private val _authStatus = MutableStateFlow<AuthStatus>(AuthStatus.Loading)
@@ -37,7 +38,7 @@ class AuthManager internal constructor(
             return RegistrationStatus.Failure("User already exists")
         }
 
-        val hashedPassword = StringHasher.hashString(registrationInfo.password)
+        val hashedPassword = stringHasher.hash(registrationInfo.password)
         val userInfo = UserInfo(
             username = registrationInfo.username,
             passwordHash = hashedPassword,
@@ -57,7 +58,7 @@ class AuthManager internal constructor(
             ?: return LoginStatus.Failure(INVALID_CREDENTIALS)
 
         // Check if password is correct
-        val hashedPassword = StringHasher.hashString(loginInfo.password)
+        val hashedPassword = stringHasher.hash(loginInfo.password)
         if (hashedPassword != userInfo.passwordHash) return LoginStatus.Failure(INVALID_CREDENTIALS)
 
         repo.login(userInfo.username)

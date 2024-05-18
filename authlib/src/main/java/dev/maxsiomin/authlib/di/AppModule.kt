@@ -5,6 +5,7 @@ import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.authlib.data.room.UsersDao
 import dev.maxsiomin.authlib.data.room.UsersDatabase
 import dev.maxsiomin.authlib.domain.repository.UsersRepository
+import dev.maxsiomin.authlib.security.StringHasher
 
 internal abstract class AppModule {
 
@@ -15,6 +16,8 @@ internal abstract class AppModule {
     abstract val usersRepo: UsersRepository
 
     abstract val sharedPrefs: SharedPreferences
+
+    abstract val stringHasher: StringHasher
 
     abstract val authManager: AuthManager
 

@@ -123,7 +123,7 @@ internal class LoginViewModel @Inject constructor(
                         is AuthError.Login.Unknown -> {
                             val errorMessage = (loginStatus.error as AuthError.Login.Unknown).reason
                             Effect.ShowMessage(
-                                UiText.DynamicString(errorMessage)
+                                UiText.DynamicString(errorMessage ?: "Unknown error")
                             )
                         }
 

@@ -194,7 +194,7 @@ internal class SignupViewModel @Inject constructor(
                         val errorMessage =
                             (registrationStatus.error as AuthError.Signup.Unknown).reason
                         onRegistrationError(
-                            UiText.DynamicString(errorMessage)
+                            UiText.DynamicString(errorMessage ?: "Unknown error")
                         )
                     }
                 }

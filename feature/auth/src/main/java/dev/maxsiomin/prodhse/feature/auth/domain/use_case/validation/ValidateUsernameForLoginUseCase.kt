@@ -5,7 +5,6 @@ import dev.maxsiomin.common.domain.resource.Error
 import dev.maxsiomin.common.domain.resource.Resource
 import javax.inject.Inject
 
-@VisibleForTesting
 class ValidateUsernameForLoginUseCase @Inject constructor() {
 
     operator fun invoke(username: String): Resource<Unit, UsernameForLoginError> {

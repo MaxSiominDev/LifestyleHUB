@@ -8,6 +8,8 @@ import dev.maxsiomin.authlib.data.repository.UsersRepositoryImpl
 import dev.maxsiomin.authlib.data.room.UsersDao
 import dev.maxsiomin.authlib.data.room.UsersDatabase
 import dev.maxsiomin.authlib.domain.repository.UsersRepository
+import dev.maxsiomin.authlib.security.JvmStringHasher
+import dev.maxsiomin.authlib.security.StringHasher
 
 internal class AppModuleImpl private constructor(private val context: Context) : AppModule() {
 
@@ -36,7 +38,11 @@ internal class AppModuleImpl private constructor(private val context: Context) :
         UsersRepositoryImpl(usersDao, sharedPrefs)
     }
 
-    override val authManager: AuthManager = AuthManager(usersRepo)
+    override val stringHasher: StringHasher by lazy {
+        JvmStringHasher()
+    }
+
+    override val authManager: AuthManager = AuthManager(usersRepo, stringHasher)
 
     companion object {
         fun init(context: Context) {

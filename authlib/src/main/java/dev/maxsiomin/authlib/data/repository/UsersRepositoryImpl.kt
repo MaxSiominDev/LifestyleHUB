@@ -9,18 +9,12 @@ import dev.maxsiomin.authlib.domain.model.UserInfo
 import dev.maxsiomin.authlib.domain.repository.UsersRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 @SuppressLint("ApplySharedPref")
 internal class UsersRepositoryImpl(
     private val dao: UsersDao,
     private val prefs: SharedPreferences
 ) : UsersRepository {
-
-    init {
-        val allKeys = prefs.all
-        Timber.i(allKeys.toString())
-    }
 
     override suspend fun getUserByName(username: String): UserInfo? = withContext(Dispatchers.IO) {
         val entity = dao.getUserByName(username) ?: return@withContext null
