@@ -16,12 +16,6 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
-    android.testOptions {
-        unitTests.all {
-            it.useJUnitPlatform()
-        }
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -56,6 +50,7 @@ dependencies {
     androidTestImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.google.truth)
+    testImplementation(libs.google.truth)
 
 
     // Room DB to save users

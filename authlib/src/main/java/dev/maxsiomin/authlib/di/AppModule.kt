@@ -2,8 +2,8 @@ package dev.maxsiomin.authlib.di
 
 import android.content.SharedPreferences
 import dev.maxsiomin.authlib.AuthManager
-import dev.maxsiomin.authlib.data.room.UsersDao
-import dev.maxsiomin.authlib.data.room.UsersDatabase
+import dev.maxsiomin.authlib.data.local.UsersDao
+import dev.maxsiomin.authlib.data.local.UsersDatabase
 import dev.maxsiomin.authlib.domain.repository.UsersRepository
 import dev.maxsiomin.authlib.security.StringHasher
 

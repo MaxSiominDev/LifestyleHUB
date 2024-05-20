@@ -1,4 +1,4 @@
-package dev.maxsiomin.authlib.data.room
+package dev.maxsiomin.authlib.data.local
 
 import androidx.room.Dao
 import androidx.room.Insert

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import dev.maxsiomin.authlib.data.mappers.UserEntityToUserInfoMapper
 import dev.maxsiomin.authlib.data.mappers.UserInfoToUserEntityMapper
-import dev.maxsiomin.authlib.data.room.UsersDao
+import dev.maxsiomin.authlib.data.local.UsersDao
 import dev.maxsiomin.authlib.domain.model.UserInfo
 import dev.maxsiomin.authlib.domain.repository.UsersRepository
 import kotlinx.coroutines.Dispatchers

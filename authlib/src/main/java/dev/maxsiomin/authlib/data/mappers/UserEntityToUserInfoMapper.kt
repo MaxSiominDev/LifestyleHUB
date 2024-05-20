@@ -1,7 +1,7 @@
 package dev.maxsiomin.authlib.data.mappers
 
 import dev.maxsiomin.authlib.domain.model.UserInfo
-import dev.maxsiomin.authlib.data.room.UserEntity
+import dev.maxsiomin.authlib.data.local.UserEntity
 
 internal class UserEntityToUserInfoMapper : (UserEntity) -> UserInfo {
 

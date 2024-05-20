@@ -1,5 +1,6 @@
 package dev.maxsiomin.authlib.security
 
+import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class JvmStringHasherTest {
@@ -15,19 +16,21 @@ class JvmStringHasherTest {
             stringHasher.hash(string)
         }.distinct()
 
-        assert(uniqueStrings.size == 1)
+        assertThat(uniqueStrings.size).isEqualTo(1)
     }
 
     @Test
     fun `hash differs for different string`() {
         val result1 = stringHasher.hash("test1")
         val result2 = stringHasher.hash("test2")
-        assert(result1 != result2)
+        assertThat(result1).isNotEqualTo(result2)
     }
 
     @Test
     fun `hash is not equal to the original string`() {
-        assert("test" != stringHasher.hash("test"))
+        val input = "test"
+        val result = stringHasher.hash(input)
+        assertThat(result).isNotEqualTo(input)
     }
 
 }

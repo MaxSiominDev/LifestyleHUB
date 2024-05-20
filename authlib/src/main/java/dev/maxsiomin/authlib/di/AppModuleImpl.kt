@@ -5,8 +5,8 @@ import android.content.SharedPreferences
 import androidx.room.Room
 import dev.maxsiomin.authlib.AuthManager
 import dev.maxsiomin.authlib.data.repository.UsersRepositoryImpl
-import dev.maxsiomin.authlib.data.room.UsersDao
-import dev.maxsiomin.authlib.data.room.UsersDatabase
+import dev.maxsiomin.authlib.data.local.UsersDao
+import dev.maxsiomin.authlib.data.local.UsersDatabase
 import dev.maxsiomin.authlib.domain.repository.UsersRepository
 import dev.maxsiomin.authlib.security.JvmStringHasher
 import dev.maxsiomin.authlib.security.StringHasher

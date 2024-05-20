@@ -1,6 +1,7 @@
 package dev.maxsiomin.common.extensions
 
 import androidx.lifecycle.SavedStateHandle
+import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class SavedStateHandleExtensionsKtTest {
@@ -10,7 +11,7 @@ class SavedStateHandleExtensionsKtTest {
         val key = "key"
         val value = "value"
         val savedStateHandle = SavedStateHandle(mapOf(key to value))
-        assert(savedStateHandle.requireArg<String>(key) == value)
+        assertThat(savedStateHandle.requireArg<String>(key)).isEqualTo(value)
     }
 
     @Test
