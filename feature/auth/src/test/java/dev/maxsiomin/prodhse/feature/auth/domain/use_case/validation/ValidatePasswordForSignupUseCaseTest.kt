@@ -9,13 +9,26 @@ class ValidatePasswordForSignupUseCaseTest {
 
     @Test
     fun `too short password fails`() {
-        validator(password = "Aa1#") as Resource.Error
+        val length = ValidatePasswordForSignupUseCase.MIN_PASSWORD_LENGTH - 1
+        val shortPassword = buildString {
+            append("A")
+            repeat(length - 1) {
+                append("1")
+            }
+        }
+        validator(password = shortPassword) as Resource.Error
     }
 
     @Test
     fun `too long password fails`() {
-        // 24 symbols
-        validator(password = "Aa1#Aa1#Aa1#Aa1#Aa1#Aa1#") as Resource.Error
+        val length = ValidatePasswordForSignupUseCase.MAX_PASSWORD_LENGTH + 1
+        val longPassword = buildString {
+            append("A")
+            repeat(length - 1) {
+                append("1")
+            }
+        }
+        validator(password = longPassword) as Resource.Error
     }
 
     @Test
@@ -30,7 +43,14 @@ class ValidatePasswordForSignupUseCaseTest {
 
     @Test
     fun `valid password succeeds`() {
-        validator("Qwerty1#") as Resource.Success
+        val length = ValidatePasswordForSignupUseCase.MIN_PASSWORD_LENGTH + 1
+        val validPassword = buildString {
+            append("A")
+            repeat(length - 1) {
+                append("1")
+            }
+        }
+        validator(validPassword) as Resource.Success
     }
 
 }

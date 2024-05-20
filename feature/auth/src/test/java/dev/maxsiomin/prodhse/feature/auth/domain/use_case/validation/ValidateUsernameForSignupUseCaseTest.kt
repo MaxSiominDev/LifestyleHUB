@@ -9,17 +9,35 @@ class ValidateUsernameForSignupUseCaseTest {
 
     @Test
     fun `too short username fails`() {
-        validator("test") as Resource.Error
+        val length = ValidateUsernameForSignupUseCase.MIN_USERNAME_LENGTH - 1
+        val shortUsername = buildString {
+            repeat(length) {
+                append("a")
+            }
+        }
+        validator(shortUsername) as Resource.Error
     }
 
     @Test
     fun `too long username fails`() {
-        validator("test test test test test")
+        val length = ValidateUsernameForSignupUseCase.MAX_USERNAME_LENGTH + 1
+        val longUsername = buildString {
+            repeat(length) {
+                append("a")
+            }
+        }
+        validator(longUsername) as Resource.Error
     }
 
     @Test
     fun `valid username succeeds`() {
-        validator("test test") as Resource.Success
+        val length = ValidateUsernameForSignupUseCase.MAX_USERNAME_LENGTH - 1
+        val validUsername = buildString {
+            repeat(length) {
+                append("a")
+            }
+        }
+        validator(validUsername) as Resource.Success
     }
 
 }
