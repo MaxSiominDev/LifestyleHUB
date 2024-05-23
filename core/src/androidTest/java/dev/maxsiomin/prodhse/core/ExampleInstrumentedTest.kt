@@ -7,6 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import org.junit.Assert.*
+import org.mockito.Mockito.mock
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -20,5 +21,6 @@ class ExampleInstrumentedTest {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("dev.maxsiomin.prodhse.core.test", appContext.packageName)
+
     }
 }

@@ -5,6 +5,7 @@ import dev.maxsiomin.common.data.ToDomainMapper
 import dev.maxsiomin.common.domain.resource.DataError
 import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
+import dev.maxsiomin.prodhse.core.util.DispatcherProvider
 import dev.maxsiomin.prodhse.feature.auth.data.auth.Authenticator
 import dev.maxsiomin.prodhse.feature.auth.data.dto.random_user.Result
 import dev.maxsiomin.prodhse.feature.auth.data.remote.random_user.RandomUserApi
@@ -21,10 +22,11 @@ internal class UsersRepositoryImpl @Inject constructor(
     private val api: RandomUserApi,
     private val authenticator: Authenticator,
     private val randomUserDataMapper: ToDomainMapper<Result, RandomUserData>,
+    private val dispatchers: DispatcherProvider,
 ) : UsersRepository {
 
     override suspend fun getRandomUserData(): Resource<RandomUserData, DataError> {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatchers.io) {
             val apiResponse = api.getRandomUser()
             return@withContext when (apiResponse) {
                 is Resource.Error -> Resource.Error(apiResponse.error)
@@ -41,14 +43,14 @@ internal class UsersRepositoryImpl @Inject constructor(
     override suspend fun loginWithUsernameAndPassword(
         username: String,
         password: String
-    ): Resource<Unit, AuthError.Login> = withContext(Dispatchers.IO) {
+    ): Resource<Unit, AuthError.Login> = withContext(dispatchers.io) {
         return@withContext authenticator.loginWithUsernameAndPassword(
             username = username,
             password = password
         )
     }
 
-    override suspend fun logout() = withContext(Dispatchers.IO) {
+    override suspend fun logout() = withContext(dispatchers.io) {
         authenticator.logout()
     }
 
@@ -62,13 +64,13 @@ internal class UsersRepositoryImpl @Inject constructor(
 
     override suspend fun checkIfUsernameExists(
         username: String
-    ): Boolean = withContext(Dispatchers.IO) {
+    ): Boolean = withContext(dispatchers.io) {
         return@withContext authenticator.checkIfUsernameExists(username = username)
     }
 
     override suspend fun signupWithUsernameAndPassword(
         info: RegistrationInfo
-    ): Resource<Unit, AuthError.Signup> = withContext(Dispatchers.IO) {
+    ): Resource<Unit, AuthError.Signup> = withContext(dispatchers.io) {
         return@withContext authenticator.registerWithUsernameAndPassword(info)
     }
 

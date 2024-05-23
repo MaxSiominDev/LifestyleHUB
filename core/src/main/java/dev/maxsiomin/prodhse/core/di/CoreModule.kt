@@ -17,7 +17,9 @@ import dev.maxsiomin.prodhse.core.location.PermissionChecker
 import dev.maxsiomin.prodhse.core.location.PermissionCheckerImpl
 import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.prodhse.core.util.DefaultDateFormatter
+import dev.maxsiomin.prodhse.core.util.DispatcherProvider
 import dev.maxsiomin.prodhse.core.util.LocaleManager
+import dev.maxsiomin.prodhse.core.util.StandardDispatcherProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -82,6 +84,11 @@ object CoreModule {
     @Provides
     fun providePermissionChecker(@ApplicationContext context: Context): PermissionChecker {
         return PermissionCheckerImpl(context)
+    }
+
+    @Provides
+    fun provideDispatcherProvider(): DispatcherProvider {
+        return StandardDispatcherProvider()
     }
 
 }

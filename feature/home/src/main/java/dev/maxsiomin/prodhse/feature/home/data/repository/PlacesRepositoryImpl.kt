@@ -7,6 +7,7 @@ import dev.maxsiomin.common.domain.resource.DataError
 import dev.maxsiomin.common.domain.resource.LocalError
 import dev.maxsiomin.common.domain.resource.NetworkError
 import dev.maxsiomin.common.domain.resource.Resource
+import dev.maxsiomin.prodhse.core.util.DispatcherProvider
 import dev.maxsiomin.prodhse.feature.home.data.dto.place_details.PlaceDetailsResponse
 import dev.maxsiomin.prodhse.feature.home.data.dto.place_photos.PlacePhotosResponseItem
 import dev.maxsiomin.prodhse.feature.home.data.dto.places_nearby.Result
@@ -27,13 +28,14 @@ internal class PlacesRepositoryImpl @Inject constructor(
     private val placeMapper: ToDomainMapper<Result, Place?>,
     private val placeDetailsMapper: ToDomainMapper<PlaceDetailsResponse, PlaceDetails?>,
     private val placePhotosMapper: ToDomainMapper<Pair<PlacePhotosResponseItem, FsqId>, Photo>,
+    private val dispatchers: DispatcherProvider,
 ) : PlacesRepository {
 
     override suspend fun getPlacesNearby(
         lat: String,
         lon: String,
         lang: String
-    ): Resource<List<Place>, DataError> = withContext(Dispatchers.IO) {
+    ): Resource<List<Place>, DataError> = withContext(dispatchers.io) {
         val apiResponse = api.getPlaces(lat = lat, lon = lon, lang = lang)
         return@withContext when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)
@@ -48,7 +50,7 @@ internal class PlacesRepositoryImpl @Inject constructor(
 
     override suspend fun getPhotos(
         fsqId: String
-    ): Resource<List<Photo>, DataError> = withContext(Dispatchers.IO) {
+    ): Resource<List<Photo>, DataError> = withContext(dispatchers.io) {
         val apiResponse = api.getPhotos(fsqId = fsqId)
         return@withContext when (apiResponse) {
             is Resource.Error -> Resource.Error(apiResponse.error)
@@ -64,7 +66,7 @@ internal class PlacesRepositoryImpl @Inject constructor(
 
     override suspend fun getPlaceDetails(
         fsqId: String
-    ): Resource<PlaceDetails, DataError> = withContext(Dispatchers.IO) {
+    ): Resource<PlaceDetails, DataError> = withContext(dispatchers.io) {
         val localData = getPlaceDetailsFromSharedPrefs(fsqId)
         val currentMillis = System.currentTimeMillis()
         if (localData != null && currentMillis - localData.timeUpdated < CACHE_EXPIRATION_PERIOD) {
@@ -92,7 +94,7 @@ internal class PlacesRepositoryImpl @Inject constructor(
 
     @SuppressLint("ApplySharedPref")
     private suspend fun savePlaceDetailsToSharedPrefs(place: PlaceDetails) {
-        withContext(Dispatchers.IO) {
+        withContext(dispatchers.io) {
             prefs.edit().apply {
                 val jsonString = Json.encodeToString(PlaceDetails.serializer(), place)
                 val key = getPlacePrefsKey(place.fsqId)
@@ -102,7 +104,7 @@ internal class PlacesRepositoryImpl @Inject constructor(
     }
 
     private suspend fun getPlaceDetailsFromSharedPrefs(id: String): PlaceDetails? =
-        withContext(Dispatchers.IO) {
+        withContext(dispatchers.io) {
             val key = getPlacePrefsKey(id)
             val jsonString = prefs.getString(key, null) ?: return@withContext null
             return@withContext Json.decodeFromString(PlaceDetails.serializer(), jsonString)

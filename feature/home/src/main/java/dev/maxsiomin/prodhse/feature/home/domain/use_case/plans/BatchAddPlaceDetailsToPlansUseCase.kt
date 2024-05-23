@@ -1,6 +1,7 @@
 package dev.maxsiomin.prodhse.feature.home.domain.use_case.plans
 
 import dev.maxsiomin.common.domain.resource.Resource
+import dev.maxsiomin.prodhse.core.util.DispatcherProvider
 import dev.maxsiomin.prodhse.feature.home.domain.model.Plan
 import dev.maxsiomin.prodhse.feature.home.domain.use_case.places.GetPlaceDetailsByIdUseCase
 import dev.maxsiomin.prodhse.feature.home.presentation.planner_tld.planner.PlannerItem
@@ -11,10 +12,11 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 internal class BatchAddPlaceDetailsToPlansUseCase @Inject constructor(
-    private val getPlaceDetailsByIdUseCase: GetPlaceDetailsByIdUseCase
+    private val getPlaceDetailsByIdUseCase: GetPlaceDetailsByIdUseCase,
+    private val dispatchers: DispatcherProvider,
 ) {
 
-    suspend operator fun invoke(plans: List<Plan>) = withContext(Dispatchers.IO) {
+    suspend operator fun invoke(plans: List<Plan>) = withContext(dispatchers.io) {
         val plannerItems = mutableListOf<PlannerItem>()
         plans.map { currentPlan ->
             async {

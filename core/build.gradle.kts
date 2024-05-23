@@ -58,6 +58,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.mockito.core)
+    testImplementation(libs.google.truth)
 
     // Hilt for DI
     implementation(libs.hilt.android)
