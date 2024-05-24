@@ -15,7 +15,7 @@ android {
     defaultConfig {
         minSdk = 26
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "dev.maxsiomin.prodhse.testing.HiltTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -60,17 +60,22 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
 
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.runner)
     testImplementation(project(":core"))
     debugImplementation(libs.ui.tooling)
 
     // Testing
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(project(":testing"))
+    androidTestImplementation(project(":testing"))
     testImplementation(libs.mockk)
     testImplementation(libs.junit)
     testImplementation(libs.google.truth)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptAndroidTest(libs.hilt.android.compiler)
+    androidTestImplementation(libs.ui.test.junit4)
+    debugImplementation(libs.ui.test.manifest)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)

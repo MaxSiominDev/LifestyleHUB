@@ -17,7 +17,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "dev.maxsiomin.prodhse.testing.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -72,6 +72,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     testImplementation(libs.google.truth)
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptAndroidTest(libs.hilt.android.compiler)
+    androidTestImplementation(project(":testing"))
+    debugImplementation(libs.ui.test.manifest)
 
     // Hilt for DI
     implementation(libs.hilt.android)

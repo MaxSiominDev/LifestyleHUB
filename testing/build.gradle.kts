@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.daggerHilt)
+    kotlin("kapt")
 }
 
 android {
@@ -37,10 +39,17 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.runner)
+    implementation(libs.junit)
+    implementation(libs.androidx.junit)
+    implementation(libs.hilt.android.testing)
+    kapt(libs.hilt.android.compiler)
 
     implementation(libs.kotlinx.coroutines.test)
     implementation(project(":core"))
+
+    // Hilt for DI
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 }

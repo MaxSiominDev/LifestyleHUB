@@ -2,6 +2,7 @@
 agp = "8.4.1"
 coreTesting = "2.2.0"
 hiltAndroid = "2.51.1"
+hiltAndroidTesting = "2.51"
 hiltNavigationCompose = "1.2.0"
 kotlin = "1.9.23"
 coreKtx = "1.13.1"
@@ -36,8 +37,10 @@ kotlinxSerialization = "1.9.23"
 timber = "5.0.1"
 coil = "2.6.0"
 truthVersion = "1.4.2"
+uiTestJunit4 = "1.6.7"
 uiTooling = "1.6.7"
 gradle = "8.4.1"
+runner = "1.5.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +56,7 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 google-truth = { module = "com.google.truth:truth", version.ref = "truthVersion" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroidTesting" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -81,9 +85,12 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4" }
+ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 gradle = { group = "com.android.tools.build", name = "gradle", version.ref = "gradle" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
