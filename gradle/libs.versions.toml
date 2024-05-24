@@ -21,6 +21,7 @@ composeBom = "2024.05.00"
 lottieCompose = "6.4.0"
 materialIconsCore = "1.6.7"
 mockitoCore = "5.12.0"
+mockk = "1.13.10"
 navigationCompose = "2.7.7"
 playServicesLocation = "21.2.0"
 preferenceKtx = "1.2.1"
@@ -76,7 +77,7 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
-mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }

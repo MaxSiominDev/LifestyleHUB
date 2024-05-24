@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/feature/auth" />
             <option value="$PROJECT_DIR$/feature/home" />
             <option value="$PROJECT_DIR$/navdestinations" />
+            <option value="$PROJECT_DIR$/testing" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

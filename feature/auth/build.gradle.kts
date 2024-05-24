@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.ui.tooling)
 
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

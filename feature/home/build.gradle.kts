@@ -60,10 +60,15 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
 
     implementation(libs.androidx.ui.tooling.preview)
+    testImplementation(project(":core"))
     debugImplementation(libs.ui.tooling)
 
-
+    // Testing
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(project(":testing"))
+    testImplementation(libs.mockk)
     testImplementation(libs.junit)
+    testImplementation(libs.google.truth)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 

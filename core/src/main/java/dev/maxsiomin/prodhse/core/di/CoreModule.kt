@@ -19,7 +19,7 @@ import dev.maxsiomin.prodhse.core.util.DateFormatter
 import dev.maxsiomin.prodhse.core.util.DefaultDateFormatter
 import dev.maxsiomin.prodhse.core.util.DispatcherProvider
 import dev.maxsiomin.prodhse.core.util.LocaleManager
-import dev.maxsiomin.prodhse.core.util.StandardDispatcherProvider
+import dev.maxsiomin.prodhse.core.util.StandardDispatchers
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -88,7 +88,7 @@ object CoreModule {
 
     @Provides
     fun provideDispatcherProvider(): DispatcherProvider {
-        return StandardDispatcherProvider()
+        return StandardDispatchers
     }
 
 }
