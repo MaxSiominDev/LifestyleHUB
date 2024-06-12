@@ -1,5 +1,5 @@
 [versions]
-agp = "8.4.1"
+agp = "8.4.2"
 coreTesting = "2.2.0"
 hiltAndroid = "2.51.1"
 hiltAndroidTesting = "2.51"
@@ -39,7 +39,7 @@ coil = "2.6.0"
 truthVersion = "1.4.2"
 uiTestJunit4 = "1.6.7"
 uiTooling = "1.6.7"
-gradle = "8.4.1"
+gradle = "8.4.2"
 runner = "1.5.2"
 
 [libraries]
