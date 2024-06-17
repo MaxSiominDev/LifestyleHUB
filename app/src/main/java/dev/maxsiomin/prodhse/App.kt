@@ -14,6 +14,8 @@ class App : Application() {
 
         AuthManager.init(this)
 
+        println("Test")
+
         if (isDebug()) {
             Timber.plant(Timber.DebugTree())
         }
