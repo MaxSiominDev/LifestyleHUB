@@ -73,7 +73,7 @@ object CoreModule {
     fun provideDateFormatter(localeManager: LocaleManager): DateFormatter {
         return when (localeManager.getLocaleLanguage()) {
 
-            LocaleManager.DEFAULTE_LOCALE -> {
+            LocaleManager.DEFAULT_LOCALE -> {
                 DefaultDateFormatter()
             }
 
