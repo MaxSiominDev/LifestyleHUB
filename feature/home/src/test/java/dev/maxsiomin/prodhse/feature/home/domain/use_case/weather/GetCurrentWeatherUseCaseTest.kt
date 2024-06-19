@@ -9,13 +9,10 @@ import dev.maxsiomin.prodhse.feature.home.domain.model.TemperatureInfo
 import dev.maxsiomin.prodhse.feature.home.domain.model.Weather
 import dev.maxsiomin.prodhse.feature.home.domain.model.WeatherCondition
 import dev.maxsiomin.prodhse.feature.home.domain.repository.WeatherRepository
-import dev.maxsiomin.prodhse.testing.TestDispatchers
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test

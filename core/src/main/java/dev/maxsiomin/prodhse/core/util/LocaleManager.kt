@@ -7,7 +7,7 @@ interface LocaleManager {
     fun getLocaleLanguage(): String
 
     companion object {
-        const val DEFAULE_LOCALE = "en"
+        const val DEFAULTE_LOCALE = "en"
     }
 }
 
@@ -17,7 +17,7 @@ class LocaleManagerImpl @Inject constructor() : LocaleManager {
 
     private val localeLanguage = currentLocale.language
 
-    private val supportedLocales = listOf(LocaleManager.DEFAULE_LOCALE)
+    private val supportedLocales = listOf(LocaleManager.DEFAULTE_LOCALE)
 
     override fun getLocaleLanguage(): String {
         return if (localeLanguage in supportedLocales) localeLanguage else "en"
