@@ -3,6 +3,7 @@ package dev.maxsiomin.common.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,14 +22,9 @@ abstract class StatefulViewModel<State : Any, Effect : Any, Event : Any> : ViewM
     val effectFlow = _effectChannel.receiveAsFlow()
 
     protected fun onEffect(effect: Effect) {
-        viewModelScope.launch {
-            this.onEffect(effect)
+        viewModelScope.launch(Dispatchers.Main) {
+            _effectChannel.send(effect)
         }
-    }
-
-    // CoroutineScope is used not to conflict with not suspend `onEffect` method
-    protected suspend fun CoroutineScope.onEffect(effect: Effect) {
-        _effectChannel.send(effect)
     }
 
     abstract fun onEvent(event: Event)
