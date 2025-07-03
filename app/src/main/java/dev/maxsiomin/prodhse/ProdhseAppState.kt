@@ -15,12 +15,10 @@ import dev.maxsiomin.prodhse.navdestinations.topLevelDestinations
 @Composable
 fun rememberProdhseAppState(
     navController: NavHostController = rememberNavController(),
-    topLevelDestinations: List<TopLevelDestination> = dev.maxsiomin.prodhse.navdestinations.topLevelDestinations,
 ): ProdhseAppState {
     return remember(navController) {
         ProdhseAppState(
             navController = navController,
-            topLevelDestinations = topLevelDestinations,
         )
     }
 }
@@ -28,7 +26,6 @@ fun rememberProdhseAppState(
 @Stable
 class ProdhseAppState(
     val navController: NavHostController,
-    val topLevelDestinations: List<TopLevelDestination>,
 ) {
 
     fun navigateToTopLevelDestination(
